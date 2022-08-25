@@ -22,6 +22,6 @@ date: 2022-06-01 09:55:49
 然后按照以下格式在本站留言区留言，待博主为您添上友链
 
 >名称：添总
-头像链接：https://tiantianlikeu.github.io/
+头像链接：https://tiantianlikeu.github.io/images/ico/favicon.ico
 主页链接：https://tiantianlikeu.github.io/
 说明信息：人生在勤，不索何获
