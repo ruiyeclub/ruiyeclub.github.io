@@ -14,6 +14,20 @@ Theme style reference [https://mrbird.cc/](https://mrbird.cc/).
 
 [https://tycoding.cn/](https://tycoding.cn/)
 
+## 操作指令
+
+`hexo init` 命令用于初始化本地文件夹为网站的根目录
+
+`hexo new` 命令用于新建文章，一般可以简写为 hexo n
+
+`hexo generate` 命令用于生成静态文件，一般可以简写为 hexo g
+
+`hexo server` 命令用于启动本地服务器，一般可以简写为 hexo s
+
+`hexo deploy` 命令用于部署网站，一般可以简写为 hexo d
+
+`hexo clean` 命令用于清理缓存文件，是一个比较常用的命令
+
 ## Get Started
 
 >   1.  Get theme code
