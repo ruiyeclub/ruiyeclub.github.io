@@ -105,3 +105,4 @@ deploy:
   type: git
   repo: https://github.com/ruiyeclub/ruiyeclub.github.io
   branch: main
+  token: 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
