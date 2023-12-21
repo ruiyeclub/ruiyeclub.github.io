@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next tumo" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/tumo.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ray4j's Blog" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Docker是基于Go语言实现的云开源项目。 Docker的主要目标是“Build，Ship and Run Any App,Anywhere”，也就是通过对应用组件的封装、分发、部署、运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到“一次封装，到处运行”。Linux 容器技术的出现就解决了这样一个问题，而 Docker 就是在它的基础上发展过来的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker快速上手之部署SpringBoot项目">
+<meta property="og:url" content="http://ray4j.top/2022/02/01/Docker%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E4%B9%8B%E9%83%A8%E7%BD%B2SpringBoot%E9%A1%B9%E7%9B%AE/index.html">
+<meta property="og:site_name" content="Ray4j.top">
+<meta property="og:description" content="Docker是基于Go语言实现的云开源项目。 Docker的主要目标是“Build，Ship and Run Any App,Anywhere”，也就是通过对应用组件的封装、分发、部署、运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到“一次封装，到处运行”。Linux 容器技术的出现就解决了这样一个问题，而 Docker 就是在它的基础上发展过来的。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/2db39f1e0972b7dd1557c891d9300fdd.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/3d0de6d7f169b639389384e8184829f5.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/f175e9402c4d4bf3e98c78f055b6e9c6.png">
+<meta property="article:published_time" content="2022-02-01T09:35:40.000Z">
+<meta property="article:modified_time" content="2022-06-04T10:00:54.722Z">
+<meta property="article:author" content="Cr.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/2db39f1e0972b7dd1557c891d9300fdd.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Tumo',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ray4j.top/2022/02/01/Docker快速上手之部署SpringBoot项目/"/>
+
+
+
+
+
+  <title>Docker快速上手之部署SpringBoot项目 | Ray4j.top</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" style="overflow-x:hidden;padding-right:320px" lang="en">
+
+  <style>@media (min-width:768px) and (max-width:991px){body .header-innerr{width:700px!important}}.header-innerr{margin:0 auto;padding:100px 0 70px;width:880px}@media (min-width:1600px){.container .header-innerr{width:1200px}}.header-innerr{position:relative}.header-innerr{padding:20px 0 0}.header-innerr:after,.header-innerr:before{content:" ";display:table}.header-innerr:after{clear:both}@media (max-width:767px){.header-innerr{width:auto;padding:10px;margin-bottom:-20px}}</style>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    
+    
+
+    <link href="/lib/font-awesome/css/font-merienda.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title" style="font-family:Merienda;font-size:1.3rem">Ray4j.top</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            HOME
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            ARCHIVES
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            ABOUT
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links/" rel="section">
+            LINKS
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+
+
+ </div>
+
+      <div class="header-innerr">
+        
+          <div class="note info" style="margin:0;letter-spacing:.15px">
+            🐤SpringBoot学习入门Demo，持续更新中...：
+            <a style="color:#40dab2;font-weight:600" 
+              href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" class="animsition-link">
+              https://github.com/ruiyeclub/SpringBoot-Hello
+            </a>
+          </div>
+        
+      </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://ray4j.top/2022/02/01/Docker%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E4%B9%8B%E9%83%A8%E7%BD%B2SpringBoot%E9%A1%B9%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ray4j.top">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Docker快速上手之部署SpringBoot项目</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-01T17:35:40+08:00">
+                2022-02-01
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>Docker是基于Go语言实现的云开源项目。</strong></p>
+<p>Docker的主要目标是“Build，Ship and Run Any App,Anywhere”，也就是通过对应用组件的封装、分发、部署、运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到“一次封装，到处运行”。<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/2db39f1e0972b7dd1557c891d9300fdd.png" alt="image.png"><br>Linux 容器技术的出现就解决了这样一个问题，而 Docker 就是在它的基础上发展过来的。将应用运行在 Docker 容器上面，而 Docker 容器在任何操作系统上都是一致的，这就实现了跨平台、跨服务器。只需要一次配置好环境，换到别的机子上就可以一键部署好，大大简化了操作。</p>
+<h4 id="一、我所理解的Docker"><a href="#一、我所理解的Docker" class="headerlink" title="一、我所理解的Docker"></a>一、我所理解的Docker</h4><blockquote>
+<p>我喜欢将Docker比喻成”方便面”，为什么说是方便面，之前部署项目环境的配置十分麻烦，换一台机器，就要重来一次，费力费时。举个栗子，我们部署一个SpringBoot项目，我们需要在服务器上面配置项目的运行环境，要安装各种各样的软件JDK&#x2F;MySQL&#x2F;Redis&#x2F;nginx，安装和配置这些东西十分麻烦，下次需要换个服务器重新部署又得重新安装一遍，简直要命。而Docker能将项目连带着运行环境一同部署过去，就好像泡面，泡面所需的调料包还有工具都附加在了里面。一句话总结Docker的好处，Docker解决了运行环境和配置问题，方便做持续集成并有助于整体发布的容器虚拟化技术。</p>
+</blockquote>
+<h4 id="二、Docker与虚拟机的区别"><a href="#二、Docker与虚拟机的区别" class="headerlink" title="二、Docker与虚拟机的区别"></a>二、Docker与虚拟机的区别</h4><table>
+<thead>
+<tr>
+<th></th>
+<th>Docker容器</th>
+<th>虚拟机（VM）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操作系统</td>
+<td>与宿主机共享OS</td>
+<td>宿主机OS上运行虚拟机OS</td>
+</tr>
+<tr>
+<td>存储大小</td>
+<td>镜像小，便于存储与传输</td>
+<td>镜像庞大（vmdk、vdi等）</td>
+</tr>
+<tr>
+<td>运行性能</td>
+<td>几乎无额外性能损失</td>
+<td>操作系统额外的CPU、内存消耗</td>
+</tr>
+<tr>
+<td>移植性</td>
+<td>轻便、灵活，适用于Linux</td>
+<td>笨重，与虚拟化技术耦合度高</td>
+</tr>
+<tr>
+<td>硬件亲和性</td>
+<td>面向软件开发者</td>
+<td>面向硬件运维者</td>
+</tr>
+</tbody></table>
+<h4 id="三、Docker里面三个重要的概念Dockerfile、镜像-image-、容器-Container"><a href="#三、Docker里面三个重要的概念Dockerfile、镜像-image-、容器-Container" class="headerlink" title="三、Docker里面三个重要的概念Dockerfile、镜像(image)、容器(Container)"></a>三、Docker里面三个重要的概念Dockerfile、镜像(image)、容器(Container)</h4><p>1.Dockerfile是用来构建Docker镜像的构建文件，是由一系列命令和参数构成的脚本。</p>
+<p>Dockerfile体系结构：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FROM　　基础镜像，当前新镜像是基于哪个镜像的</span><br><span class="line">MAINTAINER　　镜像维护者的姓名和邮箱地址</span><br><span class="line">RUN　　容器构建时需要运行的命令</span><br><span class="line">EXPOSE　　当前容器对外暴露出的端口</span><br><span class="line">WORKDIR　　指定在创建容器后，终端默认登录进来的工作目录，一个落脚点</span><br><span class="line">ENV　　用来在构建镜像过程中设置环境变量</span><br><span class="line">AD　　将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和解压tar压缩包</span><br><span class="line">COPY　　类似ADD，拷贝文件和目录到镜像中。将从构建上下文目录中<span class="tag">&lt;<span class="name">源路径</span>&gt;</span>的文件/目录复制到新的一层的镜像内的<span class="tag">&lt;<span class="name">目标路径</span>&gt;</span>位置</span><br><span class="line">VOLUME　　容器数据卷，用于数据保存和持久化工作</span><br><span class="line">CMD　　指定一个容器启动时要运行的命令。Dockerfile中可以有多个CMD指令，但只要最后一个生效，CMD会被docker run之后的参数替换</span><br><span class="line">ENTRYPOINT　　指定一个容器启动时要运行的命令。ENTRYPOINT的目的和CMD一样，都是在指定容器启动程序及参数</span><br><span class="line">ONBUILD　　当构建一个被继承的Dockerfile时运行命令，父镜像在被子继承后父镜像的onbuild被触发</span><br></pre></td></tr></table></figure>
+<p>2.镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。</p>
+<p>3.容器是用镜像创建的运行实例。它可以被启动、开始、停止、删除。每个容器都是相互隔离的、保证安全的平台。可以把容器看做是一个简易版的Linux环境（包括root用户权限、用户空间和网络空间等）和运行在其中的应用程序。</p>
+<h4 id="四、安装Docker"><a href="#四、安装Docker" class="headerlink" title="四、安装Docker"></a>四、安装Docker</h4><p>1.安装Docker依赖包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+
+<p>2.设置阿里云镜像源</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">```xml</span><br><span class="line">3.安装 Docker-CE</span><br><span class="line">```xml</span><br><span class="line">yum install docker-ce</span><br></pre></td></tr></table></figure>
+<p>4.查看是否安装成功</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/3d0de6d7f169b639389384e8184829f5.png" alt="image.png"></p>
+<h4 id="五、使用Docker安装MySQL"><a href="#五、使用Docker安装MySQL" class="headerlink" title="五、使用Docker安装MySQL"></a>五、使用Docker安装MySQL</h4><p>1.使用Docker拉取Mysql镜像(这里安装的是MySQL5.6版本)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.6</span><br></pre></td></tr></table></figure>
+<p>2.安装mysql命令</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 3306:3306 --name mysql -v /ray/mysql/conf:/etc/mysql/conf.d -v /ray/mysql/logs:/logs -v /ray/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=admin -d mysql:5.7</span><br></pre></td></tr></table></figure>
+<p>命令说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-p <span class="number">3306</span>:<span class="number">3306</span>　　将主机的<span class="number">3306</span>端口映射到docker容器的<span class="number">3306</span>端口</span><br><span class="line">--name mysql　　运行服务器名字</span><br><span class="line">-v /ray/mysql/conf:/etc/mysql/conf.d　　将主机/ray/mysql目录下的conf/my.cnf挂载到容器的/etc/mysql/conf.d</span><br><span class="line">-v /ray/mysql/logs:/logs　　将主机/ray/mysql目录下的logs目录挂载到容器的/logs</span><br><span class="line">-v /ray/mysql/data:/<span class="keyword">var</span>/lib/mysql　　将主机/ray/mysql目录下的data目录挂载到容器的/<span class="keyword">var</span>/lib/mysql</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=admin　　初始化root用户的密码</span><br><span class="line">-d mysql:<span class="number">5.7</span>　　后台程序运行mysql5<span class="number">.7</span></span><br></pre></td></tr></table></figure>
+<p>3.进入mysql</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it MySQL运行成功后的容器ID /bin/bash</span><br></pre></td></tr></table></figure>
+<p>然后即可登录MySQL，创建数据库，或者使用Navicat等工具创建数据库。</p>
+<h4 id="六、使用Docker安装Redis"><a href="#六、使用Docker安装Redis" class="headerlink" title="六、使用Docker安装Redis"></a>六、使用Docker安装Redis</h4><p>1.使用Docker拉取Redis镜像(这里安装的是Redis3.2版本)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull redis:3.2</span><br></pre></td></tr></table></figure>
+<p>2.安装redis命令(这里不对命令做解释)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 6379:6379 -v /ray/redis/data:/data -v /ray/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf -d redis:3.2 redis-server /usr/local/etc/redis/redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
+<h4 id="七、Docker部署SpringBoot项目"><a href="#七、Docker部署SpringBoot项目" class="headerlink" title="七、Docker部署SpringBoot项目"></a>七、Docker部署SpringBoot项目</h4><p>1.将项目打包成jar包(假设名字为myblog.jar)，并编写一个Dockerfile文件，文件内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Docker image for springboot file run</span><br><span class="line"># VERSION 0.0.1</span><br><span class="line"># Author: Ray</span><br><span class="line"># 基础镜像使用java</span><br><span class="line">FROM java:8</span><br><span class="line"># 作者</span><br><span class="line">MAINTAINER Ray &lt;185048761@qq.com&gt;</span><br><span class="line"># VOLUME 指定了临时文件目录为/tmp。</span><br><span class="line"># 其效果是在主机 /var/lib/docker 目录下创建了一个临时文件，并链接到容器的/tmp</span><br><span class="line">VOLUME /tmp</span><br><span class="line"># 将jar包添加到容器中并更名为app.jar</span><br><span class="line">ADD myblog.jar app.jar</span><br><span class="line"># 运行jar包</span><br><span class="line">RUN bash -c &#x27;touch /app.jar&#x27;</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-Djava.security.egd=file:/dev/./urandom&quot;,&quot;-jar&quot;,&quot;/app.jar&quot;]</span><br><span class="line">#暴露8080端口</span><br><span class="line">EXPOSE 80</span><br></pre></td></tr></table></figure>
+<p>2.将这两个文件一并上传至服务器中的同一个目录下面，进入该文件夹后执行此命令构建镜像：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/f175e9402c4d4bf3e98c78f055b6e9c6.png" alt="image.png"></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myblog.jar .</span><br></pre></td></tr></table></figure>
+<p>3.生成docker容器，并运行</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 myblog.jar</span><br></pre></td></tr></table></figure>
+<p>等一会儿，SpringBoot项目跑起来了后，就可以使用浏览器通过80端口进行访问了</p>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你觉得这篇文章帮助到了你，你可以帮作者买一杯果汁表示鼓励</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_ray.jpg" alt=" WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_ray.jpg" alt=" Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/31/JVM%E5%9F%BA%E7%A1%80%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E7%AF%87/" rel="next" title="JVM基础快速入门篇">
+                <i class="fa fa-chevron-left"></i> JVM基础快速入门篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/02/03/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%B8%80)%EF%BC%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%BB%A5%E5%8F%8Asynchronized%E5%85%B3%E9%94%AE%E5%AD%97/" rel="prev" title="Java并发编程(一)：线程基础知识以及synchronized关键字">
+                Java并发编程(一)：线程基础知识以及synchronized关键字 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+    
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">Contents</li>
+          <li class="sidebar-nav-overview" data-target="site-overview">Overview</li>
+        </ul>
+      
+
+  
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-overview">
+          <div class="sidebar-sticky sticky">
+            <div itemscope="" itemtype="http://schema.org/Person">
+              <div class="author__avatar">
+                
+                  <img itemprop="image"
+                    src="/images/avatar.jpg"
+                    alt="" /> 
+                
+              </div>
+              <div class="author__content">
+                <h3 class="author__name" itemprop="name"></h3>
+                <p class="author__bio" itemprop="description"></p>
+              </div>
+              
+                <div class="author__urls-wrapper">
+                  <button class="btn btn--inverse">Follow</button>
+                  <ul class="author__urls social-icons">
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub" target="_blank" title="GitHub">
+                            
+                              <i class="fa fa-fw fa-github"></i>&nbsp;&nbsp;GitHub</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/ray4j.top" target="_blank" title="Ray4j.top">
+                            
+                              <i class="fa fa-fw fa-link"></i>&nbsp;&nbsp;Ray4j.top</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" title="Springboot-Hello">
+                            
+                              <i class="fa fa-fw fa-cloud"></i>&nbsp;&nbsp;Springboot-Hello</a>
+                      </li>
+                    
+
+                    
+                      <li class="menu-item menu-item-search">
+                        
+                          <a href="javascript:;" class="popup-trigger">
+                          <i class="fa fa-fw fa-search"></i>&nbsp;&nbsp;
+                        
+                          
+                          
+                          Search
+                        </a>
+                      </li>
+                    
+
+                    
+                      <div class="site-search">
+                        
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+                      </div>
+                    
+
+                  </ul>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%88%91%E6%89%80%E7%90%86%E8%A7%A3%E7%9A%84Docker"><span class="nav-number">1.</span> <span class="nav-text">一、我所理解的Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Docker%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">二、Docker与虚拟机的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E3%80%81Docker%E9%87%8C%E9%9D%A2%E4%B8%89%E4%B8%AA%E9%87%8D%E8%A6%81%E7%9A%84%E6%A6%82%E5%BF%B5Dockerfile%E3%80%81%E9%95%9C%E5%83%8F-image-%E3%80%81%E5%AE%B9%E5%99%A8-Container"><span class="nav-number">3.</span> <span class="nav-text">三、Docker里面三个重要的概念Dockerfile、镜像(image)、容器(Container)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%AE%89%E8%A3%85Docker"><span class="nav-number">4.</span> <span class="nav-text">四、安装Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%BD%BF%E7%94%A8Docker%E5%AE%89%E8%A3%85MySQL"><span class="nav-number">5.</span> <span class="nav-text">五、使用Docker安装MySQL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E4%BD%BF%E7%94%A8Docker%E5%AE%89%E8%A3%85Redis"><span class="nav-number">6.</span> <span class="nav-text">六、使用Docker安装Redis</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%83%E3%80%81Docker%E9%83%A8%E7%BD%B2SpringBoot%E9%A1%B9%E7%9B%AE"><span class="nav-number">7.</span> <span class="nav-text">七、Docker部署SpringBoot项目</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style="display: inline-block">&copy; 2022 &mdash; <span itemprop="copyrightYear">2023</span>
+  <span class="author" itemprop="copyrightHolder">Cr.</span>
+
+  
+  &nbsp;&nbsp; | &nbsp;&nbsp;
+</div>
+
+        
+<div class="busuanzi-count" style="display: inline-block">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      UV
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      PV
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <span style="font-family:'Source Sans Pro','Helvetica Neue',Arial,sans-serif;font-size:1.2em;font-weight:600">TOP</span>
+    </div>
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/mo.min.js"></script>
+  <script>$(function(){$("a").not(".nav-link,.cloud-tie-join-count,.ignore-href,.jstree-anchor").addClass("animsition-link")});var burst1=new mojs.Burst({left:0,top:0,radius:{5:40},children:{shape:"circle",fill:["red","cyan","orange"],fillOpacity:.8,radiusX:3.5,radiusY:3.5}});document.addEventListener("click",function(a){null==a.target.href&&"footer"!=a.target.className&&"copyright"!=a.target.className&&"author__urls social-icons"!=a.target.className&&"author__avatar"!=a.target.className&&"sidebar sidebar-active"!=a.target.className&&burst1.tune({x:a.pageX,y:a.pageY}).generate().replay()})</script>
+  <div data-name="mojs-shape"></div>
+  
+</body>
+</html>

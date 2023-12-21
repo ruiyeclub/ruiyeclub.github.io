@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next tumo" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/tumo.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ray4j's Blog" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="整合mail发送邮件，其实就是通过代码来操作发送邮件的步骤，编辑收件人、邮件内容、邮件附件等等。通过邮件可以拓展出短信验证码、消息通知等业务。 一、pom文件引入依赖123456789&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot整合Mail发送邮件&amp;发送模板邮件">
+<meta property="og:url" content="http://ray4j.top/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Mail%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6-%E5%8F%91%E9%80%81%E6%A8%A1%E6%9D%BF%E9%82%AE%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Ray4j.top">
+<meta property="og:description" content="整合mail发送邮件，其实就是通过代码来操作发送邮件的步骤，编辑收件人、邮件内容、邮件附件等等。通过邮件可以拓展出短信验证码、消息通知等业务。 一、pom文件引入依赖123456789&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/c2d0d1f35a98ed2c68a4fdc2e120dbc6.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/ce977f2c1c55d0f5c49f0d863f0eda89.png">
+<meta property="article:published_time" content="2022-06-01T01:38:58.000Z">
+<meta property="article:modified_time" content="2022-06-04T10:00:54.730Z">
+<meta property="article:author" content="Cr.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/c2d0d1f35a98ed2c68a4fdc2e120dbc6.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Tumo',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ray4j.top/2022/06/01/SpringBoot整合Mail发送邮件-发送模板邮件/"/>
+
+
+
+
+
+  <title>SpringBoot整合Mail发送邮件&发送模板邮件 | Ray4j.top</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" style="overflow-x:hidden;padding-right:320px" lang="en">
+
+  <style>@media (min-width:768px) and (max-width:991px){body .header-innerr{width:700px!important}}.header-innerr{margin:0 auto;padding:100px 0 70px;width:880px}@media (min-width:1600px){.container .header-innerr{width:1200px}}.header-innerr{position:relative}.header-innerr{padding:20px 0 0}.header-innerr:after,.header-innerr:before{content:" ";display:table}.header-innerr:after{clear:both}@media (max-width:767px){.header-innerr{width:auto;padding:10px;margin-bottom:-20px}}</style>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    
+    
+
+    <link href="/lib/font-awesome/css/font-merienda.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title" style="font-family:Merienda;font-size:1.3rem">Ray4j.top</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            HOME
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            ARCHIVES
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            ABOUT
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links/" rel="section">
+            LINKS
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+
+
+ </div>
+
+      <div class="header-innerr">
+        
+          <div class="note info" style="margin:0;letter-spacing:.15px">
+            🐤SpringBoot学习入门Demo，持续更新中...：
+            <a style="color:#40dab2;font-weight:600" 
+              href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" class="animsition-link">
+              https://github.com/ruiyeclub/SpringBoot-Hello
+            </a>
+          </div>
+        
+      </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://ray4j.top/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Mail%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6-%E5%8F%91%E9%80%81%E6%A8%A1%E6%9D%BF%E9%82%AE%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ray4j.top">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringBoot整合Mail发送邮件&发送模板邮件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-06-01T09:38:58+08:00">
+                2022-06-01
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>　　整合mail发送邮件，其实就是通过代码来操作发送邮件的步骤，编辑收件人、邮件内容、邮件附件等等。通过邮件可以拓展出短信验证码、消息通知等业务。</p>
+<h1 id="一、pom文件引入依赖"><a href="#一、pom文件引入依赖" class="headerlink" title="一、pom文件引入依赖"></a>一、pom文件引入依赖</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-mail<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--freemarker模板引擎是为了后面发送模板邮件 不需要的可以不引入--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-freemarker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="二、application-yml文件中配置"><a href="#二、application-yml文件中配置" class="headerlink" title="二、application.yml文件中配置"></a>二、application.yml文件中配置</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  mail:</span><br><span class="line">    host: smtp.qq.xyz #这里换成自己的邮箱类型 例如qq邮箱就写smtp.qq.com</span><br><span class="line">    username: xx@qq.com #QQ邮箱</span><br><span class="line">    password: xxxxxxxxxxx #邮箱密码或者授权码</span><br><span class="line">    protocol: smtp #发送邮件协议</span><br><span class="line">    properties.mail.smtp.auth: true</span><br><span class="line">    properties.mail.smtp.port: 465 #端口号465或587</span><br><span class="line">    properties.mail.smtp.starttls.enable: true</span><br><span class="line">    properties.mail.smtp.starttls.required: true</span><br><span class="line">    properties.mail.smtp.ssl.enable: true #开启SSL</span><br><span class="line">    default-encoding: utf-8</span><br><span class="line">freemarker:</span><br><span class="line">  cache: false # 缓存配置 开发阶段应该配置为false 因为经常会改</span><br><span class="line">  suffix: .html # 模版后缀名 默认为ftl</span><br><span class="line">  charset: UTF-8 # 文件编码</span><br><span class="line">  template-loader-path: classpath:/templates/  # 存放模板的文件夹，以resource文件夹为相对路径</span><br></pre></td></tr></table></figure>
+<p>邮箱密码暴露在配置文件很不安全，一般都是采取授权码的形式。点开邮箱，然后在账户栏里面点击生成授权码：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/c2d0d1f35a98ed2c68a4fdc2e120dbc6.png" alt="image.png"></p>
+<h1 id="三、编写MailUtils工具类"><a href="#三、编写MailUtils工具类" class="headerlink" title="三、编写MailUtils工具类"></a>三、编写MailUtils工具类</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MailUtils</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Spring官方提供的集成邮件服务的实现类，目前是Java后端发送邮件和集成邮件服务的主流工具。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> JavaMailSender mailSender;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从配置文件中注入发件人的姓名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.mail.username&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String fromEmail;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FreeMarkerConfigurer freeMarkerConfigurer;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送文本邮件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to      收件人</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject 标题</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content 正文</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendSimpleMail</span><span class="params">(String to, String subject, String content)</span> &#123;</span><br><span class="line">        <span class="type">SimpleMailMessage</span> <span class="variable">message</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleMailMessage</span>();</span><br><span class="line">        <span class="comment">//发件人</span></span><br><span class="line">        message.setFrom(fromEmail);</span><br><span class="line">        message.setTo(to);</span><br><span class="line">        message.setSubject(subject);</span><br><span class="line">        message.setText(content);</span><br><span class="line">        mailSender.send(message);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送html邮件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendHtmlMail</span><span class="params">(String to, String subject, String content)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//注意这里使用的是MimeMessage</span></span><br><span class="line">            <span class="type">MimeMessage</span> <span class="variable">message</span> <span class="operator">=</span> mailSender.createMimeMessage();</span><br><span class="line">            <span class="type">MimeMessageHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MimeMessageHelper</span>(message, <span class="literal">true</span>);</span><br><span class="line">            helper.setFrom(fromEmail);</span><br><span class="line">            helper.setTo(to);</span><br><span class="line">            helper.setSubject(subject);</span><br><span class="line">            <span class="comment">//第二个参数：格式是否为html</span></span><br><span class="line">            helper.setText(content, <span class="literal">true</span>);</span><br><span class="line">            mailSender.send(message);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (MessagingException e)&#123;</span><br><span class="line">            log.error(<span class="string">&quot;发送邮件时发生异常！&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送模板邮件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> template</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendTemplateMail</span><span class="params">(String to, String subject, String template)</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 获得模板</span></span><br><span class="line">            <span class="type">Template</span> <span class="variable">template1</span> <span class="operator">=</span> freeMarkerConfigurer.getConfiguration().getTemplate(template);</span><br><span class="line">            <span class="comment">// 使用Map作为数据模型，定义属性和值</span></span><br><span class="line">            Map&lt;String,Object&gt; model = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">            model.put(<span class="string">&quot;myname&quot;</span>,<span class="string">&quot;Ray。&quot;</span>);</span><br><span class="line">            <span class="comment">// 传入数据模型到模板，替代模板中的占位符，并将模板转化为html字符串</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">templateHtml</span> <span class="operator">=</span> FreeMarkerTemplateUtils.processTemplateIntoString(template1,model);</span><br><span class="line">            <span class="comment">// 该方法本质上还是发送html邮件，调用之前发送html邮件的方法</span></span><br><span class="line">            <span class="built_in">this</span>.sendHtmlMail(to, subject, templateHtml);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (TemplateException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;发送邮件时发生异常！&quot;</span>, e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;发送邮件时发生异常！&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送带附件的邮件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> to</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> content</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> filePath</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendAttachmentsMail</span><span class="params">(String to, String subject, String content, String filePath)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">MimeMessage</span> <span class="variable">message</span> <span class="operator">=</span> mailSender.createMimeMessage();</span><br><span class="line">            <span class="comment">//要带附件第二个参数设为true</span></span><br><span class="line">            <span class="type">MimeMessageHelper</span> <span class="variable">helper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MimeMessageHelper</span>(message, <span class="literal">true</span>);</span><br><span class="line">            helper.setFrom(fromEmail);</span><br><span class="line">            helper.setTo(to);</span><br><span class="line">            helper.setSubject(subject);</span><br><span class="line">            helper.setText(content, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">            <span class="type">FileSystemResource</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileSystemResource</span>(<span class="keyword">new</span> <span class="title class_">File</span>(filePath));</span><br><span class="line">            <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> filePath.substring(filePath.lastIndexOf(File.separator));</span><br><span class="line">            helper.addAttachment(fileName, file);</span><br><span class="line">            mailSender.send(message);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (MessagingException e)&#123;</span><br><span class="line">            log.error(<span class="string">&quot;发送邮件时发生异常！&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>MailUtils其实就是进一步封装Mail提供的JavaMailSender类，根据业务场景可以在工具类里面添加对应的方法，这里提供了发送文本邮件、html邮件、模板邮件、附件邮件的方法。</p>
+<h1 id="四、Controller层的实现"><a href="#四、Controller层的实现" class="headerlink" title="四、Controller层的实现"></a>四、Controller层的实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Api(tags = &quot;邮件管理&quot;)</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/mail&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MailController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MailUtils mailUtils;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送注册验证码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 验证码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;发送注册验证码&quot;)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/test&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">send</span><span class="params">()</span>&#123;</span><br><span class="line">        mailUtils.sendSimpleMail(<span class="string">&quot;ruiyeclub@foxmail.com&quot;</span>,<span class="string">&quot;普通文本邮件&quot;</span>,<span class="string">&quot;普通文本邮件内容&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送注册验证码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 验证码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;发送注册验证码&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/sendHtml&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendTemplateMail</span><span class="params">()</span>&#123;</span><br><span class="line">        mailUtils.sendHtmlMail(<span class="string">&quot;ruiyeclub@foxmail.com&quot;</span>,<span class="string">&quot;一封html测试邮件&quot;</span>,</span><br><span class="line">                <span class="string">&quot;&lt;div style=\&quot;text-align: center;position: absolute;\&quot; &gt;\n&quot;</span></span><br><span class="line">                        +<span class="string">&quot;&lt;h3&gt;\&quot;一封html测试邮件\&quot;&lt;/h3&gt;\n&quot;</span></span><br><span class="line">                        + <span class="string">&quot;&lt;div&gt;一封html测试邮件&lt;/div&gt;\n&quot;</span></span><br><span class="line">                        + <span class="string">&quot;&lt;/div&gt;&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;发送html模板邮件&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/sendTemplate&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendTemplate</span><span class="params">()</span>&#123;</span><br><span class="line">        mailUtils.sendTemplateMail(<span class="string">&quot;ruiyeclub@foxmail.com&quot;</span>, <span class="string">&quot;基于模板的html邮件&quot;</span>, <span class="string">&quot;hello.html&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;发送带附件的邮件&quot;)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;sendAttachmentsMail&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">sendAttachmentsMail</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">filePath</span> <span class="operator">=</span> <span class="string">&quot;D:\\projects\\springboot\\template.png&quot;</span>;</span><br><span class="line">        mailUtils.sendAttachmentsMail(<span class="string">&quot;xxxx@xx.com&quot;</span>, <span class="string">&quot;带附件的邮件&quot;</span>, <span class="string">&quot;邮件中有附件&quot;</span>, filePath);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了方便测试，这里使用了swagger3，详情可以查看<a href="SpringBoot%E6%95%B4%E5%90%88Swagger3%E7%94%9F%E6%88%90%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3">SpringBoot整合Swagger3生成接口文档</a>。</p>
+<p>发送模板邮件这里，会读取resources下面的templates文件夹，测试中读取的是hello.html，具体代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>freemarker简单示例<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello Freemarker<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>My name is $&#123;myname&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="五、测试结果"><a href="#五、测试结果" class="headerlink" title="五、测试结果"></a>五、测试结果</h1><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/ce977f2c1c55d0f5c49f0d863f0eda89.png" alt="image.png"><br>如果需要达到通过邮件发送验证码的功能，可以使用redis。后台随机生成验证码，然后把用户的主键设为key，验证码的内容设为value，还可以设置个60s过期存储，发送成功后，用户登录通过主键从redis拿到对应的验证码，然后再进行登录验证就好了。</p>
+<blockquote>
+<p>参考链接：[Spring Boot整合邮件配置](Spring Boot整合邮件配置)</p>
+</blockquote>
+<p>GitHub地址：<a target="_blank" rel="noopener" href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a></p>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你觉得这篇文章帮助到了你，你可以帮作者买一杯果汁表示鼓励</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_ray.jpg" alt=" WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_ray.jpg" alt=" Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Swagger3%E7%94%9F%E6%88%90%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3/" rel="next" title="SpringBoot整合Swagger3生成接口文档">
+                <i class="fa fa-chevron-left"></i> SpringBoot整合Swagger3生成接口文档
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/06/01/SpringCloud%E4%BD%BF%E7%94%A8Feign%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1%E8%B8%A9%E7%9A%84%E5%9D%91/" rel="prev" title="SpringCloud使用Feign服务通信踩的坑">
+                SpringCloud使用Feign服务通信踩的坑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+    
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">Contents</li>
+          <li class="sidebar-nav-overview" data-target="site-overview">Overview</li>
+        </ul>
+      
+
+  
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-overview">
+          <div class="sidebar-sticky sticky">
+            <div itemscope="" itemtype="http://schema.org/Person">
+              <div class="author__avatar">
+                
+                  <img itemprop="image"
+                    src="/images/avatar.jpg"
+                    alt="" /> 
+                
+              </div>
+              <div class="author__content">
+                <h3 class="author__name" itemprop="name"></h3>
+                <p class="author__bio" itemprop="description"></p>
+              </div>
+              
+                <div class="author__urls-wrapper">
+                  <button class="btn btn--inverse">Follow</button>
+                  <ul class="author__urls social-icons">
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub" target="_blank" title="GitHub">
+                            
+                              <i class="fa fa-fw fa-github"></i>&nbsp;&nbsp;GitHub</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/ray4j.top" target="_blank" title="Ray4j.top">
+                            
+                              <i class="fa fa-fw fa-link"></i>&nbsp;&nbsp;Ray4j.top</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" title="Springboot-Hello">
+                            
+                              <i class="fa fa-fw fa-cloud"></i>&nbsp;&nbsp;Springboot-Hello</a>
+                      </li>
+                    
+
+                    
+                      <li class="menu-item menu-item-search">
+                        
+                          <a href="javascript:;" class="popup-trigger">
+                          <i class="fa fa-fw fa-search"></i>&nbsp;&nbsp;
+                        
+                          
+                          
+                          Search
+                        </a>
+                      </li>
+                    
+
+                    
+                      <div class="site-search">
+                        
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+                      </div>
+                    
+
+                  </ul>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81pom%E6%96%87%E4%BB%B6%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="nav-number">1.</span> <span class="nav-text">一、pom文件引入依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81application-yml%E6%96%87%E4%BB%B6%E4%B8%AD%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">二、application.yml文件中配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99MailUtils%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">3.</span> <span class="nav-text">三、编写MailUtils工具类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Controller%E5%B1%82%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">四、Controller层的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">五、测试结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style="display: inline-block">&copy; 2022 &mdash; <span itemprop="copyrightYear">2023</span>
+  <span class="author" itemprop="copyrightHolder">Cr.</span>
+
+  
+  &nbsp;&nbsp; | &nbsp;&nbsp;
+</div>
+
+        
+<div class="busuanzi-count" style="display: inline-block">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      UV
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      PV
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <span style="font-family:'Source Sans Pro','Helvetica Neue',Arial,sans-serif;font-size:1.2em;font-weight:600">TOP</span>
+    </div>
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/mo.min.js"></script>
+  <script>$(function(){$("a").not(".nav-link,.cloud-tie-join-count,.ignore-href,.jstree-anchor").addClass("animsition-link")});var burst1=new mojs.Burst({left:0,top:0,radius:{5:40},children:{shape:"circle",fill:["red","cyan","orange"],fillOpacity:.8,radiusX:3.5,radiusY:3.5}});document.addEventListener("click",function(a){null==a.target.href&&"footer"!=a.target.className&&"copyright"!=a.target.className&&"author__urls social-icons"!=a.target.className&&"author__avatar"!=a.target.className&&"sidebar sidebar-active"!=a.target.className&&burst1.tune({x:a.pageX,y:a.pageY}).generate().replay()})</script>
+  <div data-name="mojs-shape"></div>
+  
+</body>
+</html>
