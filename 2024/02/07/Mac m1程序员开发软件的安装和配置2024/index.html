@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next tumo" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/tumo.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ray4j's Blog" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Mac m系列芯片使用的是arm架构，很多软件都有推出设配版本，这里记录一下安装过程。  一、Jdk的安装和配置zulu推出了设配arm架构的jdk版本，下载地址zulu jdk，下载后直接安装就可以。  二、Idea的安装和破解下载jetbara和破解包，破解包可以通过网站下载，激活码也在这个网站上面，下载jar后解压，待会需要用到srcpts脚本还有激活码。  打开终端进入scripts文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac m1程序员开发软件的安装和配置2024">
+<meta property="og:url" content="http://ruiyeclub.cn/2024/02/07/Mac%20m1%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BC%80%E5%8F%91%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE2024/index.html">
+<meta property="og:site_name" content="Ruiyeclub">
+<meta property="og:description" content="Mac m系列芯片使用的是arm架构，很多软件都有推出设配版本，这里记录一下安装过程。  一、Jdk的安装和配置zulu推出了设配arm架构的jdk版本，下载地址zulu jdk，下载后直接安装就可以。  二、Idea的安装和破解下载jetbara和破解包，破解包可以通过网站下载，激活码也在这个网站上面，下载jar后解压，待会需要用到srcpts脚本还有激活码。  打开终端进入scripts文件">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206133833207.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206134345771.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206135441039.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206143034823.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206143847348.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206181908542.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206212509503.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206214423691.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206214940022.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206221554629.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206222851331.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206224929440.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206231528311.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207120554050.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207135505696.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/dd5ae043bebb49158d6d295101b508ac.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207143540188.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151046489.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151712209.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207152013022.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151955004.png">
+<meta property="article:published_time" content="2024-02-07T07:49:30.000Z">
+<meta property="article:modified_time" content="2024-02-07T07:51:38.416Z">
+<meta property="article:author" content="Cr.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206133833207.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Tumo',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ruiyeclub.cn/2024/02/07/Mac m1程序员开发软件的安装和配置2024/"/>
+
+
+
+
+
+  <title>Mac m1程序员开发软件的安装和配置2024 | Ruiyeclub</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" style="overflow-x:hidden;padding-right:320px" lang="en">
+
+  <style>@media (min-width:768px) and (max-width:991px){body .header-innerr{width:700px!important}}.header-innerr{margin:0 auto;padding:100px 0 70px;width:880px}@media (min-width:1600px){.container .header-innerr{width:1200px}}.header-innerr{position:relative}.header-innerr{padding:20px 0 0}.header-innerr:after,.header-innerr:before{content:" ";display:table}.header-innerr:after{clear:both}@media (max-width:767px){.header-innerr{width:auto;padding:10px;margin-bottom:-20px}}</style>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    
+    
+
+    <link href="/lib/font-awesome/css/font-merienda.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title" style="font-family:Merienda;font-size:1.3rem">Ruiyeclub</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            HOME
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            ARCHIVES
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            ABOUT
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links/" rel="section">
+            LINKS
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+
+
+ </div>
+
+      <div class="header-innerr">
+        
+          <div class="note info" style="margin:0;letter-spacing:.15px">
+            🐤SpringBoot学习入门Demo，持续更新中...：
+            <a style="color:#40dab2;font-weight:600" 
+              href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" class="animsition-link">
+              https://github.com/ruiyeclub/SpringBoot-Hello
+            </a>
+          </div>
+        
+      </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://ruiyeclub.cn/2024/02/07/Mac%20m1%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BC%80%E5%8F%91%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE2024/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mac m1程序员开发软件的安装和配置2024</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-02-07T15:49:30+08:00">
+                2024-02-07
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>Mac m系列芯片使用的是arm架构，很多软件都有推出设配版本，这里记录一下安装过程。</p>
+</blockquote>
+<h2 id="一、Jdk的安装和配置"><a href="#一、Jdk的安装和配置" class="headerlink" title="一、Jdk的安装和配置"></a>一、Jdk的安装和配置</h2><p>zulu推出了设配arm架构的jdk版本，下载地址<a target="_blank" rel="noopener" href="https://www.azul.com/downloads/?package=jdk#zulu">zulu jdk</a>，下载后直接安装就可以。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206133833207.png" alt="image-20240206133833207"></p>
+<h2 id="二、Idea的安装和破解"><a href="#二、Idea的安装和破解" class="headerlink" title="二、Idea的安装和破解"></a>二、Idea的安装和破解</h2><p>下载jetbara和破解包，破解包可以通过<a target="_blank" rel="noopener" href="https://3.jetbra.in/">网站</a>下载，激活码也在这个网站上面，下载jar后解压，待会需要用到srcpts脚本还有激活码。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206134345771.png" alt="image-20240206134345771"></p>
+<p>打开终端进入scripts文件夹，执行install.sh脚本。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206135441039.png" alt="image-20240206135441039"></p>
+<p>部分系统版本可能会和我一样出现了<code>Operation not permitted</code>。</p>
+<p>原因：mac电脑启用了SIP（System Integrity Protection），增加了rootless机制，导致即使在root权限下依然无法修改文件，关闭该保护机制才能进行修改。<br>参考文档：<a target="_blank" rel="noopener" href="https://sspai.com/post/55066">macOS 开启或关闭 SIP</a>（m1需要一直按着开机键进入保护模式）</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206143034823.png" alt="image-20240206143034823"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206143847348.png" alt="image-20240206143847348"></p>
+<p>此时已经成功关闭，重新执行install.js脚本，显示<code>done</code>表示成功执行。</p>
+<p>在idea输入激活码即可，如果出现<code>Key is invalid</code>建议重新一下电脑或者重新安装软件。</p>
+<h2 id="三、配置Maven"><a href="#三、配置Maven" class="headerlink" title="三、配置Maven"></a>三、配置Maven</h2><p>个人习惯使用idea自带的maven，版本3.9.5，只需要修改成阿里云镜像就可以正常使用了。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206181908542.png" alt="image-20240206181908542"></p>
+<p>进入.m2文件夹中，如果找不到按住<code>command</code>+<code>shift</code>+<code>.</code>显示隐藏文件夹，找到.m2文件夹，进入终端，在终端中输入命令<code>touch settings.xml</code>新建xml文件，复制粘贴以下内容。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">settings</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 本地下载的jar包地址 配置我们的数据盘即可--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>/Users/raychen/.m2/repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 阿里云仓库 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>alimaven<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>aliyun maven<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/repositories/central/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">        <span class="comment">&lt;!-- 中央仓库1 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>repo1<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>Human Readable Name for this Mirror.<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://repo1.maven.org/maven2/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">        <span class="comment">&lt;!-- 中央仓库2 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>repo2<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>Human Readable Name for this Mirror.<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://repo2.maven.org/maven2/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 阿里云的maven路径, --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.aliyun.com/nexus/content/groups/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="四、Homebrew的安装和配置"><a href="#四、Homebrew的安装和配置" class="headerlink" title="四、Homebrew的安装和配置"></a>四、Homebrew的安装和配置</h2><blockquote>
+<p>Homebrew是一款Mac OS平台下的软件包管理工具，拥有安装、卸载、更新、查看、搜索等很多实用的功能。</p>
+</blockquote>
+<p>1.Homebrew使用</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">brew -v 查看当前版本</span><br><span class="line">brew list —列出已安装的软件</span><br><span class="line">brew update —更新Homebrew</span><br><span class="line">brew install 软件名 —安装软件</span><br><span class="line">brew search 软件名 —搜索软件</span><br><span class="line">brew uninstall 软件名 —卸载软件</span><br><span class="line">brew update —更新所有软件</span><br><span class="line">brew upgrade 软件名 —更新具体软件</span><br><span class="line">brew outdated —查看哪些已安装的程序需要更新</span><br></pre></td></tr></table></figure>
+
+<p>2.安装Homebrew的国内镜像</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c &quot;$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206212509503.png" alt="image-20240206212509503"></p>
+<p>3.安装git：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install git</span><br></pre></td></tr></table></figure>
+
+<p>4.验证git是否安装成功：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git --version</span><br></pre></td></tr></table></figure>
+
+<p>5.设置git账户名称和邮箱</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;用户名&quot;</span><br><span class="line">git config --global user.email &quot;邮箱&quot; </span><br></pre></td></tr></table></figure>
+
+<p>6.查看git账户名称和邮箱</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config user.name</span><br><span class="line">git config user.email</span><br></pre></td></tr></table></figure>
+
+<p>7.ssh密钥的生成和配置</p>
+<p>ssh指secure shell(一种安全的网络协议)，git使用这种协议进行远程加密登录。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -C &quot;邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206214423691.png" alt="image-20240206214423691"></p>
+<p>然后在跳转到指定文件夹中，输入<code>cat id_rsa.pub </code>复制密钥。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206214940022.png" alt="image-20240206214940022"></p>
+<h2 id="五、Mysql的安装和配置"><a href="#五、Mysql的安装和配置" class="headerlink" title="五、Mysql的安装和配置"></a>五、Mysql的安装和配置</h2><p>1.去<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/">官网</a>下载Mysql安装包</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206221554629.png" alt="image-20240206221554629"></p>
+<p>安装成功后发现还是没法直接使用mysql：</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206222851331.png" alt="image-20240206222851331"></p>
+<p>这里需要配置一下环境变量</p>
+<p>2.关于mac系统环境变量配置：</p>
+<ul>
+<li>open&#x2F;vim &#x2F;etc&#x2F;profile（不建议修改这个文件）全局（公有）配置，不管是哪个用户，登陆时都会读取该文件。</li>
+<li>&#x2F;etc&#x2F;bashrc （一般在这个文件中添加系统级环境变量）全局（公有）配置，bash shell执行时，不管是哪种方式，都会读取此文件。</li>
+<li>~&#x2F;.bash_profile （一般在这个文件中添加用户级环境变量）（注：Linux里面时.bashrc而mac是.bash_proofile）若bash shell是以login方式执行时，才会读取此文件。该文件仅仅执行一次，默认情况下，他设置一些环境变量。</li>
+</ul>
+<p>3.配置mysql的环境变量</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206224929440.png" alt="image-20240206224929440"></p>
+<p>在文件后添加：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$PATH:/usr/locol/mysql/bin</span><br><span class="line">export PATH=$PATH:/usr/local/mysql/support-files</span><br></pre></td></tr></table></figure>
+
+<p>如果你和我一样该文件显示readonly，退出时<code>:wq!</code>保存，记得要加感叹号。</p>
+<p>刷新配置文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<p>如果执行完上述操作，还是报错：zsh:command not found: mysql</p>
+<p>4.设置指令别名</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>写入：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias mysql=/usr/local/mysql/bin/mysql</span><br></pre></td></tr></table></figure>
+
+<p>刷新配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206231528311.png" alt="image-20240206231528311"></p>
+<h2 id="六、Navicat的安装和使用"><a href="#六、Navicat的安装和使用" class="headerlink" title="六、Navicat的安装和使用"></a>六、Navicat的安装和使用</h2><p><a target="_blank" rel="noopener" href="https://macwk.cn/%E4%B8%AD%E6%90%9C%E7%B4%A2Navicat%E7%A0%B4%E8%A7%A3%E7%89%88%EF%BC%8C%E7%84%B6%E5%90%8E%E4%B8%8B%E8%BD%BD%E6%89%93%E5%BC%80%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%92%8C%E6%88%91%E4%B8%80%E6%A0%B7%E6%98%AF%E6%96%B0%E7%B3%BB%E7%BB%9F%EF%BC%8C%E5%8F%AF%E8%83%BD%E4%BC%9A%E9%81%87%E5%88%B0%E6%8F%90%E7%A4%BA%E6%96%87%E4%BB%B6%E5%B7%B2%E6%8D%9F%E5%9D%8F%EF%BC%8C%E9%9C%80%E8%A6%81%E8%BE%93%E5%85%A5%E5%91%BD%E4%BB%A4%EF%BC%9A">https://macwk.cn/中搜索Navicat破解版，然后下载打开，如果和我一样是新系统，可能会遇到提示文件已损坏，需要输入命令：</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo xattr -r -d com.apple.quarantine /Applications/Navicat\ Premium.app</span><br></pre></td></tr></table></figure>
+
+<p>然后连接我们的mysql就OK了。</p>
+<h2 id="七、Node-js的安装配置和使用"><a href="#七、Node-js的安装配置和使用" class="headerlink" title="七、Node.js的安装配置和使用"></a>七、Node.js的安装配置和使用</h2><p>准备通过homebrew安装node，终端输入命令：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install node #默认安装最新版</span><br></pre></td></tr></table></figure>
+
+<p>查看安装是否成功：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm -v #查看npm版本</span><br><span class="line">node -v #查看node版本</span><br><span class="line">brew list #查看安装的软件</span><br></pre></td></tr></table></figure>
+
+<p>安装国内淘宝镜像源（注意⚠️：2024年1 月 22 日，淘宝原镜像域名（registry.npm.taobao.org）的 HTTPS <a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E8%AF%81%E4%B9%A6&spm=1001.2101.3001.7020">证书</a>正式到期，改用新的域名地址执行命令）：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g cnpm --registry=https://registry.npmmirror.com</span><br><span class="line">cnpm -v #查看cnpm版本</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207120554050.png" alt="image-20240207120554050"></p>
+<h2 id="八、Docker的安装配置和使用"><a href="#八、Docker的安装配置和使用" class="headerlink" title="八、Docker的安装配置和使用"></a>八、Docker的安装配置和使用</h2><p>1.去<a target="_blank" rel="noopener" href="https://www.docker.com/products/docker-desktop/">官网</a>下载docker客户端</p>
+<p>2.下载安装后，可通过命令查看是否安装成功：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207135505696.png" alt="image-20240207135505696"></p>
+<p>3.为了方便后续拉取镜像， 我们需要配置一下docker镜像源（<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors">阿里云镜像加速器</a>）</p>
+<p>4.<a target="_blank" rel="noopener" href="https://fzxzd0ha.mirror.aliyuncs.com加到"registry-mirrors"的数组里,点击/">https://fzxzd0ha.mirror.aliyuncs.com加到&quot;registry-mirrors&quot;的数组里，点击</a> Apply &amp; Restart按钮，等待Docker重启并应用配置的镜像加速器。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/dd5ae043bebb49158d6d295101b508ac.png" alt="img"></p>
+<p>具体的使用可查看：<a href="http://ruiyeclub.cn/2022/02/01/Docker%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E4%B9%8B%E9%83%A8%E7%BD%B2SpringBoot%E9%A1%B9%E7%9B%AE/">Docker快速上手之部署SpringBoot项目</a></p>
+<h2 id="九、Redis的安装和配置"><a href="#九、Redis的安装和配置" class="headerlink" title="九、Redis的安装和配置"></a>九、Redis的安装和配置</h2><p>1.通过homebrew安装：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install redis</span><br></pre></td></tr></table></figure>
+
+<p>2.启动和关闭redis：</p>
+<ul>
+<li><pre><code class="xml">官方启动方式（不推荐，重启后需要再次打开服务）：
+redis-server 			 #启动Redis服务
+redis-cli shutdown #停止redis服务
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```xml</span><br><span class="line">  使用brew命令</span><br><span class="line">  brew services start redis 	#启动redis服务</span><br><span class="line">  brew services stop redis 		#关闭redis服务</span><br><span class="line">  brew services restart redis #重启redis服务</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207143540188.png" alt="image-20240207143540188"></p>
+<p>3.启动后输入<code>redis-cli</code>打开客户端。</p>
+<p>4.安装redis可视化软件，有很多可视化软件可以选择，这里我使用的是[Tiny RDM。</p>
+<p><strong>如果在 macOS 上安装后无法打开，请执行以下命令然后重新打开：</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo xattr -d com.apple.quarantine /Applications/Tiny\ RDM.app </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151046489.png" alt="image-20240207151046489"></p>
+<h2 id="十、Typora的安装和破解"><a href="#十、Typora的安装和破解" class="headerlink" title="十、Typora的安装和破解"></a>十、Typora的安装和破解</h2><p>1.去官网选择mac版本下载安装 <a target="_blank" rel="noopener" href="https://www.typoraio.cn/">typora下载</a>。</p>
+<p>2.通过修改typora文件进行破解，我的文件路径在<code>/Applications/Typora.app/Contents/Resources/TypeMark/page-dist/static/js</code>找到文件：</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151712209.png" alt="image-20240207151712209"></p>
+<p>3.输入 hasActivated&#x3D;”true”&#x3D;&#x3D;e.hasActivated 进行搜索，然后将它改为 hasActivated&#x3D;”true”&#x3D;&#x3D;”true”。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207152013022.png" alt="image-20240207152013022"></p>
+<p>4.重新打开软件，激活成功：</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151955004.png" alt="image-20240207151955004"></p>
+<p>具体的使用可查看：<a href="http://ruiyeclub.cn/2024/01/04/%E5%BC%80%E5%8F%91%E5%BF%85%E5%A4%87%E8%BD%AF%E4%BB%B6-Typora%E9%85%8D%E5%90%88PicGo%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE(%E8%BD%AC)/">开发必备软件-Typora配合PicGo阿里云图床配置(转)</a></p>
+<p>参考视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV16L4y1b75R/?share_source=copy_web&vd_source=c31decb11361be9e30ea99abeef3e302">Mac M1 程序员开发环境的安装与配置</a></p>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你觉得这篇文章帮助到了你，你可以帮作者买一杯果汁表示鼓励</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_ray.jpg" alt=" WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_ray.jpg" alt=" Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/01/31/%E5%85%B3%E4%BA%8EEIP1559%E4%B8%8B%E7%9A%84GAS%E8%B4%B9%E8%AE%BE%E7%BD%AE%E9%97%AE%E9%A2%98/" rel="next" title="关于EIP1559下的GAS费设置问题">
+                <i class="fa fa-chevron-left"></i> 关于EIP1559下的GAS费设置问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+    
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">Contents</li>
+          <li class="sidebar-nav-overview" data-target="site-overview">Overview</li>
+        </ul>
+      
+
+  
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-overview">
+          <div class="sidebar-sticky sticky">
+            <div itemscope="" itemtype="http://schema.org/Person">
+              <div class="author__avatar">
+                
+                  <img itemprop="image"
+                    src="/images/avatar.jpg"
+                    alt="" /> 
+                
+              </div>
+              <div class="author__content">
+                <h3 class="author__name" itemprop="name"></h3>
+                <p class="author__bio" itemprop="description"></p>
+              </div>
+              
+                <div class="author__urls-wrapper">
+                  <button class="btn btn--inverse">Follow</button>
+                  <ul class="author__urls social-icons">
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub" target="_blank" title="GitHub">
+                            
+                              <i class="fa fa-fw fa-github"></i>&nbsp;&nbsp;GitHub</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/ray4j.top" target="_blank" title="Ray4j.top">
+                            
+                              <i class="fa fa-fw fa-link"></i>&nbsp;&nbsp;Ray4j.top</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" title="Springboot-Hello">
+                            
+                              <i class="fa fa-fw fa-cloud"></i>&nbsp;&nbsp;Springboot-Hello</a>
+                      </li>
+                    
+
+                    
+                      <li class="menu-item menu-item-search">
+                        
+                          <a href="javascript:;" class="popup-trigger">
+                          <i class="fa fa-fw fa-search"></i>&nbsp;&nbsp;
+                        
+                          
+                          
+                          Search
+                        </a>
+                      </li>
+                    
+
+                    
+                      <div class="site-search">
+                        
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+                      </div>
+                    
+
+                  </ul>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81Jdk%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">一、Jdk的安装和配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Idea%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E7%A0%B4%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">二、Idea的安装和破解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%85%8D%E7%BD%AEMaven"><span class="nav-number">3.</span> <span class="nav-text">三、配置Maven</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Homebrew%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">四、Homebrew的安装和配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Mysql%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">五、Mysql的安装和配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81Navicat%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">六、Navicat的安装和使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81Node-js%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">七、Node.js的安装配置和使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81Docker%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">8.</span> <span class="nav-text">八、Docker的安装配置和使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81Redis%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE"><span class="nav-number">9.</span> <span class="nav-text">九、Redis的安装和配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81Typora%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E7%A0%B4%E8%A7%A3"><span class="nav-number">10.</span> <span class="nav-text">十、Typora的安装和破解</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style="display: inline-block">&copy; 2022 &mdash; <span itemprop="copyrightYear">2024</span>
+  <span class="author" itemprop="copyrightHolder">Cr.</span>
+
+  
+  &nbsp;&nbsp; | &nbsp;&nbsp;
+</div>
+
+        
+<div class="busuanzi-count" style="display: inline-block">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      UV
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      PV
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <span style="font-family:'Source Sans Pro','Helvetica Neue',Arial,sans-serif;font-size:1.2em;font-weight:600">TOP</span>
+    </div>
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/mo.min.js"></script>
+  <script>$(function(){$("a").not(".nav-link,.cloud-tie-join-count,.ignore-href,.jstree-anchor").addClass("animsition-link")});var burst1=new mojs.Burst({left:0,top:0,radius:{5:40},children:{shape:"circle",fill:["red","cyan","orange"],fillOpacity:.8,radiusX:3.5,radiusY:3.5}});document.addEventListener("click",function(a){null==a.target.href&&"footer"!=a.target.className&&"copyright"!=a.target.className&&"author__urls social-icons"!=a.target.className&&"author__avatar"!=a.target.className&&"sidebar sidebar-active"!=a.target.className&&burst1.tune({x:a.pageX,y:a.pageY}).generate().replay()})</script>
+  <div data-name="mojs-shape"></div>
+  
+</body>
+</html>
