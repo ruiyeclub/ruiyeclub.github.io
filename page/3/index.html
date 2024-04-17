@@ -234,6 +234,101 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://ruiyeclub.cn/2022/02/07/Idea%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6%E5%AE%9E%E7%8E%B0%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E6%90%AD%E5%BB%BASpringBoot%E9%A1%B9%E7%9B%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/02/07/Idea%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6%E5%AE%9E%E7%8E%B0%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E6%90%AD%E5%BB%BASpringBoot%E9%A1%B9%E7%9B%AE/" itemprop="url">Idea使用插件实现逆向工程搭建SpringBoot项目</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-07T17:35:40+08:00">
+                2022-02-07
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>之前写SpringBoot项目，每次都要手动去写实体类、dao层啥的，尤其是数据库表字段特别多的时候，特别麻烦。然后很多小伙伴都会用逆向工程来自动生成这些类，省去许多没必要的代码量，但是Mybatis的逆向工程依然需要配置，导逆向工程的jar啊，还有编写generatorConfig.xml文件啊（有兴趣的朋友可以看看这篇<a href="%E5%8D%9A%E5%AE%A2"></a>）。今天逛gitee的时候，看到了一款可以免去许多配置的idea逆向工程插件，几个步骤简单使用一下</p>
+<p>这个插件。<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/03211e75a42c7cdfb6feeae5e6e72104.png" alt="image.png"></p>
+<h3 id="一、下载并安装EasyCode插件"><a href="#一、下载并安装EasyCode插件" class="headerlink" title="一、下载并安装EasyCode插件"></a>一、下载并安装EasyCode插件</h3><p>Setting-&gt;Plugins。搜索EasyCode插件，并重启Idea编辑器<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/adb271ad8f16d31f54fe857f62466897.png" alt="image.png"></p>
+<h3 id="二、配置MYSQL数据源"><a href="#二、配置MYSQL数据源" class="headerlink" title="二、配置MYSQL数据源"></a>二、配置MYSQL数据源</h3><p>点击Idea右侧的Database，然后再点一下加号，选择你的数据库类型，我这里选择的是MySQL<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/867fa36ed0e166104a784b39b6313f1f.png" alt="image.png"></p>
+<h3 id="三、配置连接参数"><a href="#三、配置连接参数" class="headerlink" title="三、配置连接参数"></a>三、配置连接参数</h3><p>配置好自己的数据库连接参数后，点击Apply，然后再点击Schemas选择使用哪个数据库<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/9cebd4ceea4ccbfea4a7bd42cd6b01af.png" alt="image.png"></p>
+<h3 id="四、生成代码"><a href="#四、生成代码" class="headerlink" title="四、生成代码"></a>四、生成代码</h3><p>如图，点击Generate Code<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/c3b18d5697e490ecb39f5d99b8a759b9.png" alt="image.png"><br>这里选择项目模块，还有需要生成的代码<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/eb737e2b3d63f054f9d07b36805cfe6f.png" alt="image.png"><br>生成后的目录就这个样子，里面还写好了单表的CRUD操作<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/17c05c5e193dc89a1409c742da29680e.png" alt="image.png"></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://ruiyeclub.cn/2022/02/06/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E5%9B%9B)%EF%BC%9A%E5%B9%B6%E5%8F%91%E5%AE%B9%E5%99%A8(%E8%BD%AC)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
