@@ -75,7 +75,7 @@
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/3d0de6d7f169b639389384e8184829f5.png">
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/f175e9402c4d4bf3e98c78f055b6e9c6.png">
 <meta property="article:published_time" content="2022-02-01T09:35:40.000Z">
-<meta property="article:modified_time" content="2024-02-07T07:27:45.070Z">
+<meta property="article:modified_time" content="2024-04-17T07:24:29.537Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/2db39f1e0972b7dd1557c891d9300fdd.png">
@@ -335,7 +335,9 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
 
 <p>2.设置阿里云镜像源</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">```xml</span><br><span class="line">3.安装 Docker-CE</span><br><span class="line">```xml</span><br><span class="line">yum install docker-ce</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3.安装 Docker-CE</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce</span><br></pre></td></tr></table></figure>
 <p>4.查看是否安装成功</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/3d0de6d7f169b639389384e8184829f5.png" alt="image.png"></p>

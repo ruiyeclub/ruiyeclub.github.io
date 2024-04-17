@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207152013022.png">
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151955004.png">
 <meta property="article:published_time" content="2024-02-07T07:49:30.000Z">
-<meta property="article:modified_time" content="2024-02-07T07:51:38.416Z">
+<meta property="article:modified_time" content="2024-04-17T07:24:29.538Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206133833207.png">
@@ -416,14 +416,12 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install redis</span><br></pre></td></tr></table></figure>
 
 <p>2.启动和关闭redis：</p>
-<ul>
-<li><pre><code class="xml">官方启动方式（不推荐，重启后需要再次打开服务）：
-redis-server 			 #启动Redis服务
-redis-cli shutdown #停止redis服务
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- ```xml</span><br><span class="line">  使用brew命令</span><br><span class="line">  brew services start redis 	#启动redis服务</span><br><span class="line">  brew services stop redis 		#关闭redis服务</span><br><span class="line">  brew services restart redis #重启redis服务</span><br></pre></td></tr></table></figure>
-</code></pre>
-</li>
-</ul>
+<p>1.官方启动方式（不推荐，重启后需要再次打开服务）：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-server 			 #启动Redis服务</span><br><span class="line">redis-cli shutdown     #停止redis服务</span><br></pre></td></tr></table></figure>
+
+<p>2.使用brew命令</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">brew services start redis 	#启动redis服务</span><br><span class="line">brew services stop redis 		#关闭redis服务</span><br><span class="line">brew services restart redis   #重启redis服务</span><br></pre></td></tr></table></figure>
+
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207143540188.png" alt="image-20240207143540188"></p>
 <p>3.启动后输入<code>redis-cli</code>打开客户端。</p>
 <p>4.安装redis可视化软件，有很多可视化软件可以选择，这里我使用的是[Tiny RDM。</p>
@@ -500,8 +498,8 @@ redis-cli shutdown #停止redis服务
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2024/04/17/%E5%88%9B%E5%BB%BATelegram%E6%9C%BA%E5%99%A8%E4%BA%BA%F0%9F%A4%96API%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82/" rel="prev" title="创建Telegram机器人🤖API发送请求">
-                创建Telegram机器人🤖API发送请求 <i class="fa fa-chevron-right"></i>
+              <a href="/2024/03/05/%E5%A6%82%E4%BD%95%E5%B0%86SpringBoot%E6%89%93%E5%8C%85%E6%88%90.exe%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%EF%BC%9F(%E8%BD%AC)/" rel="prev" title="如何将SpringBoot打包成.exe项目启动？(转)">
+                如何将SpringBoot打包成.exe项目启动？(转) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

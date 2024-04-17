@@ -64,15 +64,55 @@
 
 
 
-<meta name="description" content="Awesome guy.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ruiyeclub">
-<meta property="og:url" content="http://ruiyeclub.cn/archives/2022/02/page/2/index.html">
+<meta name="description" content="前言近期做了一个前后端合并的spring boot项目，但是要求打包城exe文件，提供给不懂电脑的小白安装使用，就去研究了半天，踩了很多坑，写这篇文章，是想看到这篇文章的人，按照我的步骤走，能少踩坑。 准备准备工作：  一个jar包，没有bug能正常启动的jar包 exe4j，一个将jar转换成exe的工具，链接：https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1J30uUMJcYnqWCJSr6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何将SpringBoot打包成.exe项目启动？(转)">
+<meta property="og:url" content="http://ruiyeclub.cn/2024/03/05/%E5%A6%82%E4%BD%95%E5%B0%86SpringBoot%E6%89%93%E5%8C%85%E6%88%90.exe%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%EF%BC%9F(%E8%BD%AC)/index.html">
 <meta property="og:site_name" content="Ruiyeclub">
-<meta property="og:description" content="Awesome guy.">
+<meta property="og:description" content="前言近期做了一个前后端合并的spring boot项目，但是要求打包城exe文件，提供给不懂电脑的小白安装使用，就去研究了半天，踩了很多坑，写这篇文章，是想看到这篇文章的人，按照我的步骤走，能少踩坑。 准备准备工作：  一个jar包，没有bug能正常启动的jar包 exe4j，一个将jar转换成exe的工具，链接：https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1J30uUMJcYnqWCJSr6">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111543565-1396048921.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111600449-1354345087.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111610780-2132812247.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111619283-1606783867.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111647166-1055422528.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111656096-898994566.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111704684-1345085588.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111739256-1971491709.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111747934-1026729198.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111755257-424525494.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111800109-1087786170.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111827329-840979154.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111838992-1945360511.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111848124-1110985164.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111901893-628430600.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111937871-1409793481.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111955182-1164832840.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112509693-1948806647.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112041717-1500637696.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112057607-1301322721.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112112186-624409517.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112120569-1427010105.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112129814-1671272672.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112138411-293405841.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112146171-409628643.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112155246-276457879.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112233707-1556689797.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112247175-713534534.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112313666-1584429067.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112325941-471763229.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112334907-851084806.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112343729-1930111580.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112358190-36465892.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112415031-718978884.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112426523-1804405720.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112437772-311845179.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112448655-1218116363.png">
+<meta property="article:published_time" content="2024-03-05T04:39:48.000Z">
+<meta property="article:modified_time" content="2024-04-17T07:24:29.538Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111543565-1396048921.png">
 
 
 
@@ -102,13 +142,13 @@
 
 
 
-  <link rel="canonical" href="http://ruiyeclub.cn/archives/2022/02/page/2/"/>
+  <link rel="canonical" href="http://ruiyeclub.cn/2024/03/05/如何将SpringBoot打包成.exe项目启动？(转)/"/>
 
 
 
 
 
-  <title>Archive | Ruiyeclub</title>
+  <title>如何将SpringBoot打包成.exe项目启动？(转) | Ruiyeclub</title>
   
 
 
@@ -124,7 +164,7 @@
 
   <style>@media (min-width:768px) and (max-width:991px){body .header-innerr{width:700px!important}}.header-innerr{margin:0 auto;padding:100px 0 70px;width:880px}@media (min-width:1600px){.container .header-innerr{width:1200px}}.header-innerr{position:relative}.header-innerr{padding:20px 0 0}.header-innerr:after,.header-innerr:before{content:" ";display:table}.header-innerr:after{clear:both}@media (max-width:767px){.header-innerr{width:auto;padding:10px;margin-bottom:-20px}}</style>
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,110 +264,219 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
-        There are 29 posts in total. posts in total till now
-      </span>
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://ruiyeclub.cn/2024/03/05/%E5%A6%82%E4%BD%95%E5%B0%86SpringBoot%E6%89%93%E5%8C%85%E6%88%90.exe%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%EF%BC%9F(%E8%BD%AC)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何将SpringBoot打包成.exe项目启动？(转)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-03-05T12:39:48+08:00">
+                2024-03-05
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
-        
-        
-        
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期做了一个前后端合并的spring boot项目，但是要求打包城exe文件，提供给不懂电脑的小白安装使用，就去研究了半天，踩了很多坑，写这篇文章，是想看到这篇文章的人，按照我的步骤走，能少踩坑。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>准备工作：</p>
+<ol>
+<li>一个jar包，没有bug能正常启动的jar包</li>
+<li><a target="_blank" rel="noopener" href="https://exe4j.apponic.com/">exe4j</a>，一个将jar转换成exe的工具，链接：<code>https://pan.baidu.com/s/1J30uUMJcYnqWCJSr6gkM5w </code>提取码：6esr<br>注册码：L-g782dn2d-1f1yqxx1rv1sqd</li>
+<li><a target="_blank" rel="noopener" href="https://jrsoftware.org/isdl.php">inno setup</a>，一个将依赖和exe一起打成一个安装程序的工具，链接：<code>https://pan.baidu.com/s/1DgFo1ceM\_8Bqx\_b-veibbQ</code>提取码：g9jd</li>
+</ol>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>以我为例子，我将jar包放在了桌面</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111543565-1396048921.png" alt="img"></p>
+<p>jar包放在桌面打开安装好的exe4j</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111600449-1354345087.png" alt="img"></p>
+<p>打开exe4j直接下一步进入界面，选择JAVA转EXE</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111610780-2132812247.png" alt="img"></p>
+<p>JAVA转EXE然后点下一步，输入名称和输出路径</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111619283-1606783867.png" alt="img"></p>
+<p>输入名称和输出路径继续点击下一步，选择启动模式</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111647166-1055422528.png" alt="img"></p>
+<p>选择启动模式下方有个选项，需要设置打包后的程序兼容32和64位系统</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111656096-898994566.png" alt="img"></p>
+<p>兼容32和64位系统进来后勾选上</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111704684-1345085588.png" alt="img"></p>
+<p>勾选然后一直下一步，一直出现如下界面，开始选择jar包以及配置在VM参数配置的地方加上：<code>-Dfile.encoding=utf-8</code></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111739256-1971491709.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111747934-1026729198.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111755257-424525494.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111800109-1087786170.png" alt="img"></p>
+<p>点击下一步，配置JRE</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111827329-840979154.png" alt="img"></p>
+<p>配置JRE下拉框点击后进入如下界面</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111838992-1945360511.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111848124-1110985164.png" alt="img"></p>
+<p>下拉框点击</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111901893-628430600.png" alt="img"></p>
+<p>照着这个样子写的目的是，最终会把本地jre目录和exe一起打包，让exe文件自己去根据路径去查找一起打包的jre，可不用再安装jdk</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111937871-1409793481.png" alt="img"></p>
+<p>接着下一步，选择Client VM</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509111955182-1164832840.png" alt="img"></p>
+<p>选择Client VM然后一直下一步，最终出现如下界面<img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112509693-1948806647.png" alt="图片"></p>
+<p>这个时候你会发现桌面多了一个<code>demo.exe</code>文件，这个时候先别着急点开，接下来就是将jre和exe文件再打个包合并，达到在没有jdk电脑环境下也能运行打开inno setup，左上角File - New</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112041717-1500637696.png" alt="img"></p>
+<p>打开inno setup直接点下一步，填写配置，应用名称，版本等，随意</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112057607-1301322721.png" alt="img"></p>
+<p>版本然后点击下一步，这个地方默认就行，直接下一步</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112112186-624409517.png" alt="img"></p>
+<p>直接下一步接着选择生成好的exe文件</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112120569-1427010105.png" alt="img"></p>
+<p>接着选择生成好的exe文件然后下一步，进入这个界面保持默认，直接下一步</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112129814-1671272672.png" alt="img"></p>
+<p>保持默认依旧下一步，不用管</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112138411-293405841.png" alt="img"></p>
+<p>下一步继续下一步，这里是选择语言</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112146171-409628643.png" alt="img"></p>
+<p>选择语言然后就是选择输出路径和填写安装程序的名字了</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112155246-276457879.png" alt="img"></p>
+<p>选择输出路径然后下一步，直接点Next，然后结束配置到最后一步了，脚本文件，到这里会弹出问你是否马上编译，选择否，先把脚本写好再自己编译</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112233707-1556689797.png" alt="img"></p>
+<p>编译然后到了最后一步了，把本地的JRE写进脚本</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112247175-713534534.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112313666-1584429067.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112325941-471763229.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112334907-851084806.png" alt="img"></p>
+<p>&#96;&#96;</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112343729-1930111580.png" alt="img"></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Source: &quot;自己本地JRE路径\*&quot;; DestDir: &quot;&#123;app&#125;\&#123;#MyJreName&#125;&quot;; Flags: ignoreversion recursesubdirs createallsubdirs</span><br></pre></td></tr></table></figure>
 
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2022">2022</h1>
+<p>然后直接编译就好了，会提示保存当前脚本，随便起个名字，下个还可以继续用</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112358190-36465892.png" alt="img"></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112415031-718978884.png" alt="img"></p>
+<p>然后等待绿色滚动条结束</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112426523-1804405720.png" alt="img"></p>
+<p>等待绿色滚动条结束当绿色滚动条结束后，桌面会多了一个<code>setup.exe</code>文件</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112437772-311845179.png" alt="img"></p>
+<p>Java打包ext也同时会跳出一个安装的，因为程序帮你自动启动生成的安装程序了，安装就可以了，安装的时候记得勾选创建快捷方式</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/1608160-20230509112448655-1218116363.png" alt="img"></p>
+<p> 　</p>
+<p>创建快捷方式这个就是最后的程序了，双击运行就可以看到结果了，把<code>setup.exe</code>文件给别人安装，就都可以看到自己的程序了。</p>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你觉得这篇文章帮助到了你，你可以帮作者买一杯果汁表示鼓励</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_ray.jpg" alt=" WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_ray.jpg" alt=" Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/02/07/Mac%20m1%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BC%80%E5%8F%91%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE2024/" rel="next" title="Mac m1程序员开发软件的安装和配置2024">
+                <i class="fa fa-chevron-left"></i> Mac m1程序员开发软件的安装和配置2024
+              </a>
+            
           </div>
-        
-        
 
-        
+          <span class="post-nav-divider"></span>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/02/03/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%B8%80)%EF%BC%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%BB%A5%E5%8F%8Asynchronized%E5%85%B3%E9%94%AE%E5%AD%97/" itemprop="url">
-              
-                <span itemprop="name">Java并发编程(一)：线程基础知识以及synchronized关键字</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-02-03T17:35:40+08:00"
-              content="2022-02-03" >
-          02-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/03/14/%E5%B0%86Python%E8%84%9A%E6%9C%AC%E6%89%93%E5%8C%85%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84exe%E6%96%87%E4%BB%B6/" rel="prev" title="将Python脚本打包成可执行的exe文件">
+                将Python脚本打包成可执行的exe文件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/02/01/Docker%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E4%B9%8B%E9%83%A8%E7%BD%B2SpringBoot%E9%A1%B9%E7%9B%AE/" itemprop="url">
-              
-                <span itemprop="name">Docker快速上手之部署SpringBoot项目</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-02-01T17:35:40+08:00"
-              content="2022-02-01" >
-          02-01
-        </time>
-      </div>
-
-    </header>
+      
+      
+    </footer>
   </article>
 
+  <hr/>
 
 
+    <div class="post-spread">
       
-
     </div>
   </div>
-  
-  
-  
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2022/02/"></a><a class="page-number" href="/archives/2022/02/">1</a><span class="page-number current">2</span>
-  </nav>
-
-
 
 
           </div>
@@ -335,6 +484,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -347,10 +500,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">Contents</li>
+          <li class="sidebar-nav-overview" data-target="site-overview">Overview</li>
+        </ul>
+      
 
   
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-overview">
           <div class="sidebar-sticky sticky">
             <div itemscope="" itemtype="http://schema.org/Person">
@@ -437,6 +595,22 @@
 
 
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B"><span class="nav-number">3.</span> <span class="nav-text">开始</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -569,6 +743,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
