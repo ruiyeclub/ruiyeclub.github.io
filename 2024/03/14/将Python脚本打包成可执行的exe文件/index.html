@@ -72,7 +72,7 @@
 <meta property="og:description" content="将Python程序打包为可执行的.exe文件有多种方法。以下是其中两种常用的方式。  使用PyInstaller库进行打包 首先确保已经安装了PyInstaller库（如果没有，则通过命令pip install pyinstaller来安装）；  在命令提示符或终端中导航到要打包的Python脚本所在目录；  运行命令 pyinstaller --onefile your_script.py，这">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-03-14T06:24:09.000Z">
-<meta property="article:modified_time" content="2024-04-17T07:24:29.538Z">
+<meta property="article:modified_time" content="2024-06-20T12:50:52.123Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
 
@@ -295,6 +295,9 @@
 </li>
 </ol>
 <p><strong>注意：此方法只适用于单个Python脚本的打包。</strong></p>
+<ol start="4">
+<li>在使用 PyInstaller 打包项目时，有时会遇到缺少 Python 库的问题，导致打包失败。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --hidden-<span class="keyword">import</span>=some_module --onefile your_script.py</span><br></pre></td></tr></table></figure></li>
+</ol>
 <h2 id="使用cx-Freeze库进行打包"><a href="#使用cx-Freeze库进行打包" class="headerlink" title="使用cx_Freeze库进行打包"></a>使用cx_Freeze库进行打包</h2><ol>
 <li><p>首先确保已经安装了cx_Freeze库（如果没有，则通过命令<code>pip install cx-freeze</code>来安装）；</p>
 </li>

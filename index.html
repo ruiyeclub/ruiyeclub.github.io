@@ -585,6 +585,9 @@
 </li>
 </ol>
 <p><strong>注意：此方法只适用于单个Python脚本的打包。</strong></p>
+<ol start="4">
+<li>在使用 PyInstaller 打包项目时，有时会遇到缺少 Python 库的问题，导致打包失败。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --hidden-<span class="keyword">import</span>=some_module --onefile your_script.py</span><br></pre></td></tr></table></figure></li>
+</ol>
 <h2 id="使用cx-Freeze库进行打包"><a href="#使用cx-Freeze库进行打包" class="headerlink" title="使用cx_Freeze库进行打包"></a>使用cx_Freeze库进行打包</h2><ol>
 <li><p>首先确保已经安装了cx_Freeze库（如果没有，则通过命令<code>pip install cx-freeze</code>来安装）；</p>
 </li>
