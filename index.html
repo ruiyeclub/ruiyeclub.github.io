@@ -234,6 +234,139 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/06/27/Linux%E5%AE%89%E8%A3%85nginx%E5%92%8C%E9%85%8D%E7%BD%AEhttps/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/06/27/Linux%E5%AE%89%E8%A3%85nginx%E5%92%8C%E9%85%8D%E7%BD%AEhttps/" itemprop="url">Linux安装nginx和配置https</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-06-27T21:33:35+08:00">
+                2024-06-27
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="1-安装nginx"><a href="#1-安装nginx" class="headerlink" title="1.安装nginx"></a>1.安装nginx</h3><p>如果你还没有安装Nginx，可以使用你的Linux发行版的包管理器来安装。以下是一些常见发行版的安装命令：</p>
+<ul>
+<li>对于Debian&#x2F;Ubuntu系统：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update  </span><br><span class="line">sudo apt install nginx</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>对于CentOS&#x2F;RHEL系统（使用yum）：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-启动nginx"><a href="#2-启动nginx" class="headerlink" title="2.启动nginx"></a>2.启动nginx</h3><ul>
+<li><p>安装完成后，启动Nginx服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>并且设置它开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> nginx</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-检查Nginx状态"><a href="#3-检查Nginx状态" class="headerlink" title="3. 检查Nginx状态"></a>3. 检查Nginx状态</h3><p>你可以检查Nginx的状态来确保它正在运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-配置Nginx"><a href="#4-配置Nginx" class="headerlink" title="4. 配置Nginx"></a>4. 配置Nginx</h3><p>Nginx的主要配置文件通常位于<code>/etc/nginx/</code>目录下，特别是<code>nginx.conf</code>文件。但大多数配置更改通常会在<code>sites-available/</code>或<code>conf.d/</code>目录中的单独文件中进行，然后通过在<code>nginx.conf</code>中包含这些文件来应用。</p>
+<ul>
+<li>打开Nginx的主配置文件（如果你需要直接编辑它）：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重新加载Nginx配置以使更改生效：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl reload nginx</span><br></pre></td></tr></table></figure>
+
+<p>或者你可以完全重启Nginx服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart nginx</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二、Let’s-Encrypt在Linux上免费配置HTTPS"><a href="#二、Let’s-Encrypt在Linux上免费配置HTTPS" class="headerlink" title="二、Let’s Encrypt在Linux上免费配置HTTPS"></a>二、Let’s Encrypt在Linux上免费配置HTTPS</h2><p>Let’s Encrypt简介Let’s Encrypt是一个由Mozilla、Cisco、Akamai、IdenTrust和EFF等组织发起的项目，旨在通过自动化方式为网站提供免费的SSL&#x2F;TLS证书。它的目标是促进互联网的加密化，保障用户的在线安全。Let’s Encrypt提供的证书有效期为90天，但可以通过自动化过程免费续期。</p>
+<h3 id="1-安装Certbot"><a href="#1-安装Certbot" class="headerlink" title="1.安装Certbot"></a>1.安装Certbot</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install certbot python3-certbot-nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-配置HTTPS"><a href="#2-配置HTTPS" class="headerlink" title="2.配置HTTPS"></a>2.配置HTTPS</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot --nginx</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240627212626690.png" alt="image-20240627212626690"></p>
+<p>在浏览器地址栏中输入你的域名并加上https:&#x2F;&#x2F;前缀（例如：<a target="_blank" rel="noopener" href="https://www.example.com),如果浏览器显示了一个绿色的锁形图标,并且url地址以https//%E5%BC%80%E5%A4%B4%EF%BC%8C%E9%82%A3%E4%B9%88%E6%81%AD%E5%96%9C%E4%BD%A0%EF%BC%8C%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E5%B7%B2%E7%BB%8F%E6%88%90%E5%8A%9F%E9%85%8D%E7%BD%AE%E4%BA%86HTTPS%EF%BC%81">https://www.example.com），如果浏览器显示了一个绿色的锁形图标，并且URL地址以https://开头，那么恭喜你，你的网站已经成功配置了HTTPS！</a></p>
+<h2 id="三、配置nginx-conf"><a href="#三、配置nginx-conf" class="headerlink" title="三、配置nginx.conf"></a>三、配置nginx.conf</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">		listen <span class="number">443</span> ssl;</span><br><span class="line">		server_name 域名.com;</span><br><span class="line"></span><br><span class="line">		ssl_certificate /etc/letsencrypt/live/地址/fullchain.pem;</span><br><span class="line">		ssl_certificate_key /etc/letsencrypt/live/地址/privkey.pem;</span><br><span class="line"></span><br><span class="line">		location / &#123;</span><br><span class="line">			proxy_pass http://ip:port;</span><br><span class="line">			proxy_set_header Host $host;</span><br><span class="line">			proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">			proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1536,158 +1669,11 @@
   <hr/>
 
     
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2023/12/21/Linux%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%83%A8%E7%BD%B2node-js%E9%A1%B9%E7%9B%AE%E5%B9%B6%E4%BD%BF%E7%94%A8pm2%E5%AF%B9%E9%A1%B9%E7%9B%AE%E8%BF%9B%E8%A1%8C%E7%AE%A1%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2023/12/21/Linux%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%83%A8%E7%BD%B2node-js%E9%A1%B9%E7%9B%AE%E5%B9%B6%E4%BD%BF%E7%94%A8pm2%E5%AF%B9%E9%A1%B9%E7%9B%AE%E8%BF%9B%E8%A1%8C%E7%AE%A1%E7%90%86/" itemprop="url">Linux环境下部署node.js项目并使用pm2对项目进行管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2023-12-21T11:43:52+08:00">
-                2023-12-21
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>node.js是让JavaScript能运行在服务端的开发平台，pm2是一个Node.js 守护进程管理器，可以用于管理和监控Node.js 应用程序。</p>
-</blockquote>
-<h2 id="一、安装node环境"><a href="#一、安装node环境" class="headerlink" title="一、安装node环境"></a>一、安装node环境</h2><h3 id="1-可通过网站下载，进入Node最新版下载"><a href="#1-可通过网站下载，进入Node最新版下载" class="headerlink" title="1.可通过网站下载，进入Node最新版下载 &lt;https://nodejs.org/en/download/current/"></a>1.可通过网站下载，进入Node最新版下载 &lt;<a href="https://cloud.tencent.com/developer/tools/blog-entry?target=https://nodejs.org/en/download/current/&source=article&objectId=1772306">https://nodejs.org/en/download/current/</a></h3><ul>
-<li><p>通过wget指令下载：<code>wget https://nodejs.org/dist/v13.11.0/node-v13.11.0-linux-x64.tar.xz</code></p>
-</li>
-<li><p>解压：<code>tar -xvf node-v13.11.0-linux-x64.tar.xz</code></p>
-</li>
-<li><p>测试安装是否成功：<code>cd node-v13.11.0-linux-x64/bin</code>，执行：<code>./node -v</code></p>
-</li>
-</ul>
-<h3 id="2-添加node和npm软链建立链接（PS-ln命令是一个非常重要命令，它的功能是为某一个文件在另外一个位置建立一个同步的链接）："><a href="#2-添加node和npm软链建立链接（PS-ln命令是一个非常重要命令，它的功能是为某一个文件在另外一个位置建立一个同步的链接）：" class="headerlink" title="2.添加node和npm软链建立链接（PS:ln命令是一个非常重要命令，它的功能是为某一个文件在另外一个位置建立一个同步的链接）："></a>2.添加node和npm软链建立链接（<strong>PS:ln命令是一个非常重要命令，它的功能是为某一个文件在另外一个位置建立一个同步的链接</strong>）：</h3><ul>
-<li><code>ln -s /www/node-v13.11.0-linux-x64/bin/node /usr/local/bin/node</code></li>
-<li><code>ln -s /www/node-v13.11.0-linux-x64/bin/npm /usr/local/bin/npm</code></li>
-</ul>
-<h3 id="2-1或者是通过改变node包的存放位置进行操作：mv-node-v13-11-0-linux-x64-usr-local-node"><a href="#2-1或者是通过改变node包的存放位置进行操作：mv-node-v13-11-0-linux-x64-usr-local-node" class="headerlink" title="2.1或者是通过改变node包的存放位置进行操作：mv node-v13.11.0-linux-x64 /usr/local/node"></a>2.1或者是通过改变node包的存放位置进行操作：<code>mv node-v13.11.0-linux-x64 /usr/local/node</code></h3><p>再编辑配置文件：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"></span><br><span class="line">按住i键，进入编辑模式</span><br><span class="line"></span><br><span class="line">插入：export PATH=$PATH:/usr/local/node/bin</span><br><span class="line"></span><br><span class="line">按esc,输入:wq，退出vim编辑器模式</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3-使用测试命令：node-v和npm-v"><a href="#3-使用测试命令：node-v和npm-v" class="headerlink" title="3.使用测试命令：node -v和npm -v"></a>3.使用测试命令：<code>node -v</code>和<code>npm -v</code></h3><h3 id="4-加速npm"><a href="#4-加速npm" class="headerlink" title="4.加速npm"></a>4.加速npm</h3><ul>
-<li>使用淘宝的cnpm：<code>npm install cnpm -g --registry=https://registry.npm.taobao.org</code></li>
-<li>加cnpm软链：<code>ln -s /www/node-v13.11.0-linux-x64/bin/cnpm /usr/local/bin/cnpm</code></li>
-<li>需要注意，以后使用cnpm去代替npm来执行，比如：<code>cnpm install XXX</code></li>
-</ul>
-<h2 id="二、安装并使用pm2"><a href="#二、安装并使用pm2" class="headerlink" title="二、安装并使用pm2"></a>二、安装并使用pm2</h2><blockquote>
-<p>PM2 是一个流行的进程管理器，是在生产环境中后台运行 nodejs 的首选。它提供了很多的功能和选项，包括进程监控、自动重启、负载平衡等等。使用 PM2 后，我们可以方便地将 nodejs 应用程序后台运行。</p>
-</blockquote>
-<h3 id="1-安装pm2：npm-install-g-pm2"><a href="#1-安装pm2：npm-install-g-pm2" class="headerlink" title="1.安装pm2：npm install -g pm2"></a>1.安装pm2：<code>npm install -g pm2</code></h3><h3 id="2-添加pm2软链：ln-s-www-node-v13-11-0-linux-x64-lib-node-modules-pm2-bin-pm2-usr-local-bin"><a href="#2-添加pm2软链：ln-s-www-node-v13-11-0-linux-x64-lib-node-modules-pm2-bin-pm2-usr-local-bin" class="headerlink" title="2.添加pm2软链：ln -s /www/node-v13.11.0-linux-x64/lib/node_modules/pm2/bin/pm2 /usr/local/bin/"></a>2.添加pm2软链：<code>ln -s /www/node-v13.11.0-linux-x64/lib/node_modules/pm2/bin/pm2 /usr/local/bin/</code></h3><h3 id="3-pm2常用命令："><a href="#3-pm2常用命令：" class="headerlink" title="3.pm2常用命令："></a>3.pm2常用命令：</h3><ul>
-<li><p>启动指定应用：<code>pm2 start &lt;script_file|config_file&gt; [options]</code> ，如：<code>pm2 start index.js --name httpServer</code></p>
-</li>
-<li><p>停止指定应用：<code>pm2 stop &lt;appName&gt; [options]</code>，如：<code>pm2 stop httpServer</code></p>
-</li>
-<li><p>查看全部实例：<code>pm2 list</code> ，注意：pm2 stop 某个项目后，该项目还会存在pm2 list 的列表里面， 只是状态是 stop, 要想去掉该项目，用pm2 delete</p>
-</li>
-<li><p>重启指定应用：<code>pm2 reload|restart &lt;appName&gt; [options]</code>，如：<code>pm2 restart httpServer</code></p>
-</li>
-<li><p>显示指定应用详情：<code>pm2 show &lt;appName&gt; [options]</code>，如：<code>pm2 show httpServer</code></p>
-</li>
-<li><p>删除指定应用：<code>pm2 delete &lt;appName&gt; [options]</code>，如：<code>pm2 delete httpServer</code>，如果修改应用配置行为，最好先删除应用后，重新启动方才生效，如修改脚本入口文件</p>
-</li>
-<li><p>杀掉pm2管理的所有进程：<code>pm2 kill</code> </p>
-</li>
-<li><p>删除pm2日志：<code>pm2 flush</code></p>
-</li>
-<li><p>查看指定应用的日志，即标准输出和标准错误<code>pm2 logs &lt;appName&gt;</code></p>
-</li>
-<li><p>监控各个应用进程cpu和memory使用情况<code>pm2 monit</code></p>
-</li>
-<li><p>如果项目没有启动就执行 start 如果项目正在运行 就执行relaod<code>pm2 startOrReload &lt;appName&gt;</code></p>
-</li>
-</ul>
-<h2 id="三、踩坑记录"><a href="#三、踩坑记录" class="headerlink" title="三、踩坑记录"></a>三、踩坑记录</h2><p>2024-1-3：试图在服务器上面安装node.js18，查看node版本的时候发生报错：</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240103185224803.png" alt="image-20240103185224803"></p>
-<p>搜索资料发现是当前系统版本不支持高版本的node.js，查看当前系统版本：</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240103185613533.png" alt="image-20240103185613533"></p>
-<p><strong>解决办法降级到node.js16…</strong></p>
-<p><strong>参考文章：</strong><a target="_blank" rel="noopener" href="https://juejin.cn/post/7163899309425950751">https://juejin.cn/post/7163899309425950751</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"></a>
   </nav>
 
 
