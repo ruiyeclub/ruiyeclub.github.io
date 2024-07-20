@@ -234,6 +234,135 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/" itemprop="url">Mac上使用homebrew安装nvm</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-07-20T16:04:55+08:00">
+                2024-07-20
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>NVM（Node Version Manager）是一个用于在基于Linux系统上安装和管理Node.js的shell脚本。macOS用户可以使用<code>homebrew</code>来安装NVM。</p>
+</blockquote>
+<p>安装Homebrew（如果你还没有安装）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>卸载现有node版本</li>
+</ol>
+<p>如果你的系统已经安装了node，请先卸载它。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew uninstall --ignore-dependencies node </span><br><span class="line">brew uninstall --force node </span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用Homebrew安装nvm：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install nvm</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>将nvm初始化脚本添加到你的shell配置文件中。如果你使用的是zsh，那么你需要在你的<code>~/.zshrc</code>文件中添加以下行：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="subst">$([ -z <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME-&#125;</span>&quot;</span> ] &amp;&amp; printf %s <span class="string">&quot;<span class="variable">$&#123;HOME&#125;</span>/.nvm&quot;</span> || printf %s <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME&#125;</span>/nvm&quot;</span>)</span>&quot;</span></span><br><span class="line">[ -s <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> <span class="comment"># This loads nvm</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>使更改生效，你可以重新启动你的终端，或者运行以下命令：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>验证nvm安装成功：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
+
+<p>以上步骤将会在你的macOS系统上安装nvm，并且设置zsh使其能够识别nvm命令。</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">nvm -v //查看nvm版本</span><br><span class="line">nvm <span class="built_in">ls</span> //查看本机已经安装node版本</span><br><span class="line">nvm use 切换到指定版本node</span><br><span class="line">nvm ls-remote //列出所有可安装的远程node版本</span><br><span class="line">nvm install stable    //安装最新版本</span><br><span class="line">nvm install &lt;version&gt; //安装指定版本</span><br><span class="line">nvm uninstall stable   //卸载最新版本</span><br><span class="line">nvm uninstall &lt;version&gt;   //卸载指定版本</span><br><span class="line">nvm current //查看当前使用的node版本</span><br><span class="line">npm <span class="built_in">which</span> [current|&lt;version&gt;] //显示已安装node的安装路径。</span><br><span class="line">nvm cache <span class="built_in">dir</span> //显示nvm的缓存目录</span><br><span class="line">nvm cache clear //清楚nvm的缓存目录</span><br><span class="line">nvm node_mirror [url] //设置node镜像</span><br><span class="line">nvm npm_mirror [url] //设置npm镜像</span><br><span class="line">nvm on //开启node.js版本管理</span><br><span class="line">nvm off //关闭node.js版本管理</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">更新npm到最新版本</span><br><span class="line">npm install -g npm@latest</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="踩坑记录："><a href="#踩坑记录：" class="headerlink" title="踩坑记录："></a>踩坑记录：</h3><p>终端安装好了nvm和node，但是在vscode打开后无法执行命令，需要在<code> vi ~/.zshrc</code>加入<code>export PATH=&quot;~/.composer/vendor/bin:$PATH&quot;</code></p>
+<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7083026831263137800">如何在macOS上安装NVM</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/famensaodiseng/p/10427673.html">Mac下安装nvm后vscode输入node -v不起作用</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/06/27/Linux%E5%AE%89%E8%A3%85nginx%E5%92%8C%E9%85%8D%E7%BD%AEhttps/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1005,6 +1134,7 @@
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206143847348.png" alt="image-20240206143847348"></p>
 <p>此时已经成功关闭，重新执行install.js脚本，显示<code>done</code>表示成功执行。</p>
 <p>在idea输入激活码即可，如果出现<code>Key is invalid</code>建议重新一下电脑或者重新安装软件。</p>
+<h3 id="⚠️重启电脑后，可能会出现idea需要重新激活的情况"><a href="#⚠️重启电脑后，可能会出现idea需要重新激活的情况" class="headerlink" title="⚠️重启电脑后，可能会出现idea需要重新激活的情况"></a>⚠️重启电脑后，可能会出现idea需要重新激活的情况</h3><p>请执行<code>sudo sh uninstall.sh</code>再执行<code>sudo sh install.sh</code></p>
 <h2 id="三、配置Maven"><a href="#三、配置Maven" class="headerlink" title="三、配置Maven"></a>三、配置Maven</h2><p>个人习惯使用idea自带的maven，版本3.9.5，只需要修改成阿里云镜像就可以正常使用了。</p>
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240206181908542.png" alt="image-20240206181908542"></p>
 <p>进入.m2文件夹中，如果找不到按住<code>command</code>+<code>shift</code>+<code>.</code>显示隐藏文件夹，找到.m2文件夹，进入终端，在终端中输入命令<code>touch settings.xml</code>新建xml文件，复制粘贴以下内容。</p>
@@ -1517,132 +1647,6 @@
 <li>截图软件，粘贴效果，typora直接转换成了阿里云OSS的地址<img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/53d7a28b-96f3-4ba5-8fbc-e47b5bddae99.png" alt="image-20221222140236233"></li>
 <li>外站粘贴过来的也是同样效果</li>
 </ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2023/12/28/Node-js%E6%A8%A1%E5%9D%97%E5%8C%96%E9%80%89%E6%8B%A9Commonjs%E5%92%8CES6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2023/12/28/Node-js%E6%A8%A1%E5%9D%97%E5%8C%96%E9%80%89%E6%8B%A9Commonjs%E5%92%8CES6/" itemprop="url">Node.js模块化选择Commonjs和ES6</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2023-12-28T18:03:40+08:00">
-                2023-12-28
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>Node.js 使用的模块系统是基于 CommonJS 的，但随着时间的推移，ES6 模块也得到了越来越多的支持。以下是关于 CommonJS 和 ES6 模块的简要概述：</p>
-</blockquote>
-<p>1.<strong>CommonJS</strong>：</p>
-<ul>
-<li>最初为 Node.js 设计，所以又称 Node.js 模块系统。</li>
-<li>使用 <code>require()</code> 函数来导入模块，使用 <code>module.exports</code> 或 <code>exports</code> 对象来导出模块。</li>
-</ul>
-<p>2.<strong>ES6 模块</strong>：</p>
-<ul>
-<li>是 ECMAScript 6 (ES2015) 中引入的新模块系统。</li>
-<li>使用 <code>import</code> 语句来导入模块，使用 <code>export</code> 语句来导出模块。</li>
-<li>有静态和动态两种导入方式，提供更强的类型检查和代码编译时优化。</li>
-</ul>
-<blockquote>
-<p>请注意，随着Node.js的发展，许多库已经迁移到ES模块，因此确保你使用的库与你当前的Node.js版本兼容是很重要的。</p>
-</blockquote>
-<h3 id="一、搭建ES6模块系统"><a href="#一、搭建ES6模块系统" class="headerlink" title="一、搭建ES6模块系统"></a>一、搭建ES6模块系统</h3><p>1.把需要更换的<code>require</code>全部换成<code>import</code></p>
-<p>2.在src下创建一个.babelrc文件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;presets&quot;</span>:[<span class="string">&quot;es2015&quot;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>3.在package.json中的一段加上<code>--exec babel-node</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;name&quot;</span>: <span class="string">&quot;api&quot;</span>,</span><br><span class="line">  <span class="string">&quot;version&quot;</span>: <span class="string">&quot;1.0.0&quot;</span>,</span><br><span class="line">  <span class="string">&quot;description&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  <span class="string">&quot;type&quot;</span>: <span class="string">&quot;module&quot;</span>, <span class="comment">// 添加type类型</span></span><br><span class="line">  <span class="string">&quot;main&quot;</span>: <span class="string">&quot;index.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;dev&quot;</span>: <span class="string">&quot;nodemon ./src/main.js --exec babel-node&quot;</span>,</span><br><span class="line">    <span class="string">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1 --exec babel-node&quot;</span></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-
-<p>4.安装插件 <code>npm install babel-preset-es2015</code></p>
-<h3 id="二、关于两者的引用区别"><a href="#二、关于两者的引用区别" class="headerlink" title="二、关于两者的引用区别"></a>二、关于两者的引用区别</h3><p>1.Commonjs：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// moduleA.js  </span></span><br><span class="line"><span class="keyword">const</span> message = <span class="string">&#x27;Hello from CommonJS&#x27;</span>;  </span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = message;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js  </span></span><br><span class="line"><span class="keyword">const</span> moduleA = <span class="built_in">require</span>(<span class="string">&#x27;./moduleA&#x27;</span>);  </span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(moduleA); <span class="comment">// 输出 &#x27;Hello from CommonJS&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>需要注意的是，CommonJS 的 <code>require</code> 函数返回的是一个对象，该对象的属性对应于模块导出的内容。在上面的例子中，<code>moduleA</code> 是一个包含 <code>message</code> 属性的对象。因此，我们可以使用 <code>moduleA.message</code> 来访问导出的内容。</strong></p>
-<p>2.ES6：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// moduleA.js  </span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> message = <span class="string">&#x27;Hello from ES6&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js  </span></span><br><span class="line"><span class="keyword">import</span> &#123; message &#125; <span class="keyword">from</span> <span class="string">&#x27;./moduleA&#x27;</span>;  </span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(message); <span class="comment">// 输出 &#x27;Hello from ES6&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>需要注意的是，ES6 的 <code>import</code> 语句返回的是导出的内容本身，而不是一个对象。因此，我们可以直接使用导入的内容，而不需要通过属性来访问。</strong></p>
 
           
         

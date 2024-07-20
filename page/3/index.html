@@ -234,6 +234,98 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/13/%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99Correct%20the%20classpath%20of%20your%20application%20so%20that%20it%20contains%20a%20single,%20compatible%20version%20of%20xxx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/02/13/%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99Correct%20the%20classpath%20of%20your%20application%20so%20that%20it%20contains%20a%20single,%20compatible%20version%20of%20xxx/" itemprop="url">启动项目报错Correct the classpath of your application so that it contains a single, compatible version of xxx</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-13T17:28:11+08:00">
+                2022-02-13
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>项目是基于Gradle构建的，在整合swagger后，启动项目时报错了。报错日志：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Description:</span><br><span class="line"></span><br><span class="line">An attempt was made to call a method that does not exist. The attempt was made from the following location:</span><br><span class="line"></span><br><span class="line">    springfox.documentation.spring.web.plugins.DocumentationPluginsManager.createContextBuilder(DocumentationPluginsManager.java:<span class="number">152</span>)</span><br><span class="line"></span><br><span class="line">The following method did not exist:</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;org.springframework.plugin.core.Plugin org.springframework.plugin.core.PluginRegistry.getPluginFor(java.lang.Object, org.springframework.plugin.core.Plugin)&#x27;</span></span><br><span class="line"></span><br><span class="line">The method<span class="string">&#x27;s class, org.springframework.plugin.core.PluginRegistry, is available from the following locations:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    jar:file:/C:/Users/Administrator/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/2.0.0.RELEASE/95fc8c13037630f4aba9c51141f535becec00fe6/spring-plugin-core-2.0.0.RELEASE.jar!/org/springframework/plugin/core/PluginRegistry.class</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">It was loaded from the following location:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    file:/C:/Users/Administrator/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/2.0.0.RELEASE/95fc8c13037630f4aba9c51141f535becec00fe6/spring-plugin-core-2.0.0.RELEASE.jar</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Action:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Correct the classpath of your application so that it contains a single, compatible version of org.springframework.plugin.core.PluginRegistry</span></span><br></pre></td></tr></table></figure>
+<p>百度之后，发现是jar包冲突了，导入了两个不同版本的jar包。如图：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a3688f4401c04f3a53efb72e701a4457.png" alt="image.png"><br>解决办法可以直接将依赖中的jar包剔除掉，或者直接删除该依赖也行。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/12/Redis%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93&%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%85%A8Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%8A%E7%AD%94%E6%A1%88(%E8%BD%AC)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1304,170 +1396,6 @@
 <p>这是一个小demo，代码中只对set方法加了锁，没有对get方法加锁，这个时候会出现<em>脏读</em>现象。解决方法是读和写的方法都加锁。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T3</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">m1</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;m1 start&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        m2();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">m2</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">2</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;m2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个案例中，m1和m2方法都已经加上了锁，当执行m1的时候再去执行m2，这样是可以的。一个同步方法可以调用另外一个同步方法，也就是说sync获得的锁是<em>可重入锁</em>。还有个概念是<em>死锁</em>，死锁是指多个线程抢占资源而造成的一种互相等待。举个例子，一个箱子需要两把钥匙才可以打开，钥匙分别在两个人手中，这两个人互相抢占另外一个人的钥匙，导致箱子打不开。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/01/Docker%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E4%B9%8B%E9%83%A8%E7%BD%B2SpringBoot%E9%A1%B9%E7%9B%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/01/Docker%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E4%B9%8B%E9%83%A8%E7%BD%B2SpringBoot%E9%A1%B9%E7%9B%AE/" itemprop="url">Docker快速上手之部署SpringBoot项目</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-01T17:35:40+08:00">
-                2022-02-01
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>Docker是基于Go语言实现的云开源项目。</strong></p>
-<p>Docker的主要目标是“Build，Ship and Run Any App,Anywhere”，也就是通过对应用组件的封装、分发、部署、运行等生命周期的管理，使用户的APP（可以是一个WEB应用或数据库应用等等）及其运行环境能够做到“一次封装，到处运行”。<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/2db39f1e0972b7dd1557c891d9300fdd.png" alt="image.png"><br>Linux 容器技术的出现就解决了这样一个问题，而 Docker 就是在它的基础上发展过来的。将应用运行在 Docker 容器上面，而 Docker 容器在任何操作系统上都是一致的，这就实现了跨平台、跨服务器。只需要一次配置好环境，换到别的机子上就可以一键部署好，大大简化了操作。</p>
-<h4 id="一、我所理解的Docker"><a href="#一、我所理解的Docker" class="headerlink" title="一、我所理解的Docker"></a>一、我所理解的Docker</h4><blockquote>
-<p>我喜欢将Docker比喻成”方便面”，为什么说是方便面，之前部署项目环境的配置十分麻烦，换一台机器，就要重来一次，费力费时。举个栗子，我们部署一个SpringBoot项目，我们需要在服务器上面配置项目的运行环境，要安装各种各样的软件JDK&#x2F;MySQL&#x2F;Redis&#x2F;nginx，安装和配置这些东西十分麻烦，下次需要换个服务器重新部署又得重新安装一遍，简直要命。而Docker能将项目连带着运行环境一同部署过去，就好像泡面，泡面所需的调料包还有工具都附加在了里面。一句话总结Docker的好处，Docker解决了运行环境和配置问题，方便做持续集成并有助于整体发布的容器虚拟化技术。</p>
-</blockquote>
-<h4 id="二、Docker与虚拟机的区别"><a href="#二、Docker与虚拟机的区别" class="headerlink" title="二、Docker与虚拟机的区别"></a>二、Docker与虚拟机的区别</h4><table>
-<thead>
-<tr>
-<th></th>
-<th>Docker容器</th>
-<th>虚拟机（VM）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>操作系统</td>
-<td>与宿主机共享OS</td>
-<td>宿主机OS上运行虚拟机OS</td>
-</tr>
-<tr>
-<td>存储大小</td>
-<td>镜像小，便于存储与传输</td>
-<td>镜像庞大（vmdk、vdi等）</td>
-</tr>
-<tr>
-<td>运行性能</td>
-<td>几乎无额外性能损失</td>
-<td>操作系统额外的CPU、内存消耗</td>
-</tr>
-<tr>
-<td>移植性</td>
-<td>轻便、灵活，适用于Linux</td>
-<td>笨重，与虚拟化技术耦合度高</td>
-</tr>
-<tr>
-<td>硬件亲和性</td>
-<td>面向软件开发者</td>
-<td>面向硬件运维者</td>
-</tr>
-</tbody></table>
-<h4 id="三、Docker里面三个重要的概念Dockerfile、镜像-image-、容器-Container"><a href="#三、Docker里面三个重要的概念Dockerfile、镜像-image-、容器-Container" class="headerlink" title="三、Docker里面三个重要的概念Dockerfile、镜像(image)、容器(Container)"></a>三、Docker里面三个重要的概念Dockerfile、镜像(image)、容器(Container)</h4><p>1.Dockerfile是用来构建Docker镜像的构建文件，是由一系列命令和参数构成的脚本。</p>
-<p>Dockerfile体系结构：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FROM　　基础镜像，当前新镜像是基于哪个镜像的</span><br><span class="line">MAINTAINER　　镜像维护者的姓名和邮箱地址</span><br><span class="line">RUN　　容器构建时需要运行的命令</span><br><span class="line">EXPOSE　　当前容器对外暴露出的端口</span><br><span class="line">WORKDIR　　指定在创建容器后，终端默认登录进来的工作目录，一个落脚点</span><br><span class="line">ENV　　用来在构建镜像过程中设置环境变量</span><br><span class="line">AD　　将宿主机目录下的文件拷贝进镜像且ADD命令会自动处理URL和解压tar压缩包</span><br><span class="line">COPY　　类似ADD，拷贝文件和目录到镜像中。将从构建上下文目录中<span class="tag">&lt;<span class="name">源路径</span>&gt;</span>的文件/目录复制到新的一层的镜像内的<span class="tag">&lt;<span class="name">目标路径</span>&gt;</span>位置</span><br><span class="line">VOLUME　　容器数据卷，用于数据保存和持久化工作</span><br><span class="line">CMD　　指定一个容器启动时要运行的命令。Dockerfile中可以有多个CMD指令，但只要最后一个生效，CMD会被docker run之后的参数替换</span><br><span class="line">ENTRYPOINT　　指定一个容器启动时要运行的命令。ENTRYPOINT的目的和CMD一样，都是在指定容器启动程序及参数</span><br><span class="line">ONBUILD　　当构建一个被继承的Dockerfile时运行命令，父镜像在被子继承后父镜像的onbuild被触发</span><br></pre></td></tr></table></figure>
-<p>2.镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。</p>
-<p>3.容器是用镜像创建的运行实例。它可以被启动、开始、停止、删除。每个容器都是相互隔离的、保证安全的平台。可以把容器看做是一个简易版的Linux环境（包括root用户权限、用户空间和网络空间等）和运行在其中的应用程序。</p>
-<h4 id="四、安装Docker"><a href="#四、安装Docker" class="headerlink" title="四、安装Docker"></a>四、安装Docker</h4><p>1.安装Docker依赖包</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
-
-<p>2.设置阿里云镜像源</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3.安装 Docker-CE</span><br></pre></td></tr></table></figure>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce</span><br></pre></td></tr></table></figure>
-<p>4.查看是否安装成功</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker version</span><br></pre></td></tr></table></figure>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/3d0de6d7f169b639389384e8184829f5.png" alt="image.png"></p>
-<h4 id="五、使用Docker安装MySQL"><a href="#五、使用Docker安装MySQL" class="headerlink" title="五、使用Docker安装MySQL"></a>五、使用Docker安装MySQL</h4><p>1.使用Docker拉取Mysql镜像(这里安装的是MySQL5.6版本)</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>2.安装mysql命令</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 3306:3306 --name mysql -v /ray/mysql/conf:/etc/mysql/conf.d -v /ray/mysql/logs:/logs -v /ray/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=admin -d mysql:5.7</span><br></pre></td></tr></table></figure>
-<p>命令说明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-p <span class="number">3306</span>:<span class="number">3306</span>　　将主机的<span class="number">3306</span>端口映射到docker容器的<span class="number">3306</span>端口</span><br><span class="line">--name mysql　　运行服务器名字</span><br><span class="line">-v /ray/mysql/conf:/etc/mysql/conf.d　　将主机/ray/mysql目录下的conf/my.cnf挂载到容器的/etc/mysql/conf.d</span><br><span class="line">-v /ray/mysql/logs:/logs　　将主机/ray/mysql目录下的logs目录挂载到容器的/logs</span><br><span class="line">-v /ray/mysql/data:/<span class="keyword">var</span>/lib/mysql　　将主机/ray/mysql目录下的data目录挂载到容器的/<span class="keyword">var</span>/lib/mysql</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=admin　　初始化root用户的密码</span><br><span class="line">-d mysql:<span class="number">5.7</span>　　后台程序运行mysql5<span class="number">.7</span></span><br></pre></td></tr></table></figure>
-<p>3.进入mysql</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it MySQL运行成功后的容器ID /bin/bash</span><br></pre></td></tr></table></figure>
-<p>然后即可登录MySQL，创建数据库，或者使用Navicat等工具创建数据库。</p>
-<h4 id="六、使用Docker安装Redis"><a href="#六、使用Docker安装Redis" class="headerlink" title="六、使用Docker安装Redis"></a>六、使用Docker安装Redis</h4><p>1.使用Docker拉取Redis镜像(这里安装的是Redis3.2版本)</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull redis:3.2</span><br></pre></td></tr></table></figure>
-<p>2.安装redis命令(这里不对命令做解释)</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 6379:6379 -v /ray/redis/data:/data -v /ray/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf -d redis:3.2 redis-server /usr/local/etc/redis/redis.conf --appendonly yes</span><br></pre></td></tr></table></figure>
-<p>加密码<code>--requirepass &quot;admin&quot;</code></p>
-<h4 id="七、Docker部署SpringBoot项目"><a href="#七、Docker部署SpringBoot项目" class="headerlink" title="七、Docker部署SpringBoot项目"></a>七、Docker部署SpringBoot项目</h4><p>1.将项目打包成jar包(假设名字为myblog.jar)，并编写一个Dockerfile文件，文件内容如下：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Docker image for springboot file run</span><br><span class="line"># VERSION 0.0.1</span><br><span class="line"># Author: Ray</span><br><span class="line"># 基础镜像使用java</span><br><span class="line">FROM java:8</span><br><span class="line"># 作者</span><br><span class="line">MAINTAINER Ray &lt;185048761@qq.com&gt;</span><br><span class="line"># VOLUME 指定了临时文件目录为/tmp。</span><br><span class="line"># 其效果是在主机 /var/lib/docker 目录下创建了一个临时文件，并链接到容器的/tmp</span><br><span class="line">VOLUME /tmp</span><br><span class="line"># 将jar包添加到容器中并更名为app.jar</span><br><span class="line">ADD myblog.jar app.jar</span><br><span class="line"># 运行jar包</span><br><span class="line">RUN bash -c &#x27;touch /app.jar&#x27;</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-Djava.security.egd=file:/dev/./urandom&quot;,&quot;-jar&quot;,&quot;/app.jar&quot;]</span><br><span class="line">#暴露8080端口</span><br><span class="line">EXPOSE 80</span><br></pre></td></tr></table></figure>
-<p>2.将这两个文件一并上传至服务器中的同一个目录下面，进入该文件夹后执行此命令构建镜像：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/f175e9402c4d4bf3e98c78f055b6e9c6.png" alt="image.png"></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t myblog.jar .</span><br></pre></td></tr></table></figure>
-<p>3.生成docker容器，并运行</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 80:80 myblog.jar</span><br></pre></td></tr></table></figure>
-<p>等一会儿，SpringBoot项目跑起来了后，就可以使用浏览器通过80端口进行访问了</p>
 
           
         
