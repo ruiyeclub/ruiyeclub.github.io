@@ -234,6 +234,139 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/01/04/%E5%BC%80%E5%8F%91%E5%BF%85%E5%A4%87%E8%BD%AF%E4%BB%B6-Typora%E9%85%8D%E5%90%88PicGo%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE(%E8%BD%AC)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/01/04/%E5%BC%80%E5%8F%91%E5%BF%85%E5%A4%87%E8%BD%AF%E4%BB%B6-Typora%E9%85%8D%E5%90%88PicGo%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE(%E8%BD%AC)/" itemprop="url">开发必备软件-Typora配合PicGo阿里云图床配置(转)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-01-04T11:20:40+08:00">
+                2024-01-04
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>写博客的时候，刚开始直接在各大平台上直接写，后来还是觉得不太方便，需要在各大平台之间来回切换。于是就改用Typora，但是有个问题就是图片的处理，只能放在本地。想要发布到各大平台，就需要图床。本文结合阿里云OSS、PicGo图床配置、Typora配置，能够做到一次文章编写，各大平台统一输出。</p>
+</blockquote>
+<h2 id="阿里云配置"><a href="#阿里云配置" class="headerlink" title="阿里云配置"></a>阿里云配置</h2><h3 id="创建对象存储Bucket"><a href="#创建对象存储Bucket" class="headerlink" title="创建对象存储Bucket"></a><strong>创建对象存储Bucket</strong></h3><p>登录阿里云后，选择对象存储</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/4b40339b-f3ee-415a-8348-1a371e5c4b6d.png" alt="image-20221222125850693"></p>
+<p>新人开通试用3个月免费</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/14da8647-0f63-43ae-bcfa-69b5829db289.png" alt="image-20221222130109938"></p>
+<p>开通后，进入管理控制台</p>
+<p>点击Bucket列表，创建Bucket</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/dc718170-d70f-458c-918b-67d2c495739e.png" alt="image-20221222130233633"></p>
+<p>访问控制开启公共读</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/5154a85d-5292-49b2-bd4d-035cd8fadc36.png" alt="image-20221222130527365"></p>
+<h3 id="访问控制RAM配置"><a href="#访问控制RAM配置" class="headerlink" title="访问控制RAM配置"></a><strong>访问控制RAM配置</strong></h3><p>点击右上角AccessKey管理</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/10ecacba-67dd-4bd0-b2b0-05d6bd2c8280.png" alt="image-20221222134259058"></p>
+<p><strong>创建AccessKey，注意这里的AccessKey ID 和 AccessKey Secret保存下来，后面要用到</strong></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/46ad3a39-cd1b-49b9-9d72-d4dc2e43730f.png" alt="image-20221222134507363"></p>
+<h2 id="PicGo下载安装"><a href="#PicGo下载安装" class="headerlink" title="PicGo下载安装"></a>PicGo下载安装</h2><p>下载地址</p>
+<p><a target="_blank" rel="noopener" href="https://picgo.github.io/PicGo-Doc/zh/guide/#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85">https://picgo.github.io/PicGo-Doc/zh/guide/#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85</a></p>
+<p>可以选择山东大学的镜像站</p>
+<p><a target="_blank" rel="noopener" href="https://mirrors.sdu.edu.cn/github-release/Molunerfinn_PicGo">https://mirrors.sdu.edu.cn/github-release/Molunerfinn_PicGo</a></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/9bc5c527-4845-4ba7-b575-f6ac1c57ea3d.png" alt="image-20221222133605621"></p>
+<h3 id="PicGo配置"><a href="#PicGo配置" class="headerlink" title="PicGo配置"></a><strong>PicGo配置</strong></h3><ul>
+<li>KeyId 、KeySecret 就是上面阿里云的AccessKey ID 和 AccessKey Secret</li>
+<li>Bucket 就是阿里云的bucket名称</li>
+</ul>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/326fb8c6-44a6-491b-96e8-c58bc4c08282.png" alt="image-20221222134810396"></p>
+<ul>
+<li>存储区域，对应阿里云Endpoint的前面，我这里是oss-cn-hangzhou</li>
+<li>存储路径，自己随便定义一个，比如 img&#x2F;</li>
+<li>自定义域名，对应阿里云 Bucket域名</li>
+</ul>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/6cf44a45-802d-4553-a499-c43726a92782.png" alt="image-20221222135020880"></p>
+<h2 id="Typora下载及配置"><a href="#Typora下载及配置" class="headerlink" title="Typora下载及配置"></a>Typora下载及配置</h2><p>Typora目前收费，想要免费可使用，可参考笔者的这个下载地址</p>
+<blockquote>
+<p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1bCxmIPk23R0B9SVCqY37wg?pwd=F93i">https://pan.baidu.com/s/1bCxmIPk23R0B9SVCqY37wg?pwd=F93i</a> 提取码：F93i</p>
+</blockquote>
+<h3 id="设置"><a href="#设置" class="headerlink" title="设置"></a><strong>设置</strong></h3><p>找到设置，点击图像设置</p>
+<p>上传图片的服务，选择PicGo.app</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/18f35e1f-8a91-4200-a71d-91b6d8f65ec9.png" alt="image-20221222135334696"></p>
+<p><strong>注意：PicGo.app需要填写输入正确的安装路径，填写后可通过旁边的验证功能查看是否填写成功</strong></p>
+<h3 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a><strong>实际效果</strong></h3><ul>
+<li>截图软件，粘贴效果，typora直接转换成了阿里云OSS的地址<img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/53d7a28b-96f3-4ba5-8fbc-e47b5bddae99.png" alt="image-20221222140236233"></li>
+<li>外站粘贴过来的也是同样效果</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2023/12/28/Node-js%E6%A8%A1%E5%9D%97%E5%8C%96%E9%80%89%E6%8B%A9Commonjs%E5%92%8CES6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1225,129 +1358,6 @@
 <h1 id="四、自定义异常类捕捉MethodArgumentNotValidException"><a href="#四、自定义异常类捕捉MethodArgumentNotValidException" class="headerlink" title="四、自定义异常类捕捉MethodArgumentNotValidException"></a>四、自定义异常类捕捉MethodArgumentNotValidException</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionAdvice</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(value = MethodArgumentNotValidException.class)</span></span><br><span class="line">    <span class="keyword">public</span> JsonData <span class="title function_">validException</span><span class="params">(MethodArgumentNotValidException e)</span> &#123;</span><br><span class="line">        <span class="comment">//验证post请求的参数合法性</span></span><br><span class="line">        <span class="type">MethodArgumentNotValidException</span> <span class="variable">notValidException</span> <span class="operator">=</span> e;</span><br><span class="line">        <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> notValidException.getBindingResult().getFieldError().getDefaultMessage();</span><br><span class="line">        <span class="keyword">return</span> JsonData.buildError(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用PostMan的测试结果如下：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/0e7da5f5ea00deaf1e69196d09085f49.png" alt="image.png"></p>
 <p>具体的代码可以在我的github上面查看，<a target="_blank" rel="noopener" href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/14/SpringBoot%E4%BD%BF%E7%94%A8Jwt%E5%A4%84%E7%90%86%E8%B7%A8%E5%9F%9F%E8%AE%A4%E8%AF%81%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/14/SpringBoot%E4%BD%BF%E7%94%A8Jwt%E5%A4%84%E7%90%86%E8%B7%A8%E5%9F%9F%E8%AE%A4%E8%AF%81%E9%97%AE%E9%A2%98/" itemprop="url">SpringBoot使用Jwt处理跨域认证问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-14T17:35:40+08:00">
-                2022-02-14
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　　在前后端开发时为什么需要用户认证呢？原因是由于HTTP协定是不存储状态的，这意味着当我们透过账号密码验证一个使用者时，当下一个request请求时他就把刚刚的资料忘记了。于是我们的程序就不知道谁是谁了。 所以为了保证系统的安全，就需要验证用户是否处于登陆状态。</p>
-<h1 id="一、JWT的组成"><a href="#一、JWT的组成" class="headerlink" title="一、JWT的组成"></a>一、JWT的组成</h1><p>JWT由Header、Payload、Signature三部分组成，分别用.分隔。</p>
-<p>下面就是一个jwt真实的样子，说白了就是一个字符串，但是里面却存储了很重要的信息。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYXljaGVuIiwiaWQiOjIsIm5hbWUiOiJyYXkiLCJwYXNzd29yZCI6IjMyMSIsImlhdCI6MTU5MDI5OTU0OCwiZXhwIjoxNTkwMzg1OTQ4fQ.ORJNldDIfffg7D3_xu0_dBWb16y4fPLtw_r6qgScFpQ</span><br></pre></td></tr></table></figure>
-<p>Header：</p>
-<blockquote>
-<p>第一部分是请求头由两部分组成，alg与typ,第一个指定的是算法，第二指定的是类型。</p>
-</blockquote>
-<p>Payload</p>
-<blockquote>
-<p>第二部分是主体信息组成,用来存储JWT基本信息，或者是我们的信息。</p>
-</blockquote>
-<p>Signature</p>
-<blockquote>
-<p>第三部分主要是给第一部分跟第二部进行签名使用的,用来验证是否是我们服务器发起的Token，secret是我们的密钥。</p>
-</blockquote>
-<h1 id="二、在springboot项目中使用jwt做验证"><a href="#二、在springboot项目中使用jwt做验证" class="headerlink" title="二、在springboot项目中使用jwt做验证"></a>二、在springboot项目中使用jwt做验证</h1><p>具体流程：</p>
-<ul>
-<li>把用户的用户名和密码发到后端</li>
-<li>后端进行校验，校验成功会生成token, 把token发送给客户端</li>
-<li>客户端自己保存token, 再次请求就要在Http协议的请求头中带着token去访问服务端，和在服务端保存的token信息进行比对校验。</li>
-</ul>
-<p>1.先引入jar包</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.9.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>2.使用工具类生成token和验证token（生成token方法中存入了用户的信息）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JwtUtils</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//发行者</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SUBJECT=<span class="string">&quot;raychen&quot;</span>;</span><br><span class="line">    <span class="comment">//过期时间 一天</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> EXPIRE=<span class="number">1000</span>*<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>;</span><br><span class="line">    <span class="comment">//密钥</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String APPSECRET=<span class="string">&quot;raychen11&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 生成jwt</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> user</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">geneJsonWebToken</span><span class="params">(User user)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(user==<span class="literal">null</span> || user.getId()==<span class="literal">null</span> || user.getName()==<span class="literal">null</span> || user.getPassword()==<span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        String token=Jwts.builder().setSubject(SUBJECT)</span><br><span class="line">                .claim(<span class="string">&quot;id&quot;</span>,user.getId())</span><br><span class="line">                .claim(<span class="string">&quot;name&quot;</span>,user.getName())</span><br><span class="line">                .claim(<span class="string">&quot;password&quot;</span>,user.getPassword())</span><br><span class="line">                .setIssuedAt(<span class="keyword">new</span> <span class="title class_">Date</span>())</span><br><span class="line">                .setExpiration(<span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis()+EXPIRE))</span><br><span class="line">                .signWith(SignatureAlgorithm.HS256,APPSECRET).compact();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> token;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 校验token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Claims <span class="title function_">checkJWT</span><span class="params">(String token)</span>&#123;</span><br><span class="line">        <span class="comment">//仿造的token或者已过期就会报错</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">final</span> Claims claims=Jwts.parser().setSigningKey(APPSECRET).parseClaimsJws(token).getBody();</span><br><span class="line">            <span class="keyword">return</span> claims;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;catch...&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>3.自定义注解（进行token验证）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> CheckToken &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">required</span><span class="params">()</span> <span class="keyword">default</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>4.编写config，将后台所有请求先去拦截器（拦截器返回了true，用户才可以请求到接口）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InterceptorConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        registry.addInterceptor(authenticationInterceptor())</span><br><span class="line">                .addPathPatterns(<span class="string">&quot;/**&quot;</span>);    <span class="comment">// 拦截所有请求，通过判断是否有 @LoginRequired 注解 决定是否需要登录</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> AuthenticationInterceptor <span class="title function_">authenticationInterceptor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AuthenticationInterceptor</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>5.定义拦截器（对需要token验证的请求，进行验证，验证成功返回true，失败返回false无法请求到接口）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthenticationInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Gson gson=<span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 进入controller之前进行拦截</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> response</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> object</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object object)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 如果不是映射到方法直接通过</span></span><br><span class="line">        <span class="keyword">if</span> (!(object <span class="keyword">instanceof</span> HandlerMethod)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">HandlerMethod</span> <span class="variable">handlerMethod</span> <span class="operator">=</span> (HandlerMethod) object;</span><br><span class="line">        <span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> handlerMethod.getMethod();</span><br><span class="line">        <span class="comment">//检查是否有LoginToken注释，有则跳过认证</span></span><br><span class="line">        <span class="keyword">if</span> (method.isAnnotationPresent(LoginToken.class)) &#123;</span><br><span class="line">            <span class="type">LoginToken</span> <span class="variable">loginToken</span> <span class="operator">=</span> method.getAnnotation(LoginToken.class);</span><br><span class="line">            <span class="keyword">if</span> (loginToken.required()) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//前面是不需要token验证的 从 http 请求头中取出 token</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;token&quot;</span>);</span><br><span class="line">        <span class="comment">//检查有没有需要用户权限的注解</span></span><br><span class="line">        <span class="keyword">if</span> (method.isAnnotationPresent(CheckToken.class)) &#123;</span><br><span class="line">            <span class="type">CheckToken</span> <span class="variable">checkToken</span> <span class="operator">=</span> method.getAnnotation(CheckToken.class);</span><br><span class="line">            <span class="keyword">if</span> (checkToken.required()) &#123;</span><br><span class="line">                <span class="keyword">if</span>(token!=<span class="literal">null</span>)&#123;</span><br><span class="line">                    Claims claims= JwtUtils.checkJWT(token);</span><br><span class="line">                    <span class="keyword">if</span>(<span class="literal">null</span>==claims)&#123;</span><br><span class="line">                        sendJsonMessage(response, JsonData.buildError(<span class="string">&quot;token有误&quot;</span>));</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    Integer userId= (Integer) claims.get(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">                    <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> (String) claims.get(<span class="string">&quot;name&quot;</span>);</span><br><span class="line"></span><br><span class="line">                    request.setAttribute(<span class="string">&quot;userId&quot;</span>,userId);</span><br><span class="line">                    request.setAttribute(<span class="string">&quot;name&quot;</span>,name);</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//token为null的话 返回一段json给前端</span></span><br><span class="line">                sendJsonMessage(response, JsonData.buildError(<span class="string">&quot;请登录&quot;</span>));</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没有使用注解的方法 直接返回true</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 响应数据给前端</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> response</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> obj</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sendJsonMessage</span> <span class="params">(HttpServletResponse response, Object obj)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">            response.setContentType(<span class="string">&quot;application/json; charset=utf-8&quot;</span>);</span><br><span class="line">            <span class="type">PrintWriter</span> <span class="variable">writer</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">            writer.print(gson.toJson(obj));</span><br><span class="line">            writer.close();</span><br><span class="line">            response.flushBuffer();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>用户登录成功后，使用工具类生成token。token在服务端不做存储，直接将token返回给客户端，客户端下次请求服务端时，使用工具类来验证header里的token是否合法。</p>
-<p>项目代码地址：<a target="_blank" rel="noopener" href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a></p>
 
           
         
