@@ -234,6 +234,153 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/01/10/Linux%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%83%A8%E7%BD%B2Python%E8%84%9A%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/01/10/Linux%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%83%A8%E7%BD%B2Python%E8%84%9A%E6%9C%AC/" itemprop="url">Linux环境下部署Python脚本</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-01-10T14:32:41+08:00">
+                2024-01-10
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>系统用的是Centos，自带了python环境，考虑到后期维护使用virtualenv虚拟环境来为应用创建”隔离”的python运行环境。</p>
+<p>virtualenv虚拟环境是一个创建隔绝的Python环境的工具。</p>
+</blockquote>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240110124003769.png" alt="image-20240110124003769"></p>
+<ul>
+<li><strong>隔离性</strong>：virtualenv可以创建一个隔离的环境，这个环境与其他Python环境（如系统环境或全局环境）完全隔离。这意味着，在这个环境中安装的包不会影响其他环境，反之亦然。这有助于解决不同项目之间的依赖冲突问题。</li>
+<li><strong>易于管理</strong>：每个虚拟环境都有自己的<code>pip</code>版本，这意味着你可以为每个项目安装特定版本的<code>pip</code>。此外，每个环境都有自己的Python解释器，这使得版本控制变得简单。</li>
+<li><strong>安全性</strong>：由于每个环境都是隔离的，因此在一个环境中安装的包不会影响其他环境。这意味着在一个环境中安装的恶意包不会影响其他环境。</li>
+<li><strong>灵活性</strong>：你可以为不同的项目创建不同的虚拟环境，每个环境都有自己的Python解释器和pip版本。这使得你可以根据项目的需求来配置环境。</li>
+<li><strong>易于使用</strong>：virtualenv易于安装和使用。你只需要在命令行中输入一些命令就可以创建新的环境，安装包等。这对于初学者来说非常友好。</li>
+</ul>
+<h3 id="一、部署项目"><a href="#一、部署项目" class="headerlink" title="一、部署项目"></a>一、部署项目</h3><p>1.导出项目所需要的依赖包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip freeze &gt; requements.txt</span><br></pre></td></tr></table></figure>
+
+<p>2.创建python虚拟环境（env_name当前环境的名称）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m venv env_name</span><br></pre></td></tr></table></figure>
+
+<p>创建后会生成一个文件夹，里面包含了项目运行所需要的环境</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240110125725202.png" alt="image-20240110125725202"></p>
+<p>3.启动虚拟环境</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source env_name/bin/activate</span><br></pre></td></tr></table></figure>
+
+<p>3.启动python脚本</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requements.txt # 先导入依赖包</span><br><span class="line">python xx.py # 运行程序文件</span><br></pre></td></tr></table></figure>
+
+<p>4.关闭虚拟环境命令</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二、后台运行python脚本"><a href="#二、后台运行python脚本" class="headerlink" title="二、后台运行python脚本"></a>二、后台运行python脚本</h2><p>1.nohup命令可以使你在注销账户或关闭终端时，程序仍然保持运行。该命令的基本语法为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nohup python your_program.py &amp;</span><br><span class="line">或者：nohup python your_program.py &gt;app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p>&amp;1是一个指向标准输出的指针，2是标准错误输出的文件描述符，该命令会将标准输出和标准错误写入到app.log</p>
+<p>2.其中，<code>your_program.py</code>为需要后台运行的Python程序文件名，<code>&amp;</code>符号表示在后台运行程序。运行上述命令后，你可以看到如下输出：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup: ignoring input and appending output to &#x27;nohup.out&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>3.这意味着你的Python程序已经在后台运行，并将输出信息保存在nohup.out文件中。你可以使用<code>tail</code>命令跟踪该文件以查看程序输出信息。如果你想停止程序的运行，可以使用<code>kill</code>命令。示例代码如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tail -f nohup.out</span><br><span class="line">kill PID</span><br></pre></td></tr></table></figure>
+
+<p>4.其中，<code>PID</code>为你程序的进程ID，在运行<code>nohup</code>命令后你可以使用：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep python # 命令查找进程ID。</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="三、升级python版本"><a href="#三、升级python版本" class="headerlink" title="三、升级python版本"></a>三、升级python版本</h2><p>1.<a href="%5Bwww.python.org/downloads/%5D(https://link.juejin.cn/?target=https://www.python.org/downloads/)">官网下载安装包</a></p>
+<p>2.解压：<code>tar  -xf   Python-3.10.4.tgz</code></p>
+<p>3.进入解压后的目录：<code>./configure &amp;&amp; make &amp;&amp; make install </code></p>
+<p>4.先找到python文件，准备创建软链接</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240119145905288.png" alt="image-20240119145905288"></p>
+<p>5.创建软连接（&#x2F;usr&#x2F;local&#x2F;bin&#x2F;python3.10是存放python文件目录）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -sf /usr/local/bin/python3.10 /usr/bin/python</span><br><span class="line">ln -sf /usr/local/bin/python3.10-config /usr/bin/python-config</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h2><p>1.使用nohup命令后，日志文件内没有日志输出，我遇到的问题是存在输出缓存，通过修改启动命令解决：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup python -u your_program.py &gt;app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<p>参考文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xunfengdumo/article/details/132448270">Python nohup 启动python脚本，后台没有日志</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/01/04/%E5%BC%80%E5%8F%91%E5%BF%85%E5%A4%87%E8%BD%AF%E4%BB%B6-Typora%E9%85%8D%E5%90%88PicGo%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE(%E8%BD%AC)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1259,105 +1406,6 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">org.crazycake.shiro.exception.PrincipalInstanceException: class com.company.project.manage.entity.UserInfo must has getter for field: id</span><br><span class="line">We need a field to identify this Cache Object in Redis. So you need to defined an id field which you can get unique id to identify this principal. For example, if you use UserInfo as Principal class, the id field maybe userId, userName, email, etc. For example, getUserId(), getUserName(), getEmail(), etc.</span><br><span class="line">Default value is &quot;id&quot;, that means your principal object has a method called &quot;getId()&quot;</span><br></pre></td></tr></table></figure>
 <p>大概意思就是UserInfo对象中必须要有id属性，并且要有对应的get方法。在身份验证的时候就已经将userinfo信息传递给了shiro，然后redis做缓存的时候需要key，key的值就与userinfo里面的id值有关。<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/5d634f7823c441ee80b9356c5024cce4.png" alt="image.png"><br>点开UserInfo对象一看，尴了个尬，主键的命名使用的是uid<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/256e8900fd2c9cc5dfbb6629910f5775.png" alt="image.png"><br>最后把主键换成id，就运行正常了。</p>
 <p>演示项目在我的github上面，shiro-redis插件的整合可以查看：<br><a target="_blank" rel="noopener" href="https://mrbird.cc/Spring-Boot-Shiro%20cache.html">https://mrbird.cc/Spring-Boot-Shiro%20cache.html</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Hibernate-Validator%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81%E5%8A%9F%E8%83%BD/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Hibernate-Validator%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81%E5%8A%9F%E8%83%BD/" itemprop="url">SpringBoot整合Hibernate Validator实现参数验证功能</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-06-01T09:34:37+08:00">
-                2022-06-01
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　　在前后端分离的开发模式中，后端对前端传入的参数的校验成了必不可少的一个环节。但是在多参数的情况下，在controller层加上参数验证，会显得特别臃肿，并且会有许多的重复代码。这里可以引用Hibernate Validator来解决这个问题，直接在实体类进行参数校验，验证失败直接返回错误信息给前端，减少controller层的代码量。</p>
-<h1 id="一、pom引入Hibernate-Validator"><a href="#一、pom引入Hibernate-Validator" class="headerlink" title="一、pom引入Hibernate Validator"></a>一、pom引入Hibernate Validator</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 验证器 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate.validator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-validator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="二、通过注解在实体类进行参数校验"><a href="#二、通过注解在实体类进行参数校验" class="headerlink" title="二、通过注解在实体类进行参数校验"></a>二、通过注解在实体类进行参数校验</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;用户名称不能为空！&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;age不能为null!&quot;)</span></span><br><span class="line">    <span class="meta">@Range(min = 1, max = 888, message = &quot;范围为1至888&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日期格式化转换</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;日期不能为null!&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date date;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里用到的参数校验的注解有@NotNull和@Range，message是到时候我们返回给前端的信息，注解的具体意思如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Null</span>  被注释的元素必须为<span class="literal">null</span></span><br><span class="line"><span class="meta">@NotNull</span>  被注释的元素不能为<span class="literal">null</span></span><br><span class="line"><span class="meta">@AssertTrue</span>  被注释的元素必须为<span class="literal">true</span></span><br><span class="line"><span class="meta">@AssertFalse</span>  被注释的元素必须为<span class="literal">false</span></span><br><span class="line"><span class="meta">@Min(value)</span>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值</span><br><span class="line"><span class="meta">@Max(value)</span>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值</span><br><span class="line"><span class="meta">@DecimalMin(value)</span>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值</span><br><span class="line"><span class="meta">@DecimalMax(value)</span>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值</span><br><span class="line"><span class="meta">@Size(max,min)</span>  被注释的元素的大小必须在指定的范围内。</span><br><span class="line"><span class="meta">@Digits(integer,fraction)</span>  被注释的元素必须是一个数字，其值必须在可接受的范围内</span><br><span class="line"><span class="meta">@Past</span>  被注释的元素必须是一个过去的日期</span><br><span class="line"><span class="meta">@Future</span>  被注释的元素必须是一个将来的日期</span><br><span class="line"><span class="meta">@Pattern(value)</span> 被注释的元素必须符合指定的正则表达式。</span><br><span class="line"><span class="meta">@Email</span> 被注释的元素必须是电子邮件地址</span><br><span class="line"><span class="meta">@Length</span> 被注释的字符串的大小必须在指定的范围内</span><br><span class="line"><span class="meta">@NotEmpty</span>  被注释的字符串必须非空</span><br><span class="line"><span class="meta">@Range</span>  被注释的元素必须在合适的范围内</span><br></pre></td></tr></table></figure>
-<h1 id="三、controller层的方法加上-Valid注解"><a href="#三、controller层的方法加上-Valid注解" class="headerlink" title="三、controller层的方法加上@Valid注解"></a>三、controller层的方法加上@Valid注解</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/testPost&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">testPost</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Valid</span> UserModel userModel, BindingResult result)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">        <span class="keyword">for</span>(ObjectError error:result.getAllErrors())&#123;</span><br><span class="line">            <span class="keyword">return</span> error.getDefaultMessage();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> userModel;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>controller层这里只需要在实体类的前面加上@Valid注解，这个注解可以实现数据的验证。这里BindingResult是存储了校验时的错误信息，验证有误时将错误信息返回给前端。这里不使用BindingResult的时候，控制台会报MethodArgumentNotValidException，这里可以通过自定义异常类来捕捉它，然后去掉BindingResult，以及难看的if判断。</p>
-<h1 id="四、自定义异常类捕捉MethodArgumentNotValidException"><a href="#四、自定义异常类捕捉MethodArgumentNotValidException" class="headerlink" title="四、自定义异常类捕捉MethodArgumentNotValidException"></a>四、自定义异常类捕捉MethodArgumentNotValidException</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionAdvice</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(value = MethodArgumentNotValidException.class)</span></span><br><span class="line">    <span class="keyword">public</span> JsonData <span class="title function_">validException</span><span class="params">(MethodArgumentNotValidException e)</span> &#123;</span><br><span class="line">        <span class="comment">//验证post请求的参数合法性</span></span><br><span class="line">        <span class="type">MethodArgumentNotValidException</span> <span class="variable">notValidException</span> <span class="operator">=</span> e;</span><br><span class="line">        <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> notValidException.getBindingResult().getFieldError().getDefaultMessage();</span><br><span class="line">        <span class="keyword">return</span> JsonData.buildError(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用PostMan的测试结果如下：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/0e7da5f5ea00deaf1e69196d09085f49.png" alt="image.png"></p>
-<p>具体的代码可以在我的github上面查看，<a target="_blank" rel="noopener" href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a></p>
 
           
         

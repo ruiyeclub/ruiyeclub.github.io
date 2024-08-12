@@ -234,6 +234,100 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/04/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%BA%8C)%EF%BC%9Avolatile%E5%85%B3%E9%94%AE%E5%AD%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/02/04/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%BA%8C)%EF%BC%9Avolatile%E5%85%B3%E9%94%AE%E5%AD%97/" itemprop="url">Java并发编程(二)：volatile关键字</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-04T17:35:40+08:00">
+                2022-02-04
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>volatile是Java虚拟机提供的轻量级的同步机制。volatile关键字有如下两个作用，一句话概括就是<strong>内存可见性</strong>和禁止重排序。<br>1）保证被volatile修饰的共享变量对所有线程总是可见的，也就是<strong>当一个线程修改了一个被volatile修饰共享变量的值，新值总是可以被其他线程立即得知。</strong><br>2）禁止指令重排序优化。在执行程序时为了提高性能，编译器和处理器通常会重新安排指令的执行顺序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*volatile*/</span> <span class="type">boolean</span> running=<span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">m</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;m start&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span> (running)&#123;&#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;m end&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        T t=<span class="keyword">new</span> <span class="title class_">T</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;t.m(),<span class="string">&quot;t1&quot;</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        t.running=<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码中没加volatile的话，循环的后面的输出语句”m end”不会输出，但是main方法里面确实是已经将running的值改成了false。这里有关java的<strong>内存模型</strong>，简单来说就是程序运行时，running的值已经被加载到了缓存里面，而改的是t对象的running值在堆内存中。加了volatile就不一样了，它改完数值之后，会通知其他线程，让其他线程重新读一下堆内存中的值，也就是内存可见性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T1</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*synchronized*/</span> <span class="keyword">void</span> <span class="title function_">m</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)&#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        T1 t=<span class="keyword">new</span> <span class="title class_">T1</span>();</span><br><span class="line">        List&lt;Thread&gt; threads=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Thread&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">            threads.add(<span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;t.m(),<span class="string">&quot;thread-&quot;</span>+i));</span><br><span class="line">        &#125;</span><br><span class="line">        threads.forEach((o)-&gt;o.start());</span><br><span class="line">        threads.forEach((o)-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                o.join();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        System.out.println(t.count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码中，十个线程执行count++加到1w循环，理想状态当然是加到10w，但是volatile只能保持线程的可见性，不能保持原子性。给count变量加上了volatile，最后输出的count值也达不到10w。这就是volatile与synchronized的区别，<strong>volatile只能保持可见性，而synchronized可以保持可见性和原子性。</strong>但是volatile更加轻量级，能用volatile的情况下，尽量别用synchronized。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/03/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%B8%80)%EF%BC%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E4%BB%A5%E5%8F%8Asynchronized%E5%85%B3%E9%94%AE%E5%AD%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">

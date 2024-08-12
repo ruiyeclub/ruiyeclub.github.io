@@ -64,15 +64,21 @@
 
 
 
-<meta name="description" content="Awesome guy.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ruiyeclub">
-<meta property="og:url" content="https://ruiyeclub.cn/archives/2022/index.html">
+<meta name="description" content="在使用第三方托管网站做个人网站，例如：Github Pages，想要给网站加上https，可以通过ohttps来创建Let’s Encrypt的https证书，单纯想给网站加上https也可以。  安装Nginx先确保服务器(我这里是win服务器)已经安装了nginx，选择适合自己的版本，然后下载解压到服务器上，双击运行nginx.exe，访问服务器ip地址，出现Welcome to Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用ohttps自动部署https证书">
+<meta property="og:url" content="https://ruiyeclub.cn/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/index.html">
 <meta property="og:site_name" content="Ruiyeclub">
-<meta property="og:description" content="Awesome guy.">
+<meta property="og:description" content="在使用第三方托管网站做个人网站，例如：Github Pages，想要给网站加上https，可以通过ohttps来创建Let’s Encrypt的https证书，单纯想给网站加上https也可以。  安装Nginx先确保服务器(我这里是win服务器)已经安装了nginx，选择适合自己的版本，然后下载解压到服务器上，双击运行nginx.exe，访问服务器ip地址，出现Welcome to Nginx">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124550577.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124657919.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812125505357.png">
+<meta property="article:published_time" content="2024-08-12T05:03:01.000Z">
+<meta property="article:modified_time" content="2024-08-12T05:04:49.244Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124550577.png">
 
 
 
@@ -102,13 +108,13 @@
 
 
 
-  <link rel="canonical" href="https://ruiyeclub.cn/archives/2022/"/>
+  <link rel="canonical" href="https://ruiyeclub.cn/2024/08/12/使用ohttps自动部署https证书/"/>
 
 
 
 
 
-  <title>Archive | Ruiyeclub</title>
+  <title>使用ohttps自动部署https证书 | Ruiyeclub</title>
   
 
 
@@ -124,7 +130,7 @@
 
   <style>@media (min-width:768px) and (max-width:991px){body .header-innerr{width:700px!important}}.header-innerr{margin:0 auto;padding:100px 0 70px;width:880px}@media (min-width:1600px){.container .header-innerr{width:1200px}}.header-innerr{position:relative}.header-innerr{padding:20px 0 0}.header-innerr:after,.header-innerr:before{content:" ";display:table}.header-innerr:after{clear:both}@media (max-width:767px){.header-innerr{width:auto;padding:10px;margin-bottom:-20px}}</style>
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,406 +230,174 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
-        There are 34 posts in total. posts in total till now
-      </span>
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用ohttps自动部署https证书</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-08-12T13:03:01+08:00">
+                2024-08-12
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
-        
-        
-        
+      
+        <blockquote>
+<p>在使用第三方托管网站做个人网站，例如：Github Pages，想要给网站加上https，可以通过ohttps来创建Let’s Encrypt的https证书，单纯想给网站加上https也可以。</p>
+</blockquote>
+<h3 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h3><p>先确保服务器(我这里是win服务器)已经安装了<a target="_blank" rel="noopener" href="https://nginx.org/en/download.html">nginx</a>，选择适合自己的版本，然后下载解压到服务器上，双击运行nginx.exe，访问服务器ip地址，出现Welcome to Nginx!则表示安装启动成功。</p>
+<h3 id="使用ohttps部署ssl证书"><a href="#使用ohttps部署ssl证书" class="headerlink" title="使用ohttps部署ssl证书"></a>使用ohttps部署ssl证书</h3><ol>
+<li>创建证书</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124550577.png" alt="image-20240812124550577"></p>
+<ol start="2">
+<li>需要在自己域名管理解析中加入ohttps的记录</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124657919.png" alt="image-20240812124657919"></p>
+<ol start="3">
+<li>在nginx配置中需要ssl_certificate_key和ssl_certificate</li>
+</ol>
+<p><strong>ssl_certificate_key</strong>: 私钥文件通常包含与SSL证书配对的私钥，用于加密和解密通信中的数据，文件后缀.key，内容开头—–BEGIN RSA PRIVATE KEY—–</p>
+<p><strong>ssl_certificate</strong>: SSL证书文件包含用于验证服务器身份的公钥以及相关信息，如服务器的域名和证书颁发机构（CA）的签名，文件后缀为.crt或者是.pem，内容开头—–BEGIN CERTIFICATE—–</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812125505357.png" alt="image-20240812125505357"></p>
+<p>下载这两个文件，然后存放到服务器上</p>
+<h3 id="配置Nginx-conf"><a href="#配置Nginx-conf" class="headerlink" title="配置Nginx.conf"></a>配置Nginx.conf</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    server_names_hash_bucket_size 64;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 443 ssl;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2022">2022</h1>
+<h3 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h3><ul>
+<li><p><strong>启动Nginx服务</strong> nginx</p>
+</li>
+<li><p><strong>停止Nginx服务</strong> nginx -s stop</p>
+</li>
+<li><p><strong>检测配置文件的正确性</strong> nginx -t</p>
+</li>
+<li><p><strong>重新加载Nginx配置文件</strong> nginx -s reload</p>
+</li>
+<li><p><strong>查看Nginx版本信息</strong> nginx -v</p>
+</li>
+<li><p><strong>平滑停止Nginx服务</strong> nginx -s quit</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你觉得这篇文章帮助到了你，你可以帮作者买一杯果汁表示鼓励</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_ray.jpg" alt=" WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_ray.jpg" alt=" Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/07/25/SpringBoot%E7%9B%91%E5%90%ACRedis%E8%BF%87%E6%9C%9Fkey/" rel="next" title="SpringBoot监听Redis过期key">
+                <i class="fa fa-chevron-left"></i> SpringBoot监听Redis过期key
+              </a>
+            
           </div>
-        
-        
 
-        
+          <span class="post-nav-divider"></span>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/07/27/Idea%E5%BC%80%E5%8F%91%E5%BF%85%E8%A3%85%E6%8F%92%E4%BB%B6/" itemprop="url">
-              
-                <span itemprop="name">Idea开发必装插件</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-07-27T15:24:24+08:00"
-              content="2022-07-27" >
-          07-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/06/01/SpringBoot-Vue%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B(%E8%BD%AC)/" itemprop="url">
-              
-                <span itemprop="name">SpringBoot+Vue前后端分离项目部署教程(转)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-06-01T09:39:56+08:00"
-              content="2022-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
+      
+      
+    </footer>
   </article>
 
+  <hr/>
 
 
+    <div class="post-spread">
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/06/01/SpringCloud%E4%BD%BF%E7%94%A8Feign%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1%E8%B8%A9%E7%9A%84%E5%9D%91/" itemprop="url">
-              
-                <span itemprop="name">SpringCloud使用Feign服务通信踩的坑</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-06-01T09:39:35+08:00"
-              content="2022-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Mail%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6-%E5%8F%91%E9%80%81%E6%A8%A1%E6%9D%BF%E9%82%AE%E4%BB%B6/" itemprop="url">
-              
-                <span itemprop="name">SpringBoot整合Mail发送邮件&发送模板邮件</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-06-01T09:38:58+08:00"
-              content="2022-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Swagger3%E7%94%9F%E6%88%90%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3/" itemprop="url">
-              
-                <span itemprop="name">SpringBoot整合Swagger3生成接口文档</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-06-01T09:38:35+08:00"
-              content="2022-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/06/01/Shiro%E6%95%B4%E5%90%88Redis-%E4%BD%BF%E7%94%A8shiro-redis%E6%8F%92%E4%BB%B6%E8%B8%A9%E7%9A%84%E5%9D%91/" itemprop="url">
-              
-                <span itemprop="name">Shiro整合Redis:使用shiro-redis插件踩的坑</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-06-01T09:36:13+08:00"
-              content="2022-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Hibernate-Validator%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81%E5%8A%9F%E8%83%BD/" itemprop="url">
-              
-                <span itemprop="name">SpringBoot整合Hibernate Validator实现参数验证功能</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-06-01T09:34:37+08:00"
-              content="2022-06-01" >
-          06-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/02/14/SpringBoot%E4%BD%BF%E7%94%A8Jwt%E5%A4%84%E7%90%86%E8%B7%A8%E5%9F%9F%E8%AE%A4%E8%AF%81%E9%97%AE%E9%A2%98/" itemprop="url">
-              
-                <span itemprop="name">SpringBoot使用Jwt处理跨域认证问题</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-02-14T17:35:40+08:00"
-              content="2022-02-14" >
-          02-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/02/13/%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99Correct%20the%20classpath%20of%20your%20application%20so%20that%20it%20contains%20a%20single,%20compatible%20version%20of%20xxx/" itemprop="url">
-              
-                <span itemprop="name">启动项目报错Correct the classpath of your application so that it contains a single, compatible version of xxx</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-02-13T17:28:11+08:00"
-              content="2022-02-13" >
-          02-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2022/02/12/Redis%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93&%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%85%A8Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%8A%E7%AD%94%E6%A1%88(%E8%BD%AC)/" itemprop="url">
-              
-                <span itemprop="name">Redis面试总结&史上最全Redis面试题及答案(转)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2022-02-12T17:35:40+08:00"
-              content="2022-02-12" >
-          02-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
   </div>
-  
-  
-  
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2022/page/2/">2</a><a class="extend next" rel="next" href="/archives/2022/page/2/"></a>
-  </nav>
-
-
 
 
           </div>
@@ -631,6 +405,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -643,10 +421,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">Contents</li>
+          <li class="sidebar-nav-overview" data-target="site-overview">Overview</li>
+        </ul>
+      
 
   
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-overview">
           <div class="sidebar-sticky sticky">
             <div itemscope="" itemtype="http://schema.org/Person">
@@ -733,6 +516,22 @@
 
 
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Nginx"><span class="nav-number">1.</span> <span class="nav-text">安装Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ohttps%E9%83%A8%E7%BD%B2ssl%E8%AF%81%E4%B9%A6"><span class="nav-number">2.</span> <span class="nav-text">使用ohttps部署ssl证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AENginx-conf"><span class="nav-number">3.</span> <span class="nav-text">配置Nginx.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">Nginx常用命令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -865,6 +664,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
