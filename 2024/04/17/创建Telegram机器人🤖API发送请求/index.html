@@ -73,8 +73,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417152031003.png">
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240829100959057.png">
 <meta property="article:published_time" content="2024-04-17T07:14:49.000Z">
-<meta property="article:modified_time" content="2024-04-17T07:20:57.323Z">
+<meta property="article:modified_time" content="2024-08-29T02:11:27.455Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417152031003.png">
@@ -366,7 +367,14 @@
 <li><p>当我们正确设置机器人令牌和聊天 ID 时，消息<code>test123</code>应该到达我们的群聊主题内。</p>
 </li>
 </ol>
-<p>参考链接：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api">https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api</a></p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api![](https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png)">https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api![](https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png)</a></p>
+<h2 id="更新内容"><a href="#更新内容" class="headerlink" title="更新内容"></a>更新内容</h2><p>将消息推送至群组</p>
+<ol>
+<li>将机器人拉入群组，发送<code>/&#123;message&#125;@bot</code>消息</li>
+<li>可以通过<code>https://api.telegram.org/bot&#123;token&#125;/getUpdates</code>获取群组id</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240829100959057.png" alt="image-20240829100959057"></p>
+<p>这里群组id为-4583**9819</p>
 
       
     </div>
@@ -575,7 +583,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7TG%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="nav-number">1.</span> <span class="nav-text">申请TG机器人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%A7%81%E4%BA%BA%E8%81%8A%E5%A4%A9%E7%9A%84%E8%81%8A%E5%A4%A9ID"><span class="nav-number">2.</span> <span class="nav-text">获取私人聊天的聊天ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E7%9A%84%E8%81%8A%E5%A4%A9-ID"><span class="nav-number">3.</span> <span class="nav-text">获取频道的聊天 ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%BE%A4%E8%81%8A%E4%B8%AD%E6%9F%90%E4%B8%AA%E4%B8%BB%E9%A2%98%E7%9A%84%E8%81%8A%E5%A4%A9-ID"><span class="nav-number">4.</span> <span class="nav-text">获取群聊中某个主题的聊天 ID</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7TG%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="nav-number">1.</span> <span class="nav-text">申请TG机器人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%A7%81%E4%BA%BA%E8%81%8A%E5%A4%A9%E7%9A%84%E8%81%8A%E5%A4%A9ID"><span class="nav-number">2.</span> <span class="nav-text">获取私人聊天的聊天ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%A2%91%E9%81%93%E7%9A%84%E8%81%8A%E5%A4%A9-ID"><span class="nav-number">3.</span> <span class="nav-text">获取频道的聊天 ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E7%BE%A4%E8%81%8A%E4%B8%AD%E6%9F%90%E4%B8%AA%E4%B8%BB%E9%A2%98%E7%9A%84%E8%81%8A%E5%A4%A9-ID"><span class="nav-number">4.</span> <span class="nav-text">获取群聊中某个主题的聊天 ID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E5%86%85%E5%AE%B9"><span class="nav-number">5.</span> <span class="nav-text">更新内容</span></a></li></ol></div>
             
 
           </div>
