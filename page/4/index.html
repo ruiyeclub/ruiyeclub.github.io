@@ -234,6 +234,103 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/05/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%B8%89)%EF%BC%9AReentrantLock/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/02/05/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%B8%89)%EF%BC%9AReentrantLock/" itemprop="url">Java并发编程(三)：ReentrantLock</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-05T17:35:40+08:00">
+                2022-02-05
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>ReentrantLock是可以用来代替synchronized的。ReentrantLock比synchronized更加灵活，功能上面更加丰富，性能方面自synchronized优化后两者性能没有什么太大差别。</p>
+<p>说一下两者的区别首先ReetrantLock是基于JDK实现层面的，而synchronized是基于JVM层面实现的。ReentrantLock可以进行tryLock尝试锁定，支持公平锁的实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(); </span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//业务逻辑  </span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  lock.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 一个ReentrantLock的简单实现，要注意的是，必须要手动释放锁，不然很容易产生死锁。使用sync锁定的话遇到异常，jvm会自动释放锁，但是reentrantLock必须手动释放锁，因此经常在finally中进行锁的释放。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Lock lock=<span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">    <span class="type">boolean</span> locked=<span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            locked=lock.tryLock(<span class="number">5</span>,TimeUnit.SECONDS);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(locked)&#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>ReentrantLock可以进行tryLock尝试锁定，tryLock的方法就是进行尝试锁定，如果能在指定时间内得到锁，就返回true，反之返回false。指定时间内无法锁定时，线程可以决定是否继续等待。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ReentrantLock lock=<span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(<span class="literal">true</span>); <span class="comment">//参数为true表示公平锁</span></span><br></pre></td></tr></table></figure>
+<p>ReentrantLock可以指定为公平锁，ReentrantLock和sync默认是非公平锁，<strong>非公平锁</strong>：线程加锁时<strong>直接尝试获取锁</strong>，获取不到就自动到队尾等待。而<strong>公平锁</strong>：加锁前先查看是否有排队等待的线程，有的话优先处理排在前面的线程，<strong>先来先得</strong>。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/04/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%BA%8C)%EF%BC%9Avolatile%E5%85%B3%E9%94%AE%E5%AD%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">

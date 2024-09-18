@@ -234,6 +234,110 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/09/18/Pandas%E8%BD%ACJSON%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/09/18/Pandas%E8%BD%ACJSON%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="url">Pandas转JSON无法显示中文的问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-09-18T11:24:46+08:00">
+                2024-09-18
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>问题解释：</strong></p>
+<blockquote>
+<p>在使用pandas转换DataFrame到JSON格式时，如果DataFrame中含有中文字符，可能会遇到无法正确显示中文的问题。这通常是因为默认情况下，pandas会将字符串编码为Unicode Escape形式，这不是JSON的标准格式，而是Python内部的表现形式。</p>
+</blockquote>
+<p><strong>解决方法：</strong></p>
+<ol>
+<li><p>在转换为JSON之前，确保DataFrame的编码是正确的，通常使用UTF-8编码。</p>
+</li>
+<li><p>使用to_json方法时，设置参数ensure_ascii&#x3D;False，这样可以避免ASCII编码的问题，正确显示中文。</p>
+</li>
+</ol>
+<p><strong>示例代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个包含中文的DataFrame</span></span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(&#123;<span class="string">&#x27;data&#x27;</span>: [<span class="string">&#x27;中文内容&#x27;</span>, <span class="string">&#x27;更多中文&#x27;</span>, <span class="string">&#x27;最后一条&#x27;</span>]&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为JSON，确保使用utf-8编码，并且不使用ASCII编码</span></span><br><span class="line"></span><br><span class="line">json_str = df.to_json(orient=<span class="string">&#x27;records&#x27;</span>, force_ascii=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(json_str)</span><br></pre></td></tr></table></figure>
+
+<p>这段代码会创建一个包含中文的DataFrame，并将其转换为JSON格式，正确显示中文字符。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1498,120 +1602,6 @@
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240207151955004.png" alt="image-20240207151955004"></p>
 <p>具体的使用可查看：<a href="http://ruiyeclub.cn/2024/01/04/%E5%BC%80%E5%8F%91%E5%BF%85%E5%A4%87%E8%BD%AF%E4%BB%B6-Typora%E9%85%8D%E5%90%88PicGo%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE(%E8%BD%AC)/">开发必备软件-Typora配合PicGo阿里云图床配置(转)</a></p>
 <p>参考视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV16L4y1b75R/?share_source=copy_web&vd_source=c31decb11361be9e30ea99abeef3e302">Mac M1 程序员开发环境的安装与配置</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/01/31/%E5%85%B3%E4%BA%8EEIP1559%E4%B8%8B%E7%9A%84GAS%E8%B4%B9%E8%AE%BE%E7%BD%AE%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/01/31/%E5%85%B3%E4%BA%8EEIP1559%E4%B8%8B%E7%9A%84GAS%E8%B4%B9%E8%AE%BE%E7%BD%AE%E9%97%AE%E9%A2%98/" itemprop="url">关于EIP1559下的GAS费设置问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-01-31T15:16:55+08:00">
-                2024-01-31
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p><strong>EIP-1559</strong>是一项以太坊改进提案，旨在优化以太坊区块链的费用市场系统。 EIP-1559 引入了一个新的收费系统，其中包含三个关键要素：**基本费用(base fee)<strong>、</strong>优先小费(priority fee)<strong>和</strong>费用上限(max fee)**。</p>
-</blockquote>
-<h2 id="一、EIP-1559特点"><a href="#一、EIP-1559特点" class="headerlink" title="一、EIP-1559特点"></a>一、EIP-1559特点</h2><ul>
-<li>基础费用:eip1559引入了一种新的收费机制，即每个区块都有一个由协议根据区块需求动态调整的基础费用(base fee)，表示在该区块中进行交易时需要支付的最低手续费。基础费用的目标是让每个区块的使用率维持在50%，从而避免过度拥堵或浪费。基础费用以ETH代币支付，并且被销毁(burn)，从而减少ETH的流通供应。</li>
-<li>优先费用:除了基础费用外，用户还可以为自己的交易设置一个优先费用(priority fee)，表示他们愿意额外支付给矿工&#x2F;验证者的激励，以便让自己的交易更快被确认。优先费用也以ETH代币支付，并且被矿工&#x2F;验证者保留。</li>
-<li>费用上限:用户还可以为自己的交易设置一个费用上限(max fee)，表示他们愿意为一笔交易支付的最高手续费。费用上限包括基础费用和优先费用，当交易被确认时，用户会收到一笔退款，由实际支付金额和费用上限之间的差额组成。这个机制确保了用户永远不会超出他们所设定的预算。</li>
-<li>双重交易类型:eip1559兼容两种交易类型，即新型交易类型和传统交易类型。新型交易类型遵循eip1559的规则，即指定基础费用、优先费用和费用上限。传统交易类型遵循原有的规则，即指定一个固定的出价(gasprice)。为了让两种交易类型能够共存，传统交易类型会被转换成新型交易类型，即将出价作为费用上限，并将出价减去基础费用作为优先费用。</li>
-</ul>
-<h2 id="二、正确设置GAS"><a href="#二、正确设置GAS" class="headerlink" title="二、正确设置GAS"></a>二、正确设置GAS</h2><p><strong>GAS fee</strong> &#x3D; <strong>Base fee</strong>(完成操作需要付的基本费用) + <strong>Priority fee</strong>(小费：小费越高，越容易抢到)</p>
-<p>总费用 &#x3D; (区块基础费 + 实际优先费) * Gas使用数量</p>
-<p>也就是总费用 &#x3D; (base fee + priority fee) * gas limit(用户允许这笔交易最大可消耗的 Gas 数量)</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240131135302973.png" alt="image-20240131135302973"></p>
-<p>待设置：</p>
-<p><strong>Max Priority Fee</strong>：你最多愿意付给矿工的优先费(小费)，单位为GWEI<br><strong>Max Fee</strong>：基本费用 + 优先费</p>
-<p>实际：<strong>Priority Fee &#x3D; Min（Max Priority Fee, Max Fee - Base Fee）</strong></p>
-<h2 id="三、设置技巧"><a href="#三、设置技巧" class="headerlink" title="三、设置技巧"></a>三、设置技巧</h2><p>如果我们要给100GWEI的小费，我们需要设置：</p>
-<p>1.Max Priority Fee(GWEI) &#x3D; 100</p>
-<p>2.Max Fee(GWEI) &#x3D; (Base Fee * 2)  + Max Priority Fee(100)</p>
-<p>注意：base fee代表基础费用会有波动，且多余base fee会返还所以*2</p>
-<p>GAS参考网站：<a target="_blank" rel="noopener" href="https://www.blocknative.com/gas-estimator">https://www.blocknative.com/gas-estimator</a></p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240131130128416.png" alt="image-20240131130128416"></p>
-<p>假如我们想要99%的打包成功率，可以设置Max Priority Fee为0.1，设置max fee为26。</p>
-<p>参考文章：<a target="_blank" rel="noopener" href="https://www.wwsww.cn/qianbao/9482.html">MetaMask钱包已支持EIP-1559，一次了解调整优先费、进阶设置</a><br>参考文章：<a target="_blank" rel="noopener" href="https://mirror.xyz/looplove.eth/SOhMBCF_Z4vIWFHu4r8fpdBaLMhRTBCvNj6i5d4pNMU">Web3.0学习树|3.区块链通识 Ⅲ</a></p>
-<p>内容来源：<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Qpq00RGT5Bc">油管</a></p>
 
           
         
