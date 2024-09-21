@@ -140,6 +140,44 @@
 ]]></content>
   </entry>
   <entry>
+    <title>JVM基础快速入门篇</title>
+    <url>/2022/01/31/JVM%E5%9F%BA%E7%A1%80%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E7%AF%87/</url>
+    <content><![CDATA[<p><strong>Java是一门可以跨平台的语言，但是Java本身是不可以实现跨平台的，需要JVM实现跨平台。javac编译好后的class文件，在Windows、Linux、Mac等系统上，只要该系统安装对应的Java虚拟机，class文件都可以运行。达到”一次编译，到处运行”的效果。</strong></p>
+<h2 id="一、JVM是什么？"><a href="#一、JVM是什么？" class="headerlink" title="一、JVM是什么？"></a>一、JVM是什么？</h2><p>而JVM到底是什么呢？引用百度百科对JVM的介绍：</p>
+<blockquote>
+<p>JVM是Java Virtual Machine（Java虚拟机）的缩写，JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。</p>
+</blockquote>
+<h2 id="二、JVM架构知识"><a href="#二、JVM架构知识" class="headerlink" title="二、JVM架构知识"></a>二、JVM架构知识</h2><p>1.JVM主要包含<strong>类装载器、运行时数据区（内存模型）、执行引擎</strong>。里面内存模型有可以细分包括本地方法栈、堆、栈（线程）、方法区（元空间）、程序计数器。<br>如图所示：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/351bc7933dbca9d91c52db9f79bec760.png" alt="image.png"></p>
+<p>1.类装载器的作用就是负责加载class文件，class文件在文件开头有特定的文件标示，将class文件字节码内容加载到内存中，并将这些内容转换成方法区中的运行时数据结构并且ClassLoader只负责class文件的加载，至于它是否可以运行，则由执行引擎（Execution Engine）决定。类加载器又有四大类加载器：</p>
+<p>启动类加载器（Bootstrap ClassLoader）:负责加载JRE核心类库，像JRE中的rt.jar等（C&#x2F;C++）；</p>
+<p>扩展类加载器（Extension ClassLoader）：负责加载JRE扩展目录ext中的jar包；</p>
+<p>系统类加载器（Application ClassLoader）：负责加载ClassPath路径下的类包；</p>
+<p>自定义的类加载器（User ClassLoader）：只加载指定目录下的jar和class，想加载其它位置的类或jar时得自行定义类加载器；</p>
+<p>2.<strong>JVM中，对象都是在堆中分配内存空间的，栈只用于保存局部变量和临时变量，如果是对象，只保存引用</strong>，实际内存还是在堆中。栈的特点是先进后出，假设一个main方法，里面执行了一个方法，我们是后执行的那个方法即那个线程，但是执行完毕后，那个线程是先销毁的。<strong>每个方法在执行的同时都会创建一个栈帧，用于存储局部变量表（存放局部变量的）、操作数栈（存放需要运算的数据）、动态链接、方法出口（执行完方法 回到main方法的位置）等信息</strong>，每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机中入栈到出栈的过程。即一个方法对应一块栈帧内存区域（存放本方法的局部变量）。</p>
+<p>3.方法区存储已被虚拟机加载的类信息、常量（堆中的对象常量地址）、静态变量、即时编译器编译后的代码等数据。</p>
+<p>4.本地方法栈和栈的作用类似，但是它服务的对象是native方法，该方法得由c语言来实现。</p>
+<p>5.程序计数器作用是当CPU多线程切换的时候，切回到当前线程的时候，回到程序计数器计数的位置，继续执行。</p>
+<h2 id="三、堆内存的结构模型"><a href="#三、堆内存的结构模型" class="headerlink" title="三、堆内存的结构模型"></a>三、堆内存的结构模型</h2><p>新生代包括Eden加上2个survivor区，执行minor gc之后，大多数的对象会被回收，活着的进入s0，再次minor gc，活着的对象eden+s0-&gt;s1，再次minor gc，eden+s1-&gt;s0…这里虚拟机采取了分代收集的思想来管理内存，JVM给每个对象一个对象年龄计数器，分代年龄达到15后即对象被执行了15次minor gc后移入老年代。除此之外，s区装不下的大对象也会直接进入老年代。</p>
+<p>最后，老年代存的就是一些大对象和需要连续内存空间的对象（静态变量、缓存、线程池等），老年代满了的话，会执行Full GC垃圾收集。官网对Full GC的解释中介绍了个词”Stop-The-World”，它会把所有的应用线程停掉，这时候系统会卡掉。<strong>JVM虚拟机调优的目标就是减少full gc即减少STW。</strong><br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a79e182e285aa8a998b64f8c2929cea2.png" alt="image.png"></p>
+<h2 id="四、垃圾回收机制"><a href="#四、垃圾回收机制" class="headerlink" title="四、垃圾回收机制"></a>四、垃圾回收机制</h2><p><strong>堆里面存放new的对象和数组</strong>，Java优于其他语言一个很重要的原因就是它能自动处理垃圾对象，也就是有垃圾回收机制（GC）。有了垃圾回收机制有几点好处编程简单，系统不容易出错。</p>
+<p>1.什么是垃圾？</p>
+<p><strong>我们把没有任何引用指向的对象或者一堆对象（循环引用）定义为垃圾。</strong></p>
+<p>2.系统如何定位垃圾</p>
+<ul>
+<li>引用计数算法-简单且高效但是主流的Java虚拟机里并没有选用引用计数算法来管理内存，因为它不能解决循环引用的问题。</li>
+<li><strong>根可达分析算法</strong>-将”GC Roots”对象作为起点，从这些节点开始向下搜索引用的对象，找到的对象都标记为非垃圾对象，其余未标记的对象都是垃圾对象。线程栈的本地变量、静态变量、本地方法栈的变量等等都可以称作GC Roots跟节点。<br>如图：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/313951e066caf10cfb67e43c4a5a6dcc.png" alt="image.png"></li>
+</ul>
+<p>3.常见的垃圾回收算法</p>
+<ul>
+<li><strong>复制算法</strong>-没有碎片 浪费内存空间（目前使用新生代使用的是复制算法）</li>
+<li>标记清除-位置不连续 产生内存碎片</li>
+<li>标记压缩-没有碎片 效率偏低<br>复制算法它将可用内存按容量分为大小相等的两块，每次只使用其中的一块，当这一块的内存用完了，就将还存活的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。</li>
+</ul>
+<h2 id="五-常见垃圾回收器"><a href="#五-常见垃圾回收器" class="headerlink" title="五.常见垃圾回收器"></a>五.常见垃圾回收器</h2><p>新生代收集器：Serial、ParNew、Parallel Scavenge<br>老年代收集器：CMS、Serial Old、Parallel Old<br>整堆收集器： G1</p>
+<p><strong>jdk1.8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）</strong></p>
+]]></content>
+  </entry>
+  <entry>
     <title>Idea开发必装插件</title>
     <url>/2022/07/27/Idea%E5%BC%80%E5%8F%91%E5%BF%85%E8%A3%85%E6%8F%92%E4%BB%B6/</url>
     <content><![CDATA[<blockquote>
@@ -181,41 +219,16 @@
 ]]></content>
   </entry>
   <entry>
-    <title>JVM基础快速入门篇</title>
-    <url>/2022/01/31/JVM%E5%9F%BA%E7%A1%80%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E7%AF%87/</url>
-    <content><![CDATA[<p><strong>Java是一门可以跨平台的语言，但是Java本身是不可以实现跨平台的，需要JVM实现跨平台。javac编译好后的class文件，在Windows、Linux、Mac等系统上，只要该系统安装对应的Java虚拟机，class文件都可以运行。达到”一次编译，到处运行”的效果。</strong></p>
-<h2 id="一、JVM是什么？"><a href="#一、JVM是什么？" class="headerlink" title="一、JVM是什么？"></a>一、JVM是什么？</h2><p>而JVM到底是什么呢？引用百度百科对JVM的介绍：</p>
-<blockquote>
-<p>JVM是Java Virtual Machine（Java虚拟机）的缩写，JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。</p>
-</blockquote>
-<h2 id="二、JVM架构知识"><a href="#二、JVM架构知识" class="headerlink" title="二、JVM架构知识"></a>二、JVM架构知识</h2><p>1.JVM主要包含<strong>类装载器、运行时数据区（内存模型）、执行引擎</strong>。里面内存模型有可以细分包括本地方法栈、堆、栈（线程）、方法区（元空间）、程序计数器。<br>如图所示：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/351bc7933dbca9d91c52db9f79bec760.png" alt="image.png"></p>
-<p>1.类装载器的作用就是负责加载class文件，class文件在文件开头有特定的文件标示，将class文件字节码内容加载到内存中，并将这些内容转换成方法区中的运行时数据结构并且ClassLoader只负责class文件的加载，至于它是否可以运行，则由执行引擎（Execution Engine）决定。类加载器又有四大类加载器：</p>
-<p>启动类加载器（Bootstrap ClassLoader）:负责加载JRE核心类库，像JRE中的rt.jar等（C&#x2F;C++）；</p>
-<p>扩展类加载器（Extension ClassLoader）：负责加载JRE扩展目录ext中的jar包；</p>
-<p>系统类加载器（Application ClassLoader）：负责加载ClassPath路径下的类包；</p>
-<p>自定义的类加载器（User ClassLoader）：只加载指定目录下的jar和class，想加载其它位置的类或jar时得自行定义类加载器；</p>
-<p>2.<strong>JVM中，对象都是在堆中分配内存空间的，栈只用于保存局部变量和临时变量，如果是对象，只保存引用</strong>，实际内存还是在堆中。栈的特点是先进后出，假设一个main方法，里面执行了一个方法，我们是后执行的那个方法即那个线程，但是执行完毕后，那个线程是先销毁的。<strong>每个方法在执行的同时都会创建一个栈帧，用于存储局部变量表（存放局部变量的）、操作数栈（存放需要运算的数据）、动态链接、方法出口（执行完方法 回到main方法的位置）等信息</strong>，每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机中入栈到出栈的过程。即一个方法对应一块栈帧内存区域（存放本方法的局部变量）。</p>
-<p>3.方法区存储已被虚拟机加载的类信息、常量（堆中的对象常量地址）、静态变量、即时编译器编译后的代码等数据。</p>
-<p>4.本地方法栈和栈的作用类似，但是它服务的对象是native方法，该方法得由c语言来实现。</p>
-<p>5.程序计数器作用是当CPU多线程切换的时候，切回到当前线程的时候，回到程序计数器计数的位置，继续执行。</p>
-<h2 id="三、堆内存的结构模型"><a href="#三、堆内存的结构模型" class="headerlink" title="三、堆内存的结构模型"></a>三、堆内存的结构模型</h2><p>新生代包括Eden加上2个survivor区，执行minor gc之后，大多数的对象会被回收，活着的进入s0，再次minor gc，活着的对象eden+s0-&gt;s1，再次minor gc，eden+s1-&gt;s0…这里虚拟机采取了分代收集的思想来管理内存，JVM给每个对象一个对象年龄计数器，分代年龄达到15后即对象被执行了15次minor gc后移入老年代。除此之外，s区装不下的大对象也会直接进入老年代。</p>
-<p>最后，老年代存的就是一些大对象和需要连续内存空间的对象（静态变量、缓存、线程池等），老年代满了的话，会执行Full GC垃圾收集。官网对Full GC的解释中介绍了个词”Stop-The-World”，它会把所有的应用线程停掉，这时候系统会卡掉。<strong>JVM虚拟机调优的目标就是减少full gc即减少STW。</strong><br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a79e182e285aa8a998b64f8c2929cea2.png" alt="image.png"></p>
-<h2 id="四、垃圾回收机制"><a href="#四、垃圾回收机制" class="headerlink" title="四、垃圾回收机制"></a>四、垃圾回收机制</h2><p><strong>堆里面存放new的对象和数组</strong>，Java优于其他语言一个很重要的原因就是它能自动处理垃圾对象，也就是有垃圾回收机制（GC）。有了垃圾回收机制有几点好处编程简单，系统不容易出错。</p>
-<p>1.什么是垃圾？</p>
-<p><strong>我们把没有任何引用指向的对象或者一堆对象（循环引用）定义为垃圾。</strong></p>
-<p>2.系统如何定位垃圾</p>
-<ul>
-<li>引用计数算法-简单且高效但是主流的Java虚拟机里并没有选用引用计数算法来管理内存，因为它不能解决循环引用的问题。</li>
-<li><strong>根可达分析算法</strong>-将”GC Roots”对象作为起点，从这些节点开始向下搜索引用的对象，找到的对象都标记为非垃圾对象，其余未标记的对象都是垃圾对象。线程栈的本地变量、静态变量、本地方法栈的变量等等都可以称作GC Roots跟节点。<br>如图：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/313951e066caf10cfb67e43c4a5a6dcc.png" alt="image.png"></li>
-</ul>
-<p>3.常见的垃圾回收算法</p>
-<ul>
-<li><strong>复制算法</strong>-没有碎片 浪费内存空间（目前使用新生代使用的是复制算法）</li>
-<li>标记清除-位置不连续 产生内存碎片</li>
-<li>标记压缩-没有碎片 效率偏低<br>复制算法它将可用内存按容量分为大小相等的两块，每次只使用其中的一块，当这一块的内存用完了，就将还存活的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。</li>
-</ul>
-<h2 id="五-常见垃圾回收器"><a href="#五-常见垃圾回收器" class="headerlink" title="五.常见垃圾回收器"></a>五.常见垃圾回收器</h2><p>新生代收集器：Serial、ParNew、Parallel Scavenge<br>老年代收集器：CMS、Serial Old、Parallel Old<br>整堆收集器： G1</p>
-<p><strong>jdk1.8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）</strong></p>
+    <title>Java并发编程(三)：ReentrantLock</title>
+    <url>/2022/02/05/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%B8%89)%EF%BC%9AReentrantLock/</url>
+    <content><![CDATA[<p>ReentrantLock是可以用来代替synchronized的。ReentrantLock比synchronized更加灵活，功能上面更加丰富，性能方面自synchronized优化后两者性能没有什么太大差别。</p>
+<p>说一下两者的区别首先ReetrantLock是基于JDK实现层面的，而synchronized是基于JVM层面实现的。ReentrantLock可以进行tryLock尝试锁定，支持公平锁的实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(); </span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//业务逻辑  </span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  lock.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 一个ReentrantLock的简单实现，要注意的是，必须要手动释放锁，不然很容易产生死锁。使用sync锁定的话遇到异常，jvm会自动释放锁，但是reentrantLock必须手动释放锁，因此经常在finally中进行锁的释放。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Lock lock=<span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">    <span class="type">boolean</span> locked=<span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            locked=lock.tryLock(<span class="number">5</span>,TimeUnit.SECONDS);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(locked)&#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>ReentrantLock可以进行tryLock尝试锁定，tryLock的方法就是进行尝试锁定，如果能在指定时间内得到锁，就返回true，反之返回false。指定时间内无法锁定时，线程可以决定是否继续等待。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ReentrantLock lock=<span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(<span class="literal">true</span>); <span class="comment">//参数为true表示公平锁</span></span><br></pre></td></tr></table></figure>
+<p>ReentrantLock可以指定为公平锁，ReentrantLock和sync默认是非公平锁，<strong>非公平锁</strong>：线程加锁时<strong>直接尝试获取锁</strong>，获取不到就自动到队尾等待。而<strong>公平锁</strong>：加锁前先查看是否有排队等待的线程，有的话优先处理排在前面的线程，<strong>先来先得</strong>。</p>
 ]]></content>
   </entry>
   <entry>
@@ -236,29 +249,6 @@
 <p>这是一个小demo，代码中只对set方法加了锁，没有对get方法加锁，这个时候会出现<em>脏读</em>现象。解决方法是读和写的方法都加锁。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T3</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">m1</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;m1 start&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        m2();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">m2</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">2</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;m2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个案例中，m1和m2方法都已经加上了锁，当执行m1的时候再去执行m2，这样是可以的。一个同步方法可以调用另外一个同步方法，也就是说sync获得的锁是<em>可重入锁</em>。还有个概念是<em>死锁</em>，死锁是指多个线程抢占资源而造成的一种互相等待。举个例子，一个箱子需要两把钥匙才可以打开，钥匙分别在两个人手中，这两个人互相抢占另外一个人的钥匙，导致箱子打不开。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Java并发编程(三)：ReentrantLock</title>
-    <url>/2022/02/05/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%B8%89)%EF%BC%9AReentrantLock/</url>
-    <content><![CDATA[<p>ReentrantLock是可以用来代替synchronized的。ReentrantLock比synchronized更加灵活，功能上面更加丰富，性能方面自synchronized优化后两者性能没有什么太大差别。</p>
-<p>说一下两者的区别首先ReetrantLock是基于JDK实现层面的，而synchronized是基于JVM层面实现的。ReentrantLock可以进行tryLock尝试锁定，支持公平锁的实现。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(); </span><br><span class="line">lock.lock();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">//业务逻辑  </span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  lock.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p> 一个ReentrantLock的简单实现，要注意的是，必须要手动释放锁，不然很容易产生死锁。使用sync锁定的话遇到异常，jvm会自动释放锁，但是reentrantLock必须手动释放锁，因此经常在finally中进行锁的释放。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Lock lock=<span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">    <span class="type">boolean</span> locked=<span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            locked=lock.tryLock(<span class="number">5</span>,TimeUnit.SECONDS);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(locked)&#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>ReentrantLock可以进行tryLock尝试锁定，tryLock的方法就是进行尝试锁定，如果能在指定时间内得到锁，就返回true，反之返回false。指定时间内无法锁定时，线程可以决定是否继续等待。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ReentrantLock lock=<span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(<span class="literal">true</span>); <span class="comment">//参数为true表示公平锁</span></span><br></pre></td></tr></table></figure>
-<p>ReentrantLock可以指定为公平锁，ReentrantLock和sync默认是非公平锁，<strong>非公平锁</strong>：线程加锁时<strong>直接尝试获取锁</strong>，获取不到就自动到队尾等待。而<strong>公平锁</strong>：加锁前先查看是否有排队等待的线程，有的话优先处理排在前面的线程，<strong>先来先得</strong>。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Java并发编程(二)：volatile关键字</title>
-    <url>/2022/02/04/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%BA%8C)%EF%BC%9Avolatile%E5%85%B3%E9%94%AE%E5%AD%97/</url>
-    <content><![CDATA[<p>volatile是Java虚拟机提供的轻量级的同步机制。volatile关键字有如下两个作用，一句话概括就是<strong>内存可见性</strong>和禁止重排序。<br>1）保证被volatile修饰的共享变量对所有线程总是可见的，也就是<strong>当一个线程修改了一个被volatile修饰共享变量的值，新值总是可以被其他线程立即得知。</strong><br>2）禁止指令重排序优化。在执行程序时为了提高性能，编译器和处理器通常会重新安排指令的执行顺序。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*volatile*/</span> <span class="type">boolean</span> running=<span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">m</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;m start&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span> (running)&#123;&#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;m end&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        T t=<span class="keyword">new</span> <span class="title class_">T</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;t.m(),<span class="string">&quot;t1&quot;</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        t.running=<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码中没加volatile的话，循环的后面的输出语句”m end”不会输出，但是main方法里面确实是已经将running的值改成了false。这里有关java的<strong>内存模型</strong>，简单来说就是程序运行时，running的值已经被加载到了缓存里面，而改的是t对象的running值在堆内存中。加了volatile就不一样了，它改完数值之后，会通知其他线程，让其他线程重新读一下堆内存中的值，也就是内存可见性。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T1</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*synchronized*/</span> <span class="keyword">void</span> <span class="title function_">m</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)&#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        T1 t=<span class="keyword">new</span> <span class="title class_">T1</span>();</span><br><span class="line">        List&lt;Thread&gt; threads=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Thread&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">            threads.add(<span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;t.m(),<span class="string">&quot;thread-&quot;</span>+i));</span><br><span class="line">        &#125;</span><br><span class="line">        threads.forEach((o)-&gt;o.start());</span><br><span class="line">        threads.forEach((o)-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                o.join();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        System.out.println(t.count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码中，十个线程执行count++加到1w循环，理想状态当然是加到10w，但是volatile只能保持线程的可见性，不能保持原子性。给count变量加上了volatile，最后输出的count值也达不到10w。这就是volatile与synchronized的区别，<strong>volatile只能保持可见性，而synchronized可以保持可见性和原子性。</strong>但是volatile更加轻量级，能用volatile的情况下，尽量别用synchronized。</p>
 ]]></content>
   </entry>
   <entry>
@@ -284,6 +274,16 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 并发容器 - LinkedTransferQueue</span></span><br><span class="line"><span class="comment"> * 转移队列</span></span><br><span class="line"><span class="comment"> * add - 队列会保存数据，不做阻塞等待。</span></span><br><span class="line"><span class="comment"> * transfer - 是TransferQueue的特有方法。必须有消费者（take()方法的调用者）。</span></span><br><span class="line"><span class="comment"> * 如果没有任意线程消费数据，transfer方法阻塞。一般用于处理即时消息。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.LinkedTransferQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TransferQueue;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test_07_TransferQueue</span> &#123;</span><br><span class="line"></span><br><span class="line">    TransferQueue&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedTransferQueue</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Test_07_TransferQueue</span> <span class="variable">t</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Test_07_TransferQueue</span>();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/*new Thread(new Runnable() &#123;</span></span><br><span class="line"><span class="comment">            @Override</span></span><br><span class="line"><span class="comment">            public void run() &#123;</span></span><br><span class="line"><span class="comment">                try &#123;</span></span><br><span class="line"><span class="comment">                    System.out.println(Thread.currentThread().getName() + &quot; thread begin &quot; );</span></span><br><span class="line"><span class="comment">                    System.out.println(Thread.currentThread().getName() + &quot; - &quot; + t.queue.take());</span></span><br><span class="line"><span class="comment">                &#125; catch (InterruptedException e) &#123;</span></span><br><span class="line"><span class="comment">                    e.printStackTrace();</span></span><br><span class="line"><span class="comment">                &#125;</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">        &#125;, &quot;output thread&quot;).start();</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        try &#123;</span></span><br><span class="line"><span class="comment">            TimeUnit.SECONDS.sleep(2);</span></span><br><span class="line"><span class="comment">        &#125; catch (InterruptedException e) &#123;</span></span><br><span class="line"><span class="comment">            e.printStackTrace();</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        try &#123;</span></span><br><span class="line"><span class="comment">            t.queue.transfer(&quot;test string&quot;);</span></span><br><span class="line"><span class="comment">        &#125; catch (InterruptedException e) &#123;</span></span><br><span class="line"><span class="comment">            e.printStackTrace();</span></span><br><span class="line"><span class="comment">        &#125;*/</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    t.queue.transfer(<span class="string">&quot;test string&quot;</span>);</span><br><span class="line">                    <span class="comment">// t.queue.add(&quot;test string&quot;);</span></span><br><span class="line">                    System.out.println(<span class="string">&quot;add ok&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">2</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName() + <span class="string">&quot; thread begin &quot;</span>);</span><br><span class="line">                    System.out.println(Thread.currentThread().getName() + <span class="string">&quot; - &quot;</span> + t.queue.take());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="string">&quot;output thread&quot;</span>).start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="3-6-SynchronusQueue"><a href="#3-6-SynchronusQueue" class="headerlink" title="3.6 SynchronusQueue"></a>3.6 SynchronusQueue</h3><p>同步队列，是一个容量为0的队列。是一个特殊的TransferQueue。必须现有消费线程等待，才能使用的队列。<br>add 方法，无阻塞。若没有消费线程阻塞等待数据，则抛出异常。<br>put 方法，有阻塞。若没有消费线程阻塞等待数据，则阻塞。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 并发容器 - SynchronousQueue</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.BlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.SynchronousQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test_08_SynchronusQueue</span> &#123;</span><br><span class="line"></span><br><span class="line">    BlockingQueue&lt;String&gt; queue = <span class="keyword">new</span> <span class="title class_">SynchronousQueue</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Test_08_SynchronusQueue</span> <span class="variable">t</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Test_08_SynchronusQueue</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName() + <span class="string">&quot; thread begin &quot;</span>);</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        TimeUnit.SECONDS.sleep(<span class="number">2</span>);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(Thread.currentThread().getName() + <span class="string">&quot; - &quot;</span> + t.queue.take());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, <span class="string">&quot;output thread&quot;</span>).start();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/*try &#123;</span></span><br><span class="line"><span class="comment">            TimeUnit.SECONDS.sleep(3);</span></span><br><span class="line"><span class="comment">        &#125; catch (InterruptedException e) &#123;</span></span><br><span class="line"><span class="comment">            e.printStackTrace();</span></span><br><span class="line"><span class="comment">        &#125;*/</span></span><br><span class="line">        <span class="comment">// t.queue.add(&quot;test add&quot;);</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            t.queue.put(<span class="string">&quot;test put&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot; queue size : &quot;</span> + t.queue.size());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+  </entry>
+  <entry>
+    <title>Java并发编程(二)：volatile关键字</title>
+    <url>/2022/02/04/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B(%E4%BA%8C)%EF%BC%9Avolatile%E5%85%B3%E9%94%AE%E5%AD%97/</url>
+    <content><![CDATA[<p>volatile是Java虚拟机提供的轻量级的同步机制。volatile关键字有如下两个作用，一句话概括就是<strong>内存可见性</strong>和禁止重排序。<br>1）保证被volatile修饰的共享变量对所有线程总是可见的，也就是<strong>当一个线程修改了一个被volatile修饰共享变量的值，新值总是可以被其他线程立即得知。</strong><br>2）禁止指令重排序优化。在执行程序时为了提高性能，编译器和处理器通常会重新安排指令的执行顺序。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*volatile*/</span> <span class="type">boolean</span> running=<span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">m</span><span class="params">()</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;m start&quot;</span>);</span><br><span class="line">        <span class="keyword">while</span> (running)&#123;&#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;m end&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        T t=<span class="keyword">new</span> <span class="title class_">T</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;t.m(),<span class="string">&quot;t1&quot;</span>).start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        t.running=<span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码中没加volatile的话，循环的后面的输出语句”m end”不会输出，但是main方法里面确实是已经将running的值改成了false。这里有关java的<strong>内存模型</strong>，简单来说就是程序运行时，running的值已经被加载到了缓存里面，而改的是t对象的running值在堆内存中。加了volatile就不一样了，它改完数值之后，会通知其他线程，让其他线程重新读一下堆内存中的值，也就是内存可见性。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">T1</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">int</span> count=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*synchronized*/</span> <span class="keyword">void</span> <span class="title function_">m</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10000</span>;i++)&#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line"></span><br><span class="line">        T1 t=<span class="keyword">new</span> <span class="title class_">T1</span>();</span><br><span class="line">        List&lt;Thread&gt; threads=<span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Thread&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">            threads.add(<span class="keyword">new</span> <span class="title class_">Thread</span>(()-&gt;t.m(),<span class="string">&quot;thread-&quot;</span>+i));</span><br><span class="line">        &#125;</span><br><span class="line">        threads.forEach((o)-&gt;o.start());</span><br><span class="line">        threads.forEach((o)-&gt;&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                o.join();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        System.out.println(t.count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码中，十个线程执行count++加到1w循环，理想状态当然是加到10w，但是volatile只能保持线程的可见性，不能保持原子性。给count变量加上了volatile，最后输出的count值也达不到10w。这就是volatile与synchronized的区别，<strong>volatile只能保持可见性，而synchronized可以保持可见性和原子性。</strong>但是volatile更加轻量级，能用volatile的情况下，尽量别用synchronized。</p>
+]]></content>
   </entry>
   <entry>
     <title>Linux安装nginx和配置https</title>
@@ -605,6 +605,51 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Mac上使用homebrew安装nvm</title>
+    <url>/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/</url>
+    <content><![CDATA[<blockquote>
+<p>NVM（Node Version Manager）是一个用于在基于Linux系统上安装和管理Node.js的shell脚本。macOS用户可以使用<code>homebrew</code>来安装NVM。</p>
+</blockquote>
+<p>安装Homebrew（如果你还没有安装）：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>卸载现有node版本</li>
+</ol>
+<p>如果你的系统已经安装了node，请先卸载它。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew uninstall --ignore-dependencies node </span><br><span class="line">brew uninstall --force node </span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用Homebrew安装nvm：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">brew install nvm</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>将nvm初始化脚本添加到你的shell配置文件中。如果你使用的是zsh，那么你需要在你的<code>~/.zshrc</code>文件中添加以下行：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="subst">$([ -z <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME-&#125;</span>&quot;</span> ] &amp;&amp; printf %s <span class="string">&quot;<span class="variable">$&#123;HOME&#125;</span>/.nvm&quot;</span> || printf %s <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME&#125;</span>/nvm&quot;</span>)</span>&quot;</span></span><br><span class="line">[ -s <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> <span class="comment"># This loads nvm</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>使更改生效，你可以重新启动你的终端，或者运行以下命令：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>验证nvm安装成功：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
+
+<p>以上步骤将会在你的macOS系统上安装nvm，并且设置zsh使其能够识别nvm命令。</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">nvm -v //查看nvm版本</span><br><span class="line">nvm <span class="built_in">ls</span> //查看本机已经安装node版本</span><br><span class="line">nvm use 切换到指定版本node</span><br><span class="line">nvm ls-remote //列出所有可安装的远程node版本</span><br><span class="line">nvm install stable    //安装最新版本</span><br><span class="line">nvm install &lt;version&gt; //安装指定版本</span><br><span class="line">nvm uninstall stable   //卸载最新版本</span><br><span class="line">nvm uninstall &lt;version&gt;   //卸载指定版本</span><br><span class="line">nvm current //查看当前使用的node版本</span><br><span class="line">npm <span class="built_in">which</span> [current|&lt;version&gt;] //显示已安装node的安装路径。</span><br><span class="line">nvm cache <span class="built_in">dir</span> //显示nvm的缓存目录</span><br><span class="line">nvm cache clear //清楚nvm的缓存目录</span><br><span class="line">nvm node_mirror [url] //设置node镜像</span><br><span class="line">nvm npm_mirror [url] //设置npm镜像</span><br><span class="line">nvm on //开启node.js版本管理</span><br><span class="line">nvm off //关闭node.js版本管理</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">更新npm到最新版本</span><br><span class="line">npm install -g npm@latest</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="踩坑记录："><a href="#踩坑记录：" class="headerlink" title="踩坑记录："></a>踩坑记录：</h3><p>终端安装好了nvm和node，但是在vscode打开后无法执行命令，需要在<code> vi ~/.zshrc</code>加入<code>export PATH=&quot;~/.composer/vendor/bin:$PATH&quot;</code></p>
+<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a href="https://juejin.cn/post/7083026831263137800">如何在macOS上安装NVM</a></p>
+<p><a href="https://www.cnblogs.com/famensaodiseng/p/10427673.html">Mac下安装nvm后vscode输入node -v不起作用</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>Mac使用Web的自动化测试工具selenium</title>
     <url>/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/</url>
     <content><![CDATA[<blockquote>
@@ -677,71 +722,6 @@
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// main.js  </span></span><br><span class="line"><span class="keyword">import</span> &#123; message &#125; <span class="keyword">from</span> <span class="string">&#x27;./moduleA&#x27;</span>;  </span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(message); <span class="comment">// 输出 &#x27;Hello from ES6&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>需要注意的是，ES6 的 <code>import</code> 语句返回的是导出的内容本身，而不是一个对象。因此，我们可以直接使用导入的内容，而不需要通过属性来访问。</strong></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Mac上使用homebrew安装nvm</title>
-    <url>/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/</url>
-    <content><![CDATA[<blockquote>
-<p>NVM（Node Version Manager）是一个用于在基于Linux系统上安装和管理Node.js的shell脚本。macOS用户可以使用<code>homebrew</code>来安装NVM。</p>
-</blockquote>
-<p>安装Homebrew（如果你还没有安装）：</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>卸载现有node版本</li>
-</ol>
-<p>如果你的系统已经安装了node，请先卸载它。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">brew uninstall --ignore-dependencies node </span><br><span class="line">brew uninstall --force node </span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>使用Homebrew安装nvm：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">brew install nvm</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>将nvm初始化脚本添加到你的shell配置文件中。如果你使用的是zsh，那么你需要在你的<code>~/.zshrc</code>文件中添加以下行：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="subst">$([ -z <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME-&#125;</span>&quot;</span> ] &amp;&amp; printf %s <span class="string">&quot;<span class="variable">$&#123;HOME&#125;</span>/.nvm&quot;</span> || printf %s <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME&#125;</span>/nvm&quot;</span>)</span>&quot;</span></span><br><span class="line">[ -s <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> <span class="comment"># This loads nvm</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>使更改生效，你可以重新启动你的终端，或者运行以下命令：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>验证nvm安装成功：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
-
-<p>以上步骤将会在你的macOS系统上安装nvm，并且设置zsh使其能够识别nvm命令。</p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">nvm -v //查看nvm版本</span><br><span class="line">nvm <span class="built_in">ls</span> //查看本机已经安装node版本</span><br><span class="line">nvm use 切换到指定版本node</span><br><span class="line">nvm ls-remote //列出所有可安装的远程node版本</span><br><span class="line">nvm install stable    //安装最新版本</span><br><span class="line">nvm install &lt;version&gt; //安装指定版本</span><br><span class="line">nvm uninstall stable   //卸载最新版本</span><br><span class="line">nvm uninstall &lt;version&gt;   //卸载指定版本</span><br><span class="line">nvm current //查看当前使用的node版本</span><br><span class="line">npm <span class="built_in">which</span> [current|&lt;version&gt;] //显示已安装node的安装路径。</span><br><span class="line">nvm cache <span class="built_in">dir</span> //显示nvm的缓存目录</span><br><span class="line">nvm cache clear //清楚nvm的缓存目录</span><br><span class="line">nvm node_mirror [url] //设置node镜像</span><br><span class="line">nvm npm_mirror [url] //设置npm镜像</span><br><span class="line">nvm on //开启node.js版本管理</span><br><span class="line">nvm off //关闭node.js版本管理</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">更新npm到最新版本</span><br><span class="line">npm install -g npm@latest</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="踩坑记录："><a href="#踩坑记录：" class="headerlink" title="踩坑记录："></a>踩坑记录：</h3><p>终端安装好了nvm和node，但是在vscode打开后无法执行命令，需要在<code> vi ~/.zshrc</code>加入<code>export PATH=&quot;~/.composer/vendor/bin:$PATH&quot;</code></p>
-<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a href="https://juejin.cn/post/7083026831263137800">如何在macOS上安装NVM</a></p>
-<p><a href="https://www.cnblogs.com/famensaodiseng/p/10427673.html">Mac下安装nvm后vscode输入node -v不起作用</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Pandas转JSON无法显示中文的问题</title>
-    <url>/2024/09/18/Pandas%E8%BD%ACJSON%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<p><strong>问题解释：</strong></p>
-<blockquote>
-<p>在使用pandas转换DataFrame到JSON格式时，如果DataFrame中含有中文字符，可能会遇到无法正确显示中文的问题。这通常是因为默认情况下，pandas会将字符串编码为Unicode Escape形式，这不是JSON的标准格式，而是Python内部的表现形式。</p>
-</blockquote>
-<p><strong>解决方法：</strong></p>
-<ol>
-<li><p>在转换为JSON之前，确保DataFrame的编码是正确的，通常使用UTF-8编码。</p>
-</li>
-<li><p>使用to_json方法时，设置参数ensure_ascii&#x3D;False，这样可以避免ASCII编码的问题，正确显示中文。</p>
-</li>
-</ol>
-<p><strong>示例代码：</strong></p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个包含中文的DataFrame</span></span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(&#123;<span class="string">&#x27;data&#x27;</span>: [<span class="string">&#x27;中文内容&#x27;</span>, <span class="string">&#x27;更多中文&#x27;</span>, <span class="string">&#x27;最后一条&#x27;</span>]&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为JSON，确保使用utf-8编码，并且不使用ASCII编码</span></span><br><span class="line"></span><br><span class="line">json_str = df.to_json(orient=<span class="string">&#x27;records&#x27;</span>, force_ascii=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(json_str)</span><br></pre></td></tr></table></figure>
-
-<p>这段代码会创建一个包含中文的DataFrame，并将其转换为JSON格式，正确显示中文字符。</p>
 ]]></content>
   </entry>
   <entry>
@@ -917,6 +897,26 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Pandas转JSON无法显示中文的问题</title>
+    <url>/2024/09/18/Pandas%E8%BD%ACJSON%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p><strong>问题解释：</strong></p>
+<blockquote>
+<p>在使用pandas转换DataFrame到JSON格式时，如果DataFrame中含有中文字符，可能会遇到无法正确显示中文的问题。这通常是因为默认情况下，pandas会将字符串编码为Unicode Escape形式，这不是JSON的标准格式，而是Python内部的表现形式。</p>
+</blockquote>
+<p><strong>解决方法：</strong></p>
+<ol>
+<li><p>在转换为JSON之前，确保DataFrame的编码是正确的，通常使用UTF-8编码。</p>
+</li>
+<li><p>使用to_json方法时，设置参数ensure_ascii&#x3D;False，这样可以避免ASCII编码的问题，正确显示中文。</p>
+</li>
+</ol>
+<p><strong>示例代码：</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个包含中文的DataFrame</span></span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(&#123;<span class="string">&#x27;data&#x27;</span>: [<span class="string">&#x27;中文内容&#x27;</span>, <span class="string">&#x27;更多中文&#x27;</span>, <span class="string">&#x27;最后一条&#x27;</span>]&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为JSON，确保使用utf-8编码，并且不使用ASCII编码</span></span><br><span class="line"></span><br><span class="line">json_str = df.to_json(orient=<span class="string">&#x27;records&#x27;</span>, force_ascii=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(json_str)</span><br></pre></td></tr></table></figure>
+
+<p>这段代码会创建一个包含中文的DataFrame，并将其转换为JSON格式，正确显示中文字符。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>Shiro整合Redis:使用shiro-redis插件踩的坑</title>
     <url>/2022/06/01/Shiro%E6%95%B4%E5%90%88Redis-%E4%BD%BF%E7%94%A8shiro-redis%E6%8F%92%E4%BB%B6%E8%B8%A9%E7%9A%84%E5%9D%91/</url>
     <content><![CDATA[<p>　　一直想在shiro权限这块加入缓存，使用redis是再合适不过了，恰巧已经有大佬将shiro和redis整合在一起使用了，只需在引入pom文件中引入即可。</p>
@@ -1033,21 +1033,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>SpringBoot整合Hibernate Validator实现参数验证功能</title>
-    <url>/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Hibernate-Validator%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81%E5%8A%9F%E8%83%BD/</url>
-    <content><![CDATA[<p>　　在前后端分离的开发模式中，后端对前端传入的参数的校验成了必不可少的一个环节。但是在多参数的情况下，在controller层加上参数验证，会显得特别臃肿，并且会有许多的重复代码。这里可以引用Hibernate Validator来解决这个问题，直接在实体类进行参数校验，验证失败直接返回错误信息给前端，减少controller层的代码量。</p>
-<h1 id="一、pom引入Hibernate-Validator"><a href="#一、pom引入Hibernate-Validator" class="headerlink" title="一、pom引入Hibernate Validator"></a>一、pom引入Hibernate Validator</h1><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 验证器 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate.validator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-validator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h1 id="二、通过注解在实体类进行参数校验"><a href="#二、通过注解在实体类进行参数校验" class="headerlink" title="二、通过注解在实体类进行参数校验"></a>二、通过注解在实体类进行参数校验</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;用户名称不能为空！&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;age不能为null!&quot;)</span></span><br><span class="line">    <span class="meta">@Range(min = 1, max = 888, message = &quot;范围为1至888&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日期格式化转换</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;日期不能为null!&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date date;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里用到的参数校验的注解有@NotNull和@Range，message是到时候我们返回给前端的信息，注解的具体意思如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Null</span>  被注释的元素必须为<span class="literal">null</span></span><br><span class="line"><span class="meta">@NotNull</span>  被注释的元素不能为<span class="literal">null</span></span><br><span class="line"><span class="meta">@AssertTrue</span>  被注释的元素必须为<span class="literal">true</span></span><br><span class="line"><span class="meta">@AssertFalse</span>  被注释的元素必须为<span class="literal">false</span></span><br><span class="line"><span class="meta">@Min(value)</span>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值</span><br><span class="line"><span class="meta">@Max(value)</span>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值</span><br><span class="line"><span class="meta">@DecimalMin(value)</span>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值</span><br><span class="line"><span class="meta">@DecimalMax(value)</span>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值</span><br><span class="line"><span class="meta">@Size(max,min)</span>  被注释的元素的大小必须在指定的范围内。</span><br><span class="line"><span class="meta">@Digits(integer,fraction)</span>  被注释的元素必须是一个数字，其值必须在可接受的范围内</span><br><span class="line"><span class="meta">@Past</span>  被注释的元素必须是一个过去的日期</span><br><span class="line"><span class="meta">@Future</span>  被注释的元素必须是一个将来的日期</span><br><span class="line"><span class="meta">@Pattern(value)</span> 被注释的元素必须符合指定的正则表达式。</span><br><span class="line"><span class="meta">@Email</span> 被注释的元素必须是电子邮件地址</span><br><span class="line"><span class="meta">@Length</span> 被注释的字符串的大小必须在指定的范围内</span><br><span class="line"><span class="meta">@NotEmpty</span>  被注释的字符串必须非空</span><br><span class="line"><span class="meta">@Range</span>  被注释的元素必须在合适的范围内</span><br></pre></td></tr></table></figure>
-<h1 id="三、controller层的方法加上-Valid注解"><a href="#三、controller层的方法加上-Valid注解" class="headerlink" title="三、controller层的方法加上@Valid注解"></a>三、controller层的方法加上@Valid注解</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/testPost&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">testPost</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Valid</span> UserModel userModel, BindingResult result)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">        <span class="keyword">for</span>(ObjectError error:result.getAllErrors())&#123;</span><br><span class="line">            <span class="keyword">return</span> error.getDefaultMessage();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> userModel;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>controller层这里只需要在实体类的前面加上@Valid注解，这个注解可以实现数据的验证。这里BindingResult是存储了校验时的错误信息，验证有误时将错误信息返回给前端。这里不使用BindingResult的时候，控制台会报MethodArgumentNotValidException，这里可以通过自定义异常类来捕捉它，然后去掉BindingResult，以及难看的if判断。</p>
-<h1 id="四、自定义异常类捕捉MethodArgumentNotValidException"><a href="#四、自定义异常类捕捉MethodArgumentNotValidException" class="headerlink" title="四、自定义异常类捕捉MethodArgumentNotValidException"></a>四、自定义异常类捕捉MethodArgumentNotValidException</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionAdvice</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(value = MethodArgumentNotValidException.class)</span></span><br><span class="line">    <span class="keyword">public</span> JsonData <span class="title function_">validException</span><span class="params">(MethodArgumentNotValidException e)</span> &#123;</span><br><span class="line">        <span class="comment">//验证post请求的参数合法性</span></span><br><span class="line">        <span class="type">MethodArgumentNotValidException</span> <span class="variable">notValidException</span> <span class="operator">=</span> e;</span><br><span class="line">        <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> notValidException.getBindingResult().getFieldError().getDefaultMessage();</span><br><span class="line">        <span class="keyword">return</span> JsonData.buildError(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用PostMan的测试结果如下：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/0e7da5f5ea00deaf1e69196d09085f49.png" alt="image.png"></p>
-<p>具体的代码可以在我的github上面查看，<a href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>SpringBoot整合Mail发送邮件&amp;发送模板邮件</title>
     <url>/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Mail%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6-%E5%8F%91%E9%80%81%E6%A8%A1%E6%9D%BF%E9%82%AE%E4%BB%B6/</url>
     <content><![CDATA[<p>　　整合mail发送邮件，其实就是通过代码来操作发送邮件的步骤，编辑收件人、邮件内容、邮件附件等等。通过邮件可以拓展出短信验证码、消息通知等业务。</p>
@@ -1160,46 +1145,6 @@
 <p>所以最后我在启动类上加了@ComponentScan注解：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ComponentScan(basePackages = &#123;&quot;com.xxx&quot;&#125;)</span></span><br></pre></td></tr></table></figure>
 <p>OK，成功启动并访问成功。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>使用ohttps自动部署https证书</title>
-    <url>/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/</url>
-    <content><![CDATA[<blockquote>
-<p>在使用第三方托管网站做个人网站，例如：Github Pages，想要给网站加上https，可以通过ohttps来创建Let’s Encrypt的https证书，单纯想给网站加上https也可以。</p>
-</blockquote>
-<h3 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h3><p>先确保服务器(我这里是win服务器)已经安装了<a href="https://nginx.org/en/download.html">nginx</a>，选择适合自己的版本，然后下载解压到服务器上，双击运行nginx.exe，访问服务器ip地址，出现Welcome to Nginx!则表示安装启动成功。</p>
-<h3 id="使用ohttps部署ssl证书"><a href="#使用ohttps部署ssl证书" class="headerlink" title="使用ohttps部署ssl证书"></a>使用ohttps部署ssl证书</h3><ol>
-<li>创建证书</li>
-</ol>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124550577.png" alt="image-20240812124550577"></p>
-<ol start="2">
-<li>需要在自己域名管理解析中加入ohttps的记录</li>
-</ol>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124657919.png" alt="image-20240812124657919"></p>
-<ol start="3">
-<li>在nginx配置中需要ssl_certificate_key和ssl_certificate</li>
-</ol>
-<p><strong>ssl_certificate_key</strong>: 私钥文件通常包含与SSL证书配对的私钥，用于加密和解密通信中的数据，文件后缀.key，内容开头—–BEGIN RSA PRIVATE KEY—–</p>
-<p><strong>ssl_certificate</strong>: SSL证书文件包含用于验证服务器身份的公钥以及相关信息，如服务器的域名和证书颁发机构（CA）的签名，文件后缀为.crt或者是.pem，内容开头—–BEGIN CERTIFICATE—–</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812125505357.png" alt="image-20240812125505357"></p>
-<p>下载这两个文件，然后存放到服务器上</p>
-<h3 id="配置Nginx-conf"><a href="#配置Nginx-conf" class="headerlink" title="配置Nginx.conf"></a>配置Nginx.conf</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    server_names_hash_bucket_size 64;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 443 ssl;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h3><ul>
-<li><p><strong>启动Nginx服务</strong> nginx</p>
-</li>
-<li><p><strong>停止Nginx服务</strong> nginx -s stop</p>
-</li>
-<li><p><strong>检测配置文件的正确性</strong> nginx -t</p>
-</li>
-<li><p><strong>重新加载Nginx配置文件</strong> nginx -s reload</p>
-</li>
-<li><p><strong>查看Nginx版本信息</strong> nginx -v</p>
-</li>
-<li><p><strong>平滑停止Nginx服务</strong> nginx -s quit</p>
-</li>
-</ul>
 ]]></content>
   </entry>
   <entry>
@@ -1326,11 +1271,75 @@
 ]]></content>
   </entry>
   <entry>
-    <title>启动项目报错Correct the classpath of your application so that it contains a single, compatible version of xxx</title>
-    <url>/2022/02/13/%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99Correct%20the%20classpath%20of%20your%20application%20so%20that%20it%20contains%20a%20single,%20compatible%20version%20of%20xxx/</url>
-    <content><![CDATA[<p>项目是基于Gradle构建的，在整合swagger后，启动项目时报错了。报错日志：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Description:</span><br><span class="line"></span><br><span class="line">An attempt was made to call a method that does not exist. The attempt was made from the following location:</span><br><span class="line"></span><br><span class="line">    springfox.documentation.spring.web.plugins.DocumentationPluginsManager.createContextBuilder(DocumentationPluginsManager.java:<span class="number">152</span>)</span><br><span class="line"></span><br><span class="line">The following method did not exist:</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;org.springframework.plugin.core.Plugin org.springframework.plugin.core.PluginRegistry.getPluginFor(java.lang.Object, org.springframework.plugin.core.Plugin)&#x27;</span></span><br><span class="line"></span><br><span class="line">The method<span class="string">&#x27;s class, org.springframework.plugin.core.PluginRegistry, is available from the following locations:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    jar:file:/C:/Users/Administrator/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/2.0.0.RELEASE/95fc8c13037630f4aba9c51141f535becec00fe6/spring-plugin-core-2.0.0.RELEASE.jar!/org/springframework/plugin/core/PluginRegistry.class</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">It was loaded from the following location:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    file:/C:/Users/Administrator/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/2.0.0.RELEASE/95fc8c13037630f4aba9c51141f535becec00fe6/spring-plugin-core-2.0.0.RELEASE.jar</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Action:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Correct the classpath of your application so that it contains a single, compatible version of org.springframework.plugin.core.PluginRegistry</span></span><br></pre></td></tr></table></figure>
-<p>百度之后，发现是jar包冲突了，导入了两个不同版本的jar包。如图：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a3688f4401c04f3a53efb72e701a4457.png" alt="image.png"><br>解决办法可以直接将依赖中的jar包剔除掉，或者直接删除该依赖也行。</p>
+    <title>使用ohttps自动部署https证书</title>
+    <url>/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/</url>
+    <content><![CDATA[<blockquote>
+<p>在使用第三方托管网站做个人网站，例如：Github Pages，想要给网站加上https，可以通过ohttps来创建Let’s Encrypt的https证书，单纯想给网站加上https也可以。</p>
+</blockquote>
+<h3 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h3><p>先确保服务器(我这里是win服务器)已经安装了<a href="https://nginx.org/en/download.html">nginx</a>，选择适合自己的版本，然后下载解压到服务器上，双击运行nginx.exe，访问服务器ip地址，出现Welcome to Nginx!则表示安装启动成功。</p>
+<h3 id="使用ohttps部署ssl证书"><a href="#使用ohttps部署ssl证书" class="headerlink" title="使用ohttps部署ssl证书"></a>使用ohttps部署ssl证书</h3><ol>
+<li>创建证书</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124550577.png" alt="image-20240812124550577"></p>
+<ol start="2">
+<li>需要在自己域名管理解析中加入ohttps的记录</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124657919.png" alt="image-20240812124657919"></p>
+<ol start="3">
+<li>在nginx配置中需要ssl_certificate_key和ssl_certificate</li>
+</ol>
+<p><strong>ssl_certificate_key</strong>: 私钥文件通常包含与SSL证书配对的私钥，用于加密和解密通信中的数据，文件后缀.key，内容开头—–BEGIN RSA PRIVATE KEY—–</p>
+<p><strong>ssl_certificate</strong>: SSL证书文件包含用于验证服务器身份的公钥以及相关信息，如服务器的域名和证书颁发机构（CA）的签名，文件后缀为.crt或者是.pem，内容开头—–BEGIN CERTIFICATE—–</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812125505357.png" alt="image-20240812125505357"></p>
+<p>下载这两个文件，然后存放到服务器上</p>
+<h3 id="配置Nginx-conf"><a href="#配置Nginx-conf" class="headerlink" title="配置Nginx.conf"></a>配置Nginx.conf</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    server_names_hash_bucket_size 64;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 443 ssl;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h3><ul>
+<li><p><strong>启动Nginx服务</strong> nginx</p>
+</li>
+<li><p><strong>停止Nginx服务</strong> nginx -s stop</p>
+</li>
+<li><p><strong>检测配置文件的正确性</strong> nginx -t</p>
+</li>
+<li><p><strong>重新加载Nginx配置文件</strong> nginx -s reload</p>
+</li>
+<li><p><strong>查看Nginx版本信息</strong> nginx -v</p>
+</li>
+<li><p><strong>平滑停止Nginx服务</strong> nginx -s quit</p>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>将Python脚本打包成可执行的exe文件</title>
+    <url>/2024/03/14/%E5%B0%86Python%E8%84%9A%E6%9C%AC%E6%89%93%E5%8C%85%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84exe%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<blockquote>
+<p>将Python程序打包为可执行的.exe文件有多种方法。以下是其中两种常用的方式。</p>
+</blockquote>
+<h2 id="使用PyInstaller库进行打包"><a href="#使用PyInstaller库进行打包" class="headerlink" title="使用PyInstaller库进行打包"></a>使用PyInstaller库进行打包</h2><ol>
+<li><p>首先确保已经安装了PyInstaller库（如果没有，则通过命令<code>pip install pyinstaller</code>来安装）；</p>
+</li>
+<li><p>在命令提示符或终端中导航到要打包的Python脚本所在目录；</p>
+</li>
+<li><p>运行命令 <code>pyinstaller --onefile your_script.py</code>，这会生成一个名为”dist”的文件夹，并在该文件夹内创建一个与脚本同名的.exe文件。</p>
+</li>
+</ol>
+<p><strong>注意：此方法只适用于单个Python脚本的打包。</strong></p>
+<ol start="4">
+<li>在使用 PyInstaller 打包项目时，有时会遇到缺少 Python 库的问题，导致打包失败。<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pyinstaller --hidden-<span class="keyword">import</span>=some_module --onefile your_script.py</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="使用cx-Freeze库进行打包"><a href="#使用cx-Freeze库进行打包" class="headerlink" title="使用cx_Freeze库进行打包"></a>使用cx_Freeze库进行打包</h2><ol>
+<li><p>首先确保已经安装了cx_Freeze库（如果没有，则通过命令<code>pip install cx-freeze</code>来安装）；</p>
+</li>
+<li><p>创建一个名为setup.py的新文件，并添加以下内容：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> distutils.core <span class="keyword">import</span> setup</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) == <span class="number">1</span> <span class="keyword">or</span> <span class="string">&#x27;bdist_wininst&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> sys.argv[<span class="number">1</span>]:</span><br><span class="line">    <span class="comment"># 设置需要打包的模块及入口点</span></span><br><span class="line">    modules = [<span class="string">&#x27;myapp&#x27;</span>]</span><br><span class="line">    </span><br><span class="line">    options = &#123;</span><br><span class="line">        <span class="string">&quot;build_exe&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;includes&quot;</span>: [<span class="string">&quot;atexit&quot;</span>],</span><br><span class="line">            <span class="string">&quot;excludes&quot;</span>: [],</span><br><span class="line">            <span class="string">&quot;packages&quot;</span>: [],</span><br><span class="line">            <span class="string">&quot;path&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">         &#125;,</span><br><span class="line">      &#125;</span><br><span class="line">    </span><br><span class="line">    setup(name=<span class="string">&quot;YourProgram&quot;</span>, version=<span class="string">&quot;0.1&quot;</span>, description=<span class="string">&quot;Description of Your Program&quot;</span>, author=<span class="string">&quot;Author Name&quot;</span>, url=<span class="string">&quot;http://www.example.com/&quot;</span>, console=[<span class="string">&quot;myapp.py&quot;</span>])</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在命令提示符或终端中导航到包含上述setup.py文件的目录；</p>
+</li>
+<li><p>运行命令 <code>python setup.py bdist_wininst</code>，这会生成一个名为”dist”的文件夹，并在该文件夹内创建一个与脚本同名的.exe文件。</p>
+</li>
+</ol>
+<p><strong>注意：此方法更适合对多个Python模块进行打包。</strong></p>
 ]]></content>
   </entry>
   <entry>
@@ -1415,35 +1424,11 @@
 ]]></content>
   </entry>
   <entry>
-    <title>将Python脚本打包成可执行的exe文件</title>
-    <url>/2024/03/14/%E5%B0%86Python%E8%84%9A%E6%9C%AC%E6%89%93%E5%8C%85%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84exe%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<blockquote>
-<p>将Python程序打包为可执行的.exe文件有多种方法。以下是其中两种常用的方式。</p>
-</blockquote>
-<h2 id="使用PyInstaller库进行打包"><a href="#使用PyInstaller库进行打包" class="headerlink" title="使用PyInstaller库进行打包"></a>使用PyInstaller库进行打包</h2><ol>
-<li><p>首先确保已经安装了PyInstaller库（如果没有，则通过命令<code>pip install pyinstaller</code>来安装）；</p>
-</li>
-<li><p>在命令提示符或终端中导航到要打包的Python脚本所在目录；</p>
-</li>
-<li><p>运行命令 <code>pyinstaller --onefile your_script.py</code>，这会生成一个名为”dist”的文件夹，并在该文件夹内创建一个与脚本同名的.exe文件。</p>
-</li>
-</ol>
-<p><strong>注意：此方法只适用于单个Python脚本的打包。</strong></p>
-<ol start="4">
-<li>在使用 PyInstaller 打包项目时，有时会遇到缺少 Python 库的问题，导致打包失败。<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pyinstaller --hidden-<span class="keyword">import</span>=some_module --onefile your_script.py</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="使用cx-Freeze库进行打包"><a href="#使用cx-Freeze库进行打包" class="headerlink" title="使用cx_Freeze库进行打包"></a>使用cx_Freeze库进行打包</h2><ol>
-<li><p>首先确保已经安装了cx_Freeze库（如果没有，则通过命令<code>pip install cx-freeze</code>来安装）；</p>
-</li>
-<li><p>创建一个名为setup.py的新文件，并添加以下内容：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">from</span> distutils.core <span class="keyword">import</span> setup</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) == <span class="number">1</span> <span class="keyword">or</span> <span class="string">&#x27;bdist_wininst&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> sys.argv[<span class="number">1</span>]:</span><br><span class="line">    <span class="comment"># 设置需要打包的模块及入口点</span></span><br><span class="line">    modules = [<span class="string">&#x27;myapp&#x27;</span>]</span><br><span class="line">    </span><br><span class="line">    options = &#123;</span><br><span class="line">        <span class="string">&quot;build_exe&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;includes&quot;</span>: [<span class="string">&quot;atexit&quot;</span>],</span><br><span class="line">            <span class="string">&quot;excludes&quot;</span>: [],</span><br><span class="line">            <span class="string">&quot;packages&quot;</span>: [],</span><br><span class="line">            <span class="string">&quot;path&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">         &#125;,</span><br><span class="line">      &#125;</span><br><span class="line">    </span><br><span class="line">    setup(name=<span class="string">&quot;YourProgram&quot;</span>, version=<span class="string">&quot;0.1&quot;</span>, description=<span class="string">&quot;Description of Your Program&quot;</span>, author=<span class="string">&quot;Author Name&quot;</span>, url=<span class="string">&quot;http://www.example.com/&quot;</span>, console=[<span class="string">&quot;myapp.py&quot;</span>])</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在命令提示符或终端中导航到包含上述setup.py文件的目录；</p>
-</li>
-<li><p>运行命令 <code>python setup.py bdist_wininst</code>，这会生成一个名为”dist”的文件夹，并在该文件夹内创建一个与脚本同名的.exe文件。</p>
-</li>
-</ol>
-<p><strong>注意：此方法更适合对多个Python模块进行打包。</strong></p>
+    <title>启动项目报错Correct the classpath of your application so that it contains a single, compatible version of xxx</title>
+    <url>/2022/02/13/%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE%E6%8A%A5%E9%94%99Correct%20the%20classpath%20of%20your%20application%20so%20that%20it%20contains%20a%20single,%20compatible%20version%20of%20xxx/</url>
+    <content><![CDATA[<p>项目是基于Gradle构建的，在整合swagger后，启动项目时报错了。报错日志：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Description:</span><br><span class="line"></span><br><span class="line">An attempt was made to call a method that does not exist. The attempt was made from the following location:</span><br><span class="line"></span><br><span class="line">    springfox.documentation.spring.web.plugins.DocumentationPluginsManager.createContextBuilder(DocumentationPluginsManager.java:<span class="number">152</span>)</span><br><span class="line"></span><br><span class="line">The following method did not exist:</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;org.springframework.plugin.core.Plugin org.springframework.plugin.core.PluginRegistry.getPluginFor(java.lang.Object, org.springframework.plugin.core.Plugin)&#x27;</span></span><br><span class="line"></span><br><span class="line">The method<span class="string">&#x27;s class, org.springframework.plugin.core.PluginRegistry, is available from the following locations:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    jar:file:/C:/Users/Administrator/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/2.0.0.RELEASE/95fc8c13037630f4aba9c51141f535becec00fe6/spring-plugin-core-2.0.0.RELEASE.jar!/org/springframework/plugin/core/PluginRegistry.class</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">It was loaded from the following location:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    file:/C:/Users/Administrator/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/2.0.0.RELEASE/95fc8c13037630f4aba9c51141f535becec00fe6/spring-plugin-core-2.0.0.RELEASE.jar</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Action:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Correct the classpath of your application so that it contains a single, compatible version of org.springframework.plugin.core.PluginRegistry</span></span><br></pre></td></tr></table></figure>
+<p>百度之后，发现是jar包冲突了，导入了两个不同版本的jar包。如图：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a3688f4401c04f3a53efb72e701a4457.png" alt="image.png"><br>解决办法可以直接将依赖中的jar包剔除掉，或者直接删除该依赖也行。</p>
 ]]></content>
   </entry>
   <entry>
@@ -1493,6 +1478,21 @@
 <li>截图软件，粘贴效果，typora直接转换成了阿里云OSS的地址<img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/53d7a28b-96f3-4ba5-8fbc-e47b5bddae99.png" alt="image-20221222140236233"></li>
 <li>外站粘贴过来的也是同样效果</li>
 </ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>SpringBoot整合Hibernate Validator实现参数验证功能</title>
+    <url>/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Hibernate-Validator%E5%AE%9E%E7%8E%B0%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81%E5%8A%9F%E8%83%BD/</url>
+    <content><![CDATA[<p>　　在前后端分离的开发模式中，后端对前端传入的参数的校验成了必不可少的一个环节。但是在多参数的情况下，在controller层加上参数验证，会显得特别臃肿，并且会有许多的重复代码。这里可以引用Hibernate Validator来解决这个问题，直接在实体类进行参数校验，验证失败直接返回错误信息给前端，减少controller层的代码量。</p>
+<h1 id="一、pom引入Hibernate-Validator"><a href="#一、pom引入Hibernate-Validator" class="headerlink" title="一、pom引入Hibernate Validator"></a>一、pom引入Hibernate Validator</h1><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 验证器 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.hibernate.validator<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hibernate-validator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.5.Final<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="二、通过注解在实体类进行参数校验"><a href="#二、通过注解在实体类进行参数校验" class="headerlink" title="二、通过注解在实体类进行参数校验"></a>二、通过注解在实体类进行参数校验</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;用户名称不能为空！&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;age不能为null!&quot;)</span></span><br><span class="line">    <span class="meta">@Range(min = 1, max = 888, message = &quot;范围为1至888&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 日期格式化转换</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;日期不能为null!&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date date;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里用到的参数校验的注解有@NotNull和@Range，message是到时候我们返回给前端的信息，注解的具体意思如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Null</span>  被注释的元素必须为<span class="literal">null</span></span><br><span class="line"><span class="meta">@NotNull</span>  被注释的元素不能为<span class="literal">null</span></span><br><span class="line"><span class="meta">@AssertTrue</span>  被注释的元素必须为<span class="literal">true</span></span><br><span class="line"><span class="meta">@AssertFalse</span>  被注释的元素必须为<span class="literal">false</span></span><br><span class="line"><span class="meta">@Min(value)</span>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值</span><br><span class="line"><span class="meta">@Max(value)</span>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值</span><br><span class="line"><span class="meta">@DecimalMin(value)</span>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值</span><br><span class="line"><span class="meta">@DecimalMax(value)</span>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值</span><br><span class="line"><span class="meta">@Size(max,min)</span>  被注释的元素的大小必须在指定的范围内。</span><br><span class="line"><span class="meta">@Digits(integer,fraction)</span>  被注释的元素必须是一个数字，其值必须在可接受的范围内</span><br><span class="line"><span class="meta">@Past</span>  被注释的元素必须是一个过去的日期</span><br><span class="line"><span class="meta">@Future</span>  被注释的元素必须是一个将来的日期</span><br><span class="line"><span class="meta">@Pattern(value)</span> 被注释的元素必须符合指定的正则表达式。</span><br><span class="line"><span class="meta">@Email</span> 被注释的元素必须是电子邮件地址</span><br><span class="line"><span class="meta">@Length</span> 被注释的字符串的大小必须在指定的范围内</span><br><span class="line"><span class="meta">@NotEmpty</span>  被注释的字符串必须非空</span><br><span class="line"><span class="meta">@Range</span>  被注释的元素必须在合适的范围内</span><br></pre></td></tr></table></figure>
+<h1 id="三、controller层的方法加上-Valid注解"><a href="#三、controller层的方法加上-Valid注解" class="headerlink" title="三、controller层的方法加上@Valid注解"></a>三、controller层的方法加上@Valid注解</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PostMapping(&quot;/testPost&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">testPost</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Valid</span> UserModel userModel, BindingResult result)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(result.hasErrors())&#123;</span><br><span class="line">        <span class="keyword">for</span>(ObjectError error:result.getAllErrors())&#123;</span><br><span class="line">            <span class="keyword">return</span> error.getDefaultMessage();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> userModel;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>controller层这里只需要在实体类的前面加上@Valid注解，这个注解可以实现数据的验证。这里BindingResult是存储了校验时的错误信息，验证有误时将错误信息返回给前端。这里不使用BindingResult的时候，控制台会报MethodArgumentNotValidException，这里可以通过自定义异常类来捕捉它，然后去掉BindingResult，以及难看的if判断。</p>
+<h1 id="四、自定义异常类捕捉MethodArgumentNotValidException"><a href="#四、自定义异常类捕捉MethodArgumentNotValidException" class="headerlink" title="四、自定义异常类捕捉MethodArgumentNotValidException"></a>四、自定义异常类捕捉MethodArgumentNotValidException</h1><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionAdvice</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(value = MethodArgumentNotValidException.class)</span></span><br><span class="line">    <span class="keyword">public</span> JsonData <span class="title function_">validException</span><span class="params">(MethodArgumentNotValidException e)</span> &#123;</span><br><span class="line">        <span class="comment">//验证post请求的参数合法性</span></span><br><span class="line">        <span class="type">MethodArgumentNotValidException</span> <span class="variable">notValidException</span> <span class="operator">=</span> e;</span><br><span class="line">        <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> notValidException.getBindingResult().getFieldError().getDefaultMessage();</span><br><span class="line">        <span class="keyword">return</span> JsonData.buildError(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用PostMan的测试结果如下：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/0e7da5f5ea00deaf1e69196d09085f49.png" alt="image.png"></p>
+<p>具体的代码可以在我的github上面查看，<a href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a></p>
 ]]></content>
   </entry>
 </search>
