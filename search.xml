@@ -129,6 +129,31 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Docker搭建和部署禅道</title>
+    <url>/2024/10/16/Docker%E6%90%AD%E5%BB%BA%E5%92%8C%E9%83%A8%E7%BD%B2%E7%A6%85%E9%81%93/</url>
+    <content><![CDATA[<blockquote>
+<p>禅道项目管理工具提供了丰富的功能模块，包括任务管理、需求管理、Bug跟踪、版本控制、团队协作、项目报表等，这些功能覆盖了项目管理的各个方面。全面的功能模块使得项目团队可以在一个统一的平台上进行协同工作，无需再整合多个系统，从而提高了工作效率。</p>
+</blockquote>
+<p>公司使用禅道来管理项目需求、进度以及Bug测试，新版禅道添加了很多功能，这里我搭建使用的是老版本12.5.3。</p>
+<h3 id="Docker拉取禅道镜像"><a href="#Docker拉取禅道镜像" class="headerlink" title="Docker拉取禅道镜像"></a>Docker拉取禅道镜像</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull idoop/zentao:12.5.3</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016134837422.png" alt="image-20241016134837422"></p>
+<h3 id="运行禅道容器"><a href="#运行禅道容器" class="headerlink" title="运行禅道容器"></a>运行禅道容器</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run --privileged=true -d -p 8082:80 -p 3316:3306 \</span><br><span class="line">        -e ADMINER_USER=&quot;admin&quot; -e ADMINER_PASSWD=&quot;123456&quot; \</span><br><span class="line">        -v /dockerdatafile/chandao/:/opt/zbox/ \</span><br><span class="line">        --name zentao-server \</span><br><span class="line">        idoop/zentao:12.5.3</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<ul>
+<li><p>ADMINER_USER：指定禅道管理员账号</p>
+</li>
+<li><p>ADMINER_PASSWD：指定禅道管理员首次登录密码</p>
+</li>
+</ul>
+<h3 id="访问禅道"><a href="#访问禅道" class="headerlink" title="访问禅道"></a>访问禅道</h3><p>浏览器访问宿主机器地址加8082端口，登录使用用户名 admin，密码 123456</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016135156614.png" alt="image-20241016135156614"></p>
+<h3 id="使用1Panel创建网站"><a href="#使用1Panel创建网站" class="headerlink" title="使用1Panel创建网站"></a>使用1Panel创建网站</h3><p>可通过域名进行访问</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016135651301.png" alt="image-20241016135651301"></p>
+]]></content>
+  </entry>
+  <entry>
     <title>Idea使用插件实现逆向工程搭建SpringBoot项目</title>
     <url>/2022/02/07/Idea%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6%E5%AE%9E%E7%8E%B0%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E6%90%AD%E5%BB%BASpringBoot%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[<p>之前写SpringBoot项目，每次都要手动去写实体类、dao层啥的，尤其是数据库表字段特别多的时候，特别麻烦。然后很多小伙伴都会用逆向工程来自动生成这些类，省去许多没必要的代码量，但是Mybatis的逆向工程依然需要配置，导逆向工程的jar啊，还有编写generatorConfig.xml文件啊（有兴趣的朋友可以看看这篇<a href="%E5%8D%9A%E5%AE%A2"></a>）。今天逛gitee的时候，看到了一款可以免去许多配置的idea逆向工程插件，几个步骤简单使用一下</p>
@@ -178,31 +203,6 @@
 </blockquote>
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f596969477578696e672f5472616e736c6174696f6e506c7567696e406d61737465722f696d616765732f73637265656e73686f74732e676966.gif" alt="translation"></p>
 <h3 id="11-其他"><a href="#11-其他" class="headerlink" title="11.其他"></a>11.其他</h3><p>Python、requirements等开发python的插件，让我可以更方便的在Idea中编写python代码。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Docker搭建和部署禅道</title>
-    <url>/2024/10/16/Docker%E6%90%AD%E5%BB%BA%E5%92%8C%E9%83%A8%E7%BD%B2%E7%A6%85%E9%81%93/</url>
-    <content><![CDATA[<blockquote>
-<p>禅道项目管理工具提供了丰富的功能模块，包括任务管理、需求管理、Bug跟踪、版本控制、团队协作、项目报表等，这些功能覆盖了项目管理的各个方面。全面的功能模块使得项目团队可以在一个统一的平台上进行协同工作，无需再整合多个系统，从而提高了工作效率。</p>
-</blockquote>
-<p>公司使用禅道来管理项目需求、进度以及Bug测试，新版禅道添加了很多功能，这里我搭建使用的是老版本12.5.3。</p>
-<h3 id="Docker拉取禅道镜像"><a href="#Docker拉取禅道镜像" class="headerlink" title="Docker拉取禅道镜像"></a>Docker拉取禅道镜像</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker pull idoop/zentao:12.5.3</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016134837422.png" alt="image-20241016134837422"></p>
-<h3 id="运行禅道容器"><a href="#运行禅道容器" class="headerlink" title="运行禅道容器"></a>运行禅道容器</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run --privileged=true -d -p 8082:80 -p 3316:3306 \</span><br><span class="line">        -e ADMINER_USER=&quot;admin&quot; -e ADMINER_PASSWD=&quot;123456&quot; \</span><br><span class="line">        -v /dockerdatafile/chandao/:/opt/zbox/ \</span><br><span class="line">        --name zentao-server \</span><br><span class="line">        idoop/zentao:12.5.3</span><br></pre></td></tr></table></figure>
-
-<p>参数说明：</p>
-<ul>
-<li><p>ADMINER_USER：指定禅道管理员账号</p>
-</li>
-<li><p>ADMINER_PASSWD：指定禅道管理员首次登录密码</p>
-</li>
-</ul>
-<h3 id="访问禅道"><a href="#访问禅道" class="headerlink" title="访问禅道"></a>访问禅道</h3><p>浏览器访问宿主机器地址加8082端口，登录使用用户名 admin，密码 123456</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016135156614.png" alt="image-20241016135156614"></p>
-<h3 id="使用1Panel创建网站"><a href="#使用1Panel创建网站" class="headerlink" title="使用1Panel创建网站"></a>使用1Panel创建网站</h3><p>可通过域名进行访问</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016135651301.png" alt="image-20241016135651301"></p>
 ]]></content>
   </entry>
   <entry>
@@ -675,6 +675,39 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Mac使用Web的自动化测试工具selenium</title>
+    <url>/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/</url>
+    <content><![CDATA[<blockquote>
+<p>使用 <a href="https://baike.baidu.com/item/Selenium/18266">selenium</a> 模拟浏览器渲染数据，需要依赖各浏览器的驱动才能完成，因此需要单独安装chrome driver。</p>
+</blockquote>
+<h3 id="一、下载对应chrome浏览器驱动"><a href="#一、下载对应chrome浏览器驱动" class="headerlink" title="一、下载对应chrome浏览器驱动"></a>一、下载对应<code>chrome</code>浏览器驱动</h3><ol>
+<li>下载地址：<a href="https://googlechromelabs.github.io/chrome-for-testing/">chrome driver</a></li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240527155408011.png" alt="image-20240527155408011"></p>
+<ol start="2">
+<li><p>安装 chrome driver</p>
+</li>
+<li><p>解压完 zip 压缩包之后，拷贝二进制文件到 &#x2F;usr&#x2F;local&#x2F;bin 目录下即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">拷贝</span></span><br><span class="line">cp chromedriver-mac-arm64/chromedriver /usr/local/bin</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">授权</span></span><br><span class="line">cd /usr/local/bin</span><br><span class="line">xattr -d com.apple.quarantine chromedriver</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="二、python调用selenium"><a href="#二、python调用selenium" class="headerlink" title="二、python调用selenium"></a>二、python调用selenium</h3><ol>
+<li>安装selenium</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>唤起谷歌浏览器</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="comment"># 启动谷歌浏览器</span></span><br><span class="line">driver=webdriver.Chrome() </span><br><span class="line"><span class="comment"># 访问一个网页</span></span><br><span class="line">driver.get(<span class="string">&quot;http://www.zhihu.com&quot;</span>) </span><br><span class="line"><span class="comment"># 退出浏览器</span></span><br><span class="line">driver.quit() </span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>调用页面接口</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个ChromeOptions对象，用于设置Chrome浏览器的启动选项。</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 使Chrome以无头模式运行（即不显示浏览器窗口）。这通常用于在服务器环境中进行自动化操作。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用GPU硬件加速。这是为了在某些无头模式的情况下避免一些bug。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--disable-gpu&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用沙盒模式。沙盒模式通常用于安全性，但在某些环境中可能会导致问题，因此这里将其禁用。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--no-sandbox&#x27;</span>)</span><br><span class="line"><span class="comment"># 设置浏览器的user-agent字符串。这使得请求看起来像是来自一个正常的桌面浏览器，而不是一个自动化工具，从而减少被反爬虫机制识别的风险。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span>)</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 让浏览器访问指定的URL，即https://investing.com。</span></span><br><span class="line">driver.get(<span class="string">&#x27;https://investing.com&#x27;</span>)</span><br><span class="line"><span class="comment"># 使用浏览器执行JavaScript代码，通过fetch API发送一个HTTP请求到指定的API endpoint，并返回其响应。该响应将被解析为JSON格式并存储在response变量中。</span></span><br><span class="line">response = driver.execute_script(<span class="string">&quot;return fetch(&#x27;https://api.investing.com/api/financialdata/7310/historical/chart/?interval=P1D&amp;pointscount=160&#x27;).then(res =&gt; res.json())&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
+  <entry>
     <title>Node.js模块化选择Commonjs和ES6</title>
     <url>/2023/12/28/Node-js%E6%A8%A1%E5%9D%97%E5%8C%96%E9%80%89%E6%8B%A9Commonjs%E5%92%8CES6/</url>
     <content><![CDATA[<blockquote>
@@ -992,39 +1025,6 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AuthenticationInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Gson gson=<span class="keyword">new</span> <span class="title class_">Gson</span>();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 进入controller之前进行拦截</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> response</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> object</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object object)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 如果不是映射到方法直接通过</span></span><br><span class="line">        <span class="keyword">if</span> (!(object <span class="keyword">instanceof</span> HandlerMethod)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">HandlerMethod</span> <span class="variable">handlerMethod</span> <span class="operator">=</span> (HandlerMethod) object;</span><br><span class="line">        <span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> handlerMethod.getMethod();</span><br><span class="line">        <span class="comment">//检查是否有LoginToken注释，有则跳过认证</span></span><br><span class="line">        <span class="keyword">if</span> (method.isAnnotationPresent(LoginToken.class)) &#123;</span><br><span class="line">            <span class="type">LoginToken</span> <span class="variable">loginToken</span> <span class="operator">=</span> method.getAnnotation(LoginToken.class);</span><br><span class="line">            <span class="keyword">if</span> (loginToken.required()) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//前面是不需要token验证的 从 http 请求头中取出 token</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> request.getHeader(<span class="string">&quot;token&quot;</span>);</span><br><span class="line">        <span class="comment">//检查有没有需要用户权限的注解</span></span><br><span class="line">        <span class="keyword">if</span> (method.isAnnotationPresent(CheckToken.class)) &#123;</span><br><span class="line">            <span class="type">CheckToken</span> <span class="variable">checkToken</span> <span class="operator">=</span> method.getAnnotation(CheckToken.class);</span><br><span class="line">            <span class="keyword">if</span> (checkToken.required()) &#123;</span><br><span class="line">                <span class="keyword">if</span>(token!=<span class="literal">null</span>)&#123;</span><br><span class="line">                    Claims claims= JwtUtils.checkJWT(token);</span><br><span class="line">                    <span class="keyword">if</span>(<span class="literal">null</span>==claims)&#123;</span><br><span class="line">                        sendJsonMessage(response, JsonData.buildError(<span class="string">&quot;token有误&quot;</span>));</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    Integer userId= (Integer) claims.get(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">                    <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> (String) claims.get(<span class="string">&quot;name&quot;</span>);</span><br><span class="line"></span><br><span class="line">                    request.setAttribute(<span class="string">&quot;userId&quot;</span>,userId);</span><br><span class="line">                    request.setAttribute(<span class="string">&quot;name&quot;</span>,name);</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//token为null的话 返回一段json给前端</span></span><br><span class="line">                sendJsonMessage(response, JsonData.buildError(<span class="string">&quot;请登录&quot;</span>));</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没有使用注解的方法 直接返回true</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 响应数据给前端</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> response</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> obj</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sendJsonMessage</span> <span class="params">(HttpServletResponse response, Object obj)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">            response.setContentType(<span class="string">&quot;application/json; charset=utf-8&quot;</span>);</span><br><span class="line">            <span class="type">PrintWriter</span> <span class="variable">writer</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">            writer.print(gson.toJson(obj));</span><br><span class="line">            writer.close();</span><br><span class="line">            response.flushBuffer();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>用户登录成功后，使用工具类生成token。token在服务端不做存储，直接将token返回给客户端，客户端下次请求服务端时，使用工具类来验证header里的token是否合法。</p>
 <p>项目代码地址：<a href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Mac使用Web的自动化测试工具selenium</title>
-    <url>/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/</url>
-    <content><![CDATA[<blockquote>
-<p>使用 <a href="https://baike.baidu.com/item/Selenium/18266">selenium</a> 模拟浏览器渲染数据，需要依赖各浏览器的驱动才能完成，因此需要单独安装chrome driver。</p>
-</blockquote>
-<h3 id="一、下载对应chrome浏览器驱动"><a href="#一、下载对应chrome浏览器驱动" class="headerlink" title="一、下载对应chrome浏览器驱动"></a>一、下载对应<code>chrome</code>浏览器驱动</h3><ol>
-<li>下载地址：<a href="https://googlechromelabs.github.io/chrome-for-testing/">chrome driver</a></li>
-</ol>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240527155408011.png" alt="image-20240527155408011"></p>
-<ol start="2">
-<li><p>安装 chrome driver</p>
-</li>
-<li><p>解压完 zip 压缩包之后，拷贝二进制文件到 &#x2F;usr&#x2F;local&#x2F;bin 目录下即可</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">拷贝</span></span><br><span class="line">cp chromedriver-mac-arm64/chromedriver /usr/local/bin</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">授权</span></span><br><span class="line">cd /usr/local/bin</span><br><span class="line">xattr -d com.apple.quarantine chromedriver</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="二、python调用selenium"><a href="#二、python调用selenium" class="headerlink" title="二、python调用selenium"></a>二、python调用selenium</h3><ol>
-<li>安装selenium</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>唤起谷歌浏览器</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="comment"># 启动谷歌浏览器</span></span><br><span class="line">driver=webdriver.Chrome() </span><br><span class="line"><span class="comment"># 访问一个网页</span></span><br><span class="line">driver.get(<span class="string">&quot;http://www.zhihu.com&quot;</span>) </span><br><span class="line"><span class="comment"># 退出浏览器</span></span><br><span class="line">driver.quit() </span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>调用页面接口</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个ChromeOptions对象，用于设置Chrome浏览器的启动选项。</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 使Chrome以无头模式运行（即不显示浏览器窗口）。这通常用于在服务器环境中进行自动化操作。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用GPU硬件加速。这是为了在某些无头模式的情况下避免一些bug。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--disable-gpu&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用沙盒模式。沙盒模式通常用于安全性，但在某些环境中可能会导致问题，因此这里将其禁用。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--no-sandbox&#x27;</span>)</span><br><span class="line"><span class="comment"># 设置浏览器的user-agent字符串。这使得请求看起来像是来自一个正常的桌面浏览器，而不是一个自动化工具，从而减少被反爬虫机制识别的风险。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span>)</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 让浏览器访问指定的URL，即https://investing.com。</span></span><br><span class="line">driver.get(<span class="string">&#x27;https://investing.com&#x27;</span>)</span><br><span class="line"><span class="comment"># 使用浏览器执行JavaScript代码，通过fetch API发送一个HTTP请求到指定的API endpoint，并返回其响应。该响应将被解析为JSON格式并存储在response变量中。</span></span><br><span class="line">response = driver.execute_script(<span class="string">&quot;return fetch(&#x27;https://api.investing.com/api/financialdata/7310/historical/chart/?interval=P1D&amp;pointscount=160&#x27;).then(res =&gt; res.json())&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
-
 ]]></content>
   </entry>
   <entry>
