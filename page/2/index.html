@@ -1081,12 +1081,22 @@
 <li><p>如果项目没有启动就执行 start 如果项目正在运行 就执行relaod<code>pm2 startOrReload &lt;appName&gt;</code></p>
 </li>
 </ul>
-<h2 id="三、踩坑记录"><a href="#三、踩坑记录" class="headerlink" title="三、踩坑记录"></a>三、踩坑记录</h2><p>2024-1-3：试图在服务器上面安装node.js18，查看node版本的时候发生报错：</p>
+<h2 id="三、踩坑记录"><a href="#三、踩坑记录" class="headerlink" title="三、踩坑记录"></a>三、踩坑记录</h2><ol>
+<li>2024-1-3：试图在服务器上面安装node.js18，查看node版本的时候发生报错：</li>
+</ol>
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240103185224803.png" alt="image-20240103185224803"></p>
 <p>搜索资料发现是当前系统版本不支持高版本的node.js，查看当前系统版本：</p>
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240103185613533.png" alt="image-20240103185613533"></p>
 <p><strong>解决办法降级到node.js16…</strong></p>
 <p><strong>参考文章：</strong><a target="_blank" rel="noopener" href="https://juejin.cn/post/7163899309425950751">https://juejin.cn/post/7163899309425950751</a></p>
+<ol start="2">
+<li>2024-10-18：在服务器运行pm2 start index.js命令报错</li>
+</ol>
+<p>项目在scripts配置运行环境，无法直接通过运行js文件启动服务。</p>
+<p>可通过pm2启动你的npm脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start npm --name &quot;你的应用名&quot; -- run start</span><br></pre></td></tr></table></figure>
+<p>这里的–name参数是给你的应用设置一个名字，– run start是告诉pm2运行package.json中定义的start脚本。</p>
+<p>如果你的npm脚本是用来启动一个服务器，那么–name参数非常有用，这样你可以随时查看服务状态或者重启服务。</p>
 
           
         
