@@ -74,7 +74,7 @@
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240103185224803.png">
 <meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240103185613533.png">
 <meta property="article:published_time" content="2023-12-21T03:43:52.000Z">
-<meta property="article:modified_time" content="2024-10-18T06:20:05.390Z">
+<meta property="article:modified_time" content="2024-11-14T07:09:15.427Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240103185224803.png">
@@ -352,6 +352,9 @@
 <p>项目在scripts配置运行环境，无法直接通过运行js文件启动服务。</p>
 <p>可通过pm2启动你的npm脚本</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start npm --name &quot;你的应用名&quot; -- run start</span><br></pre></td></tr></table></figure>
+<p>也可以使用pm2启动python脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start python3 --name &quot;你的应用名&quot; -- main.py</span><br></pre></td></tr></table></figure>
+
 <p>这里的–name参数是给你的应用设置一个名字，– run start是告诉pm2运行package.json中定义的start脚本。</p>
 <p>如果你的npm脚本是用来启动一个服务器，那么–name参数非常有用，这样你可以随时查看服务状态或者重启服务。</p>
 
