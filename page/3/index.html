@@ -234,6 +234,112 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/06/01/SpringCloud%E4%BD%BF%E7%94%A8Feign%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1%E8%B8%A9%E7%9A%84%E5%9D%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/06/01/SpringCloud%E4%BD%BF%E7%94%A8Feign%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1%E8%B8%A9%E7%9A%84%E5%9D%91/" itemprop="url">SpringCloud使用Feign服务通信踩的坑</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-06-01T09:39:35+08:00">
+                2022-06-01
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>　　<strong>fallback熔断器实现了Feign客户端的所有方法，当网络不通或者访问失败时，会自动调用fallback服务降级类中的方法。</strong></p>
+<p>启动项目时报错了，具体的报错信息如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalStateException: No fallback instance of type <span class="keyword">class</span> <span class="title class_">com</span>.xxx.xxx.feign.fallback.RemoteUserFallback found <span class="keyword">for</span> feign client xxx</span><br></pre></td></tr></table></figure>
+
+<p>报错内容明显是没找到RemoteUserFallBack这个类</p>
+<p>1、检查配置文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  hystrix:</span><br><span class="line">    enabled: true # 开启Feign的熔断功能 默认是关闭的</span><br></pre></td></tr></table></figure>
+<p>2、启动类上需要@EnableFeignClients注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableFeignClients(basePackages = &#123;&quot;com.xxx.包名&quot;&#125;)</span> <span class="comment">//开启Feign并扫描Feign客户端</span></span><br></pre></td></tr></table></figure>
+
+<p>3、Feign客户端类上使用@FeignClient，通过fallback属性来指明对应熔断器的类名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(value = &quot;服务名&quot;, fallback = RemoteUserFallback.class,)</span> <span class="comment">//声明当前类是一个Feign客户端，并指定请求的服务名</span></span><br></pre></td></tr></table></figure>
+<p><strong>4、fallback熔断器类上需要加注解@Component，确保可以被spring扫描</strong></p>
+<p>我报错的原因就是出现在第四步这里，尽管我加了@component注解。SpringBoot在启动的时候 会扫描main类所在包及其子包进行Bean的实例化，但是fallback熔断器类并不在我启动类的子类下面，我这里是通过引入其模块来调用这里面的方法。</p>
+<p>所以最后我在启动类上加了@ComponentScan注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan(basePackages = &#123;&quot;com.xxx&quot;&#125;)</span></span><br></pre></td></tr></table></figure>
+<p>OK，成功启动并访问成功。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/06/01/SpringBoot%E6%95%B4%E5%90%88Mail%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6-%E5%8F%91%E9%80%81%E6%A8%A1%E6%9D%BF%E9%82%AE%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1293,138 +1399,6 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserRealm</span> <span class="keyword">extends</span> <span class="title class_">AuthorizingRealm</span> &#123;<span class="comment">//用户授权</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> AuthorizationInfo <span class="title function_">doGetAuthorizationInfo</span><span class="params">(PrincipalCollection principalCollection)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">SimpleAuthorizationInfo</span> <span class="variable">info</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleAuthorizationInfo</span>();</span><br><span class="line"><span class="comment">//        info.addStringPermission(&quot;user:add&quot;); 手动添加了权限</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//拿到当前登录的这个对象</span></span><br><span class="line">        Subject subject= SecurityUtils.getSubject();</span><br><span class="line">        <span class="type">User</span> <span class="variable">currentUser</span> <span class="operator">=</span> (User) subject.getPrincipal(); <span class="comment">//拿到user对象 可以设置用户权限</span></span><br><span class="line">        <span class="comment">//设置当前用户的权限 从数据库上面拿</span></span><br><span class="line">        info.addStringPermission(currentUser.getPerms());</span><br><span class="line">        System.out.println(currentUser.getPerms());</span><br><span class="line">        <span class="keyword">return</span> info;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//用户认证</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> AuthenticationInfo <span class="title function_">doGetAuthenticationInfo</span><span class="params">(AuthenticationToken token)</span> <span class="keyword">throws</span> AuthenticationException &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">UsernamePasswordToken</span> <span class="variable">userToken</span> <span class="operator">=</span> (UsernamePasswordToken) token;</span><br><span class="line">        <span class="comment">//认证用户（连接数据库）</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> userService.queryUserByName(userToken.getUsername());</span><br><span class="line">        <span class="keyword">if</span>(user==<span class="literal">null</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>; <span class="comment">//UnknownAccountException</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//判断session是否有值，显示登录按钮</span></span><br><span class="line">        <span class="type">Subject</span> <span class="variable">currentSubject</span> <span class="operator">=</span> SecurityUtils.getSubject();</span><br><span class="line">        <span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> currentSubject.getSession();</span><br><span class="line">        session.setAttribute(<span class="string">&quot;loginUser&quot;</span>,user);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//可以加密：MD5 MD5盐值加密（更高级）</span></span><br><span class="line">        <span class="comment">//密码认证（shiro完成）</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">SimpleAuthenticationInfo</span>(user,user.getPassword(),<span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Shiro大致的配置就在这里了，具体功能如拦截功能、授权认证功能，可以在我的<br>github <a target="_blank" rel="noopener" href="https://github.com/ruiyeclub/SpringBoot-Hello">https://github.com/ruiyeclub/SpringBoot-Hello</a>，进行查看。</p>
 <p>Shiro核心概述可参考文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/deng-cc/p/9401900.html">https://www.cnblogs.com/deng-cc/p/9401900.html</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/02/10/Compose%E6%90%AD%E5%BB%BARedis%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%8E%E4%B8%89%E5%93%A8%E5%85%B5%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/10/Compose%E6%90%AD%E5%BB%BARedis%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%8E%E4%B8%89%E5%93%A8%E5%85%B5%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/" itemprop="url">Compose搭建Redis一主二从三哨兵高可用集群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-02-10T17:35:40+08:00">
-                2022-02-10
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一、Docker-Compose介绍"><a href="#一、Docker-Compose介绍" class="headerlink" title="一、Docker Compose介绍"></a>一、Docker Compose介绍</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://docs.docker.com/compose/">https://docs.docker.com/compose/</a></p>
-</blockquote>
-<p>Docker官方的网站是这样介绍Docker Compose的：</p>
-<p><strong>Compose是用于定义和运行多容器Docker应用程序的工具。通过Compose，您可以使用YAML文件来配置应用程序的服务。然后，使用一个命令，就可以从配置中创建并启动所有服务。</strong></p>
-<p>这里Docker Compose给我的感受就是便捷、快速。只需编写一个docker-compose.yml文件，然后通过命令docker-compose up -d，这里就可以搭建多个服务起来，非常适合搭建集群环境。</p>
-<h2 id="二、安装Docker-Compose工具"><a href="#二、安装Docker-Compose工具" class="headerlink" title="二、安装Docker Compose工具"></a>二、安装Docker Compose工具</h2><p>通过命令安装Compose工具，安装Compose的前提是安装了Docker环境，如何安装和快速使用Docker，可以翻看我之前的那篇博客–<a href="Docker%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%E4%B9%8B%E6%90%AD%E5%BB%BASpringBoot%E9%A1%B9%E7%9B%AE"></a>，这里不做赘述了。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
-<p>给安装脚本添加执行权限</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
-<p>这里可以使用命令查看是否安装成功</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -v</span><br></pre></td></tr></table></figure>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/51ea38aadbb2ff6e09252ef863d8b8ef.png" alt="image.png"><br>到这里Compose工具就安装好了</p>
-<h2 id="三、使用Compose搭建Redis主从服务器"><a href="#三、使用Compose搭建Redis主从服务器" class="headerlink" title="三、使用Compose搭建Redis主从服务器"></a>三、使用Compose搭建Redis主从服务器</h2><p><strong>主从复制</strong>：主节点负责写数据，从节点负责读数据，主节点定期把数据同步到从节点保证数据的一致性。</p>
-<p>从性能方面，redis复制功能增加了读的性能，理论上说，每增加一倍的服务器，整个系统的读能力就增加一倍。</p>
-<p>选择好路径，通过命令创建文件夹redis，然后进入文件夹创建docker-compose.yml，或者在本地创建，然后通过Xftp工具上传至服务器。docker-compose.yml写入如下内容。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;2&#x27;</span><br><span class="line">services:</span><br><span class="line">  master:</span><br><span class="line">    image: redis　　　　## 镜像</span><br><span class="line">    container_name: redis-master　　　　##容器别名</span><br><span class="line">    command: redis-server --requirepass 123456　　　　##redis密码</span><br><span class="line">    ports:</span><br><span class="line">    - &quot;6379:6379&quot;　　　　##暴露端口</span><br><span class="line">    networks:</span><br><span class="line">    - sentinel-master</span><br><span class="line">  slave1:</span><br><span class="line">    image: redis</span><br><span class="line">    container_name: redis-slave-1</span><br><span class="line">    ports:</span><br><span class="line">    - &quot;6380:6379&quot;</span><br><span class="line">    command: redis-server --slaveof redis-master 6379 --requirepass 123456 --masterauth 123456 </span><br><span class="line">    depends_on:</span><br><span class="line">    - master</span><br><span class="line">    networks:</span><br><span class="line">    - sentinel-master</span><br><span class="line">  slave2:</span><br><span class="line">    image: redis</span><br><span class="line">    container_name: redis-slave-2</span><br><span class="line">    ports:</span><br><span class="line">    - &quot;6381:6379&quot;</span><br><span class="line">    command: redis-server --slaveof redis-master 6379 --requirepass 123456 --masterauth 123456</span><br><span class="line">    depends_on:</span><br><span class="line">    - master</span><br><span class="line">    networks:</span><br><span class="line">    - sentinel-master</span><br></pre></td></tr></table></figure>
-<p>启动redis集群</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-<p>docker ps查看运行的实例，这里我们需要用到主节点的ip地址，注意不是电脑的ip哦，是节点的ip地址。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect 主节点容器id</span><br></pre></td></tr></table></figure>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/53f49345df59e36ee71202f08c7f8d94.png" alt="image.png"><br>这里先记着这个ip地址，后面使用到哨兵需要绑定这个主节点的ip。</p>
-<h2 id="四、哨兵sentinel模式搭建"><a href="#四、哨兵sentinel模式搭建" class="headerlink" title="四、哨兵sentinel模式搭建"></a>四、哨兵sentinel模式搭建</h2><p>上面我们已经搭建好了主从模式，当主服务器宕机后，需要手动把一台服务器切换成主服务器，这里需要人工干预，费事费力，还会造成一段时间内服务不可用。这不是一种推荐的方式，更多时候，我们优先考虑<strong>哨兵模式</strong>。<br>哨兵是redis高可用的解决方案，由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器以及这些主服务器属下的所有从服务器，它能够在被监视的主服务器下线时，自动将该主服务器属下的某个优先的从服务器升级为新的主服务器，由这个主服务器代替已下线的主服务器继续处理命令请求。</p>
-<p>哨兵的功能：<br>1.监控：哨兵会不断地监控检测主节点和从节点是否运作正常。<br>2.自动故障转移：当主节点不能正常工作时，哨兵会开始自动故障转移操作，它会将失效主节点的其中一个从节点升级为新的主节点，并让其他从节点改为复制新的主节点。<br>3.通知：哨兵可以将故障转移的结果发送给客户端。<br>4.配置提供者：客户端在初始化时，通过连接哨兵来获得当前Redis服务的主节点地址。</p>
-<p>这里创建sentinel文件夹，然后同样编写docker-compose.yml文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">version: &#x27;2&#x27;</span><br><span class="line">services:</span><br><span class="line">  sentinel1:</span><br><span class="line">    image: redis       ## 镜像</span><br><span class="line">    container_name: redis-sentinel-1</span><br><span class="line">    ports:</span><br><span class="line">    - &quot;26379:26379&quot;</span><br><span class="line">    command: redis-sentinel /usr/local/etc/redis/sentinel.conf</span><br><span class="line">    volumes:</span><br><span class="line">    - &quot;./sentinel.conf:/usr/local/etc/redis/sentinel.conf&quot;</span><br><span class="line">  sentinel2:</span><br><span class="line">    image: redis                ## 镜像</span><br><span class="line">    container_name: redis-sentinel-2</span><br><span class="line">    ports:</span><br><span class="line">    - &quot;26380:26379&quot;           </span><br><span class="line">    command: redis-sentinel /usr/local/etc/redis/sentinel.conf</span><br><span class="line">    volumes:</span><br><span class="line">    - &quot;./sentinel2.conf:/usr/local/etc/redis/sentinel.conf&quot;</span><br><span class="line">  sentinel3:</span><br><span class="line">    image: redis                ## 镜像</span><br><span class="line">    container_name: redis-sentinel-3</span><br><span class="line">    ports:</span><br><span class="line">    - &quot;26381:26379&quot;           </span><br><span class="line">    command: redis-sentinel /usr/local/etc/redis/sentinel.conf</span><br><span class="line">    volumes:</span><br><span class="line">    - ./sentinel3.conf:/usr/local/etc/redis/sentinel.conf</span><br><span class="line">networks:</span><br><span class="line">  default:</span><br><span class="line">    external:</span><br><span class="line">      name: redis_sentinel-master</span><br></pre></td></tr></table></figure>
-<p>继续在此目录编写文件，编写sentinel.conf文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">dir /tmp</span><br><span class="line">#172.18.0.3填写自己的主节点ip</span><br><span class="line">sentinel monitor mymaster 172.18.0.3 6379 2</span><br><span class="line">sentinel auth-pass mymaster 123456 </span><br><span class="line">sentinel down-after-milliseconds mymaster 30000</span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br><span class="line">sentinel failover-timeout mymaster 10000  </span><br><span class="line">sentinel deny-scripts-reconfig yes</span><br></pre></td></tr></table></figure>
-<p>对命令的解释</p>
-<blockquote>
-<p>第三行表示Redis监控一个叫做mymaster的运行在172.18.0.3:6379的master，投票达到2则表示master以及挂掉了。<br>第四行设置主节点的密码。<br>第五行表示在一段时间范围内sentinel向master发送的心跳PING没有回复则认为master不可用了。<br>第六行的parallel-syncs表示设置在故障转移之后，同时可以重新配置使用新master的slave的数量。数字越低，更多的时间将会用故障转移完成，但是如果slaves配置为服务旧数据，你可能不希望所有的slave同时重新同步master。因为主从复制对于slave是非阻塞的，当停止从master加载批量数据时有一个片刻延迟。通过设置选项为1，确信每次只有一个slave是不可到达的。<br>第七行表示10秒内mymaster还没活过来，则认为master宕机了。</p>
-</blockquote>
-<p>创建好文件后，复制好三份</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp sentinel.conf sentinel1.conf</span><br><span class="line">cp sentinel.conf sentinel2.conf</span><br><span class="line">cp sentinel.conf sentinel3.conf</span><br></pre></td></tr></table></figure>
-<p>启动redis哨兵模式</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-<h2 id="五、故障转移测试"><a href="#五、故障转移测试" class="headerlink" title="五、故障转移测试"></a>五、故障转移测试</h2><p>上面既然说到了哨兵可以自动转移故障，也就是当主节点宕机的时候，它们能通过选举制度，在从节点中选出一个节点来代替主节点。</p>
-<p>我们先来看看主节点此时的信息，这里a288c55db497是我主节点容器的ip，这里先是进入容器，再进入redis客户端，再输入密码，然后使用info查看节点信息。<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/b78632e11091376763eb17eb0a456666.png" alt="image.png"><br>这里可以看到这个节点的身份是master也就是主节点，然后有两个连接着的从节点<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/29b59a2b56a62e32552c35bf626817e4.png" alt="image.png"></p>
-<p>现在我们停掉这个节点，看看哨兵是否可以实现故障转移</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop a288c55db497</span><br></pre></td></tr></table></figure>
-<p>然后选择其中一个从节点进入客户端，输入info查看信息<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/81c6dc9c59ee6ff27dd01d9aabad7827.png" alt="image.png"><br>这里发现其中一台从节点已经变成主节点了，而且连接的从节点，也变成了一个。</p>
-<p>了解Docker Compose可参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/658911a8cff3">https://www.jianshu.com/p/658911a8cff3</a></p>
-<p>了解Redis主从哨兵可参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/leeSmall/p/8398401.html">https://www.cnblogs.com/leeSmall/p/8398401.html</a></p>
 
           
         

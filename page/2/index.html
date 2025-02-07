@@ -234,6 +234,122 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/03/14/%E5%B0%86Python%E8%84%9A%E6%9C%AC%E6%89%93%E5%8C%85%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84exe%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/03/14/%E5%B0%86Python%E8%84%9A%E6%9C%AC%E6%89%93%E5%8C%85%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84exe%E6%96%87%E4%BB%B6/" itemprop="url">将Python脚本打包成可执行的exe文件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-03-14T14:24:09+08:00">
+                2024-03-14
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>将Python程序打包为可执行的.exe文件有多种方法。以下是其中两种常用的方式。</p>
+</blockquote>
+<h2 id="使用PyInstaller库进行打包"><a href="#使用PyInstaller库进行打包" class="headerlink" title="使用PyInstaller库进行打包"></a>使用PyInstaller库进行打包</h2><ol>
+<li><p>首先确保已经安装了PyInstaller库（如果没有，则通过命令<code>pip install pyinstaller</code>来安装）；</p>
+</li>
+<li><p>在命令提示符或终端中导航到要打包的Python脚本所在目录；</p>
+</li>
+<li><p>运行命令 <code>pyinstaller --onefile your_script.py</code>，这会生成一个名为”dist”的文件夹，并在该文件夹内创建一个与脚本同名的.exe文件。</p>
+</li>
+</ol>
+<p><strong>注意：此方法只适用于单个Python脚本的打包。</strong></p>
+<ol start="4">
+<li>在使用 PyInstaller 打包项目时，有时会遇到缺少 Python 库的问题，导致打包失败。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --hidden-<span class="keyword">import</span>=some_module --onefile your_script.py</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="使用cx-Freeze库进行打包"><a href="#使用cx-Freeze库进行打包" class="headerlink" title="使用cx_Freeze库进行打包"></a>使用cx_Freeze库进行打包</h2><ol>
+<li><p>首先确保已经安装了cx_Freeze库（如果没有，则通过命令<code>pip install cx-freeze</code>来安装）；</p>
+</li>
+<li><p>创建一个名为setup.py的新文件，并添加以下内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">from</span> distutils.core <span class="keyword">import</span> setup</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) == <span class="number">1</span> <span class="keyword">or</span> <span class="string">&#x27;bdist_wininst&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> sys.argv[<span class="number">1</span>]:</span><br><span class="line">    <span class="comment"># 设置需要打包的模块及入口点</span></span><br><span class="line">    modules = [<span class="string">&#x27;myapp&#x27;</span>]</span><br><span class="line">    </span><br><span class="line">    options = &#123;</span><br><span class="line">        <span class="string">&quot;build_exe&quot;</span>: &#123;</span><br><span class="line">            <span class="string">&quot;includes&quot;</span>: [<span class="string">&quot;atexit&quot;</span>],</span><br><span class="line">            <span class="string">&quot;excludes&quot;</span>: [],</span><br><span class="line">            <span class="string">&quot;packages&quot;</span>: [],</span><br><span class="line">            <span class="string">&quot;path&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">         &#125;,</span><br><span class="line">      &#125;</span><br><span class="line">    </span><br><span class="line">    setup(name=<span class="string">&quot;YourProgram&quot;</span>, version=<span class="string">&quot;0.1&quot;</span>, description=<span class="string">&quot;Description of Your Program&quot;</span>, author=<span class="string">&quot;Author Name&quot;</span>, url=<span class="string">&quot;http://www.example.com/&quot;</span>, console=[<span class="string">&quot;myapp.py&quot;</span>])</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在命令提示符或终端中导航到包含上述setup.py文件的目录；</p>
+</li>
+<li><p>运行命令 <code>python setup.py bdist_wininst</code>，这会生成一个名为”dist”的文件夹，并在该文件夹内创建一个与脚本同名的.exe文件。</p>
+</li>
+</ol>
+<p><strong>注意：此方法更适合对多个Python模块进行打包。</strong></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/03/05/%E5%A6%82%E4%BD%95%E5%B0%86SpringBoot%E6%89%93%E5%8C%85%E6%88%90.exe%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%EF%BC%9F(%E8%BD%AC)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1510,112 +1626,6 @@
 <h2 id="9-运行测试"><a href="#9-运行测试" class="headerlink" title="9.运行测试"></a>9.运行测试</h2><p>去浏览器测试下是否运行成功<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/66732d08619276eea4be2f8ab7f32551.png" alt="image.png"></p>
 <h2 id="10-其他设置"><a href="#10-其他设置" class="headerlink" title="10.其他设置"></a>10.其他设置</h2><p>进入后台管理 -&gt; 网站管理 -&gt; 其他设置，配置websocket域名<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a97b2594f13b2928072728067ac68968.png" alt="image.png"></p>
 <h2 id="11-总结"><a href="#11-总结" class="headerlink" title="11.总结"></a>11.总结</h2><p>整个前后端分离的部署教程到这里就结束啦，第一次部署可能会比较麻烦，不过后面就轻车熟路了，有问题的可以私聊问我或者在评论区留言。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/06/01/SpringCloud%E4%BD%BF%E7%94%A8Feign%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1%E8%B8%A9%E7%9A%84%E5%9D%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/06/01/SpringCloud%E4%BD%BF%E7%94%A8Feign%E6%9C%8D%E5%8A%A1%E9%80%9A%E4%BF%A1%E8%B8%A9%E7%9A%84%E5%9D%91/" itemprop="url">SpringCloud使用Feign服务通信踩的坑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-06-01T09:39:35+08:00">
-                2022-06-01
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>　　<strong>fallback熔断器实现了Feign客户端的所有方法，当网络不通或者访问失败时，会自动调用fallback服务降级类中的方法。</strong></p>
-<p>启动项目时报错了，具体的报错信息如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.IllegalStateException: No fallback instance of type <span class="keyword">class</span> <span class="title class_">com</span>.xxx.xxx.feign.fallback.RemoteUserFallback found <span class="keyword">for</span> feign client xxx</span><br></pre></td></tr></table></figure>
-
-<p>报错内容明显是没找到RemoteUserFallBack这个类</p>
-<p>1、检查配置文件</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">feign:</span><br><span class="line">  hystrix:</span><br><span class="line">    enabled: true # 开启Feign的熔断功能 默认是关闭的</span><br></pre></td></tr></table></figure>
-<p>2、启动类上需要@EnableFeignClients注解</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableFeignClients(basePackages = &#123;&quot;com.xxx.包名&quot;&#125;)</span> <span class="comment">//开启Feign并扫描Feign客户端</span></span><br></pre></td></tr></table></figure>
-
-<p>3、Feign客户端类上使用@FeignClient，通过fallback属性来指明对应熔断器的类名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(value = &quot;服务名&quot;, fallback = RemoteUserFallback.class,)</span> <span class="comment">//声明当前类是一个Feign客户端，并指定请求的服务名</span></span><br></pre></td></tr></table></figure>
-<p><strong>4、fallback熔断器类上需要加注解@Component，确保可以被spring扫描</strong></p>
-<p>我报错的原因就是出现在第四步这里，尽管我加了@component注解。SpringBoot在启动的时候 会扫描main类所在包及其子包进行Bean的实例化，但是fallback熔断器类并不在我启动类的子类下面，我这里是通过引入其模块来调用这里面的方法。</p>
-<p>所以最后我在启动类上加了@ComponentScan注解：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ComponentScan(basePackages = &#123;&quot;com.xxx&quot;&#125;)</span></span><br></pre></td></tr></table></figure>
-<p>OK，成功启动并访问成功。</p>
 
           
         
