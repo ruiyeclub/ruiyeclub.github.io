@@ -234,6 +234,165 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/" itemprop="url">绕过cloudflare 5秒盾的技术方案解析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-02-18T15:03:59+08:00">
+                2025-02-18
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>Cloudflare 的 5秒盾（Under Attack Mode）是网站防护的常见手段，通过 JavaScript 挑战验证访客真实性。很多网站会使用Cloudflare提供安全服务，导致爬虫的时候显示403状态。</p>
+</blockquote>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/55187d199c2a9079caff09622c6f78f9933ed773.png" alt="55187d199c2a9079caff09622c6f78f9933ed773"></p>
+<h2 id="一、解决方案及代码示例"><a href="#一、解决方案及代码示例" class="headerlink" title="一、解决方案及代码示例"></a>一、解决方案及代码示例</h2><h4 id="1-使用-cloudscraper-库"><a href="#1-使用-cloudscraper-库" class="headerlink" title="1. 使用 cloudscraper 库"></a>1. 使用 cloudscraper 库</h4><p><strong>原理</strong>：模拟 Cloudflare 预期的请求特征</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cloudscraper</span><br><span class="line"></span><br><span class="line">scraper = cloudscraper.create_scraper()</span><br><span class="line">response = scraper.get(<span class="string">&quot;https://target-site.com&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-使用-curl-cffi-库"><a href="#2-使用-curl-cffi-库" class="headerlink" title="2. 使用 curl_cffi 库"></a>2. 使用 curl_cffi 库</h4><p><strong>优势</strong>：支持多浏览器指纹模拟</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> curl_cffi <span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">response = requests.get(</span><br><span class="line">    <span class="string">&quot;https://target-site.com&quot;</span>,</span><br><span class="line">    impersonate=<span class="string">&quot;chrome110&quot;</span>  <span class="comment"># 支持 chrome99-110 / edge99-110</span></span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-第三方-API-服务"><a href="#3-第三方-API-服务" class="headerlink" title="3. 第三方 API 服务"></a>3. 第三方 API 服务</h4><p><strong>推荐服务</strong>：</p>
+<ul>
+<li>ScrapingBee（自带代理轮转）</li>
+<li>ScraperAPI</li>
+<li>ZenRows</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">API_KEY = <span class="string">&quot;your_api_key&quot;</span></span><br><span class="line">response = requests.get(</span><br><span class="line">    <span class="string">f&quot;https://api.scrapingbee.com/v1/?api_key=<span class="subst">&#123;API_KEY&#125;</span>&amp;url=target-site.com&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-FlareSolverr-服务"><a href="#4-FlareSolverr-服务" class="headerlink" title="4. FlareSolverr 服务"></a>4. FlareSolverr 服务</h4><p><strong>架构</strong>：基于 Puppeteer 的中间件服务</p>
+<p>部署步骤：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name flaresolverr \</span><br><span class="line">  -p 8191:8191 \</span><br><span class="line">  -e LOG_LEVEL=info \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  ghcr.io/flaresolverr/flaresolverr:latest</span><br></pre></td></tr></table></figure>
+
+<p>调用示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">payload = &#123;</span><br><span class="line">    <span class="string">&quot;cmd&quot;</span>: <span class="string">&quot;request.get&quot;</span>,</span><br><span class="line">    <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://target-site.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;maxTimeout&quot;</span>: <span class="number">60000</span></span><br><span class="line">&#125;</span><br><span class="line">response = requests.post(<span class="string">&quot;http://localhost:8191/v1&quot;</span>, json=payload)</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、方案对比分析"><a href="#二、方案对比分析" class="headerlink" title="二、方案对比分析"></a>二、方案对比分析</h2><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>执行速度</th>
+<th>维护成本</th>
+<th>隐匿性</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cloudscraper</td>
+<td>★★★★</td>
+<td>低</td>
+<td>中</td>
+<td>中小规模常规采集</td>
+</tr>
+<tr>
+<td>curl_cffi</td>
+<td>★★★★★</td>
+<td>低</td>
+<td>高</td>
+<td>需要最新指纹场景</td>
+</tr>
+<tr>
+<td>第三方API</td>
+<td>★★★</td>
+<td>中</td>
+<td>高</td>
+<td>企业级高频采集</td>
+</tr>
+<tr>
+<td>FlareSolverr</td>
+<td>★★</td>
+<td>高</td>
+<td>极高</td>
+<td>复杂JS验证场景</td>
+</tr>
+</tbody></table>
+<h2 id="三、对抗升级建议"><a href="#三、对抗升级建议" class="headerlink" title="三、对抗升级建议"></a>三、对抗升级建议</h2><ol>
+<li><strong>IP轮换策略</strong>：结合住宅代理使用（推荐 BrightData）</li>
+<li><strong>指纹随机化</strong>：定期更换 User-Agent&#x2F;TLS 指纹</li>
+<li><strong>请求限速</strong>：设置 3-10 秒随机延迟</li>
+<li><strong>头信息校验</strong>：携带完整 Accept-Encoding&#x2F;Cookie 等头</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/02/07/RabbitMQ%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1376,183 +1535,6 @@
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个ChromeOptions对象，用于设置Chrome浏览器的启动选项。</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 使Chrome以无头模式运行（即不显示浏览器窗口）。这通常用于在服务器环境中进行自动化操作。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用GPU硬件加速。这是为了在某些无头模式的情况下避免一些bug。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--disable-gpu&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用沙盒模式。沙盒模式通常用于安全性，但在某些环境中可能会导致问题，因此这里将其禁用。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--no-sandbox&#x27;</span>)</span><br><span class="line"><span class="comment"># 设置浏览器的user-agent字符串。这使得请求看起来像是来自一个正常的桌面浏览器，而不是一个自动化工具，从而减少被反爬虫机制识别的风险。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span>)</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 让浏览器访问指定的URL，即https://investing.com。</span></span><br><span class="line">driver.get(<span class="string">&#x27;https://investing.com&#x27;</span>)</span><br><span class="line"><span class="comment"># 使用浏览器执行JavaScript代码，通过fetch API发送一个HTTP请求到指定的API endpoint，并返回其响应。该响应将被解析为JSON格式并存储在response变量中。</span></span><br><span class="line">response = driver.execute_script(<span class="string">&quot;return fetch(&#x27;https://api.investing.com/api/financialdata/7310/historical/chart/?interval=P1D&amp;pointscount=160&#x27;).then(res =&gt; res.json())&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
 
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/04/17/%E5%88%9B%E5%BB%BATelegram%E6%9C%BA%E5%99%A8%E4%BA%BA%F0%9F%A4%96API%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/17/%E5%88%9B%E5%BB%BATelegram%E6%9C%BA%E5%99%A8%E4%BA%BA%F0%9F%A4%96API%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82/" itemprop="url">创建Telegram机器人🤖API发送请求</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-04-17T15:14:49+08:00">
-                2024-04-17
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="申请TG机器人"><a href="#申请TG机器人" class="headerlink" title="申请TG机器人"></a>申请TG机器人</h2><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417152031003.png" alt="image-20240417152031003"></p>
-<ol>
-<li>打开 Telegram 应用程序然后搜索<code>@BotFather</code></li>
-<li>单击开始</li>
-<li>单击菜单 -&gt; &#x2F;newbot 或输入<code>/newbot</code>并点击发送</li>
-<li>按照说明进行操作，直到我们收到这样的消息</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Done! Congratulations on your new bot. You will find it at t.me/new_bot.</span><br><span class="line">You can now add a description.....</span><br><span class="line"></span><br><span class="line">Use this token to access the HTTP API:</span><br><span class="line">63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c</span><br><span class="line">Keep your token secure and store it safely, it can be used by anyone to control your bot.</span><br><span class="line"></span><br><span class="line">For a description of the Bot API, see this page: https://core.telegram.org/bots/api</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>这是我们的机器人令牌<code>63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c</code>（确保我们不会将其分享给任何人）。</li>
-</ol>
-<h2 id="获取私人聊天的聊天ID"><a href="#获取私人聊天的聊天ID" class="headerlink" title="获取私人聊天的聊天ID"></a>获取私人聊天的聊天ID</h2><ol>
-<li><p>搜索并打开我们新的 Telegram 机器人</p>
-</li>
-<li><p>单击“开始”或发送消息</p>
-</li>
-<li><p>在浏览器中打开此网址</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.telegram.org/bot&#123;our_bot_token&#125;/getUpdates</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>请注意，我们需要在令牌前加上 <code>bot</code></li>
-<li>例如：<code>https://api.telegram.org/bot63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c/getUpdates</code></li>
-</ul>
-<p>或者通过@raw_info_bot：</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png" alt="image-20240417151949471"></p>
-<ol start="4">
-<li>我们会看到这样的 json</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;ok&quot;: true,</span><br><span class="line">  &quot;result&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;update_id&quot;: 83xxxxx35,</span><br><span class="line">      &quot;message&quot;: &#123;</span><br><span class="line">        &quot;message_id&quot;: 2643,</span><br><span class="line">        &quot;from&quot;: &#123;...&#125;,</span><br><span class="line">        &quot;chat&quot;: &#123;</span><br><span class="line">          &quot;id&quot;: 21xxxxx38,</span><br><span class="line">          &quot;first_name&quot;: &quot;...&quot;,</span><br><span class="line">          &quot;last_name&quot;: &quot;...&quot;,</span><br><span class="line">          &quot;username&quot;: &quot;@username&quot;,</span><br><span class="line">          &quot;type&quot;: &quot;private&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;date&quot;: 1703062972,</span><br><span class="line">        &quot;text&quot;: &quot;/start&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li><p>检查<code>result.0.message.chat.id</code>，这是我们的聊天 ID：<code>21xxxxx38</code></p>
-</li>
-<li><p>让我们尝试post发送一条消息<code>https://api.telegram.org/bot63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c/sendMessage?chat_id=21xxxxx38&amp;text=test123</code></p>
-</li>
-<li><p>当我们正确设置机器人令牌和聊天 ID 时，消息<code>test123</code>应该会到达我们的 Telegram 机器人聊天中。</p>
-</li>
-</ol>
-<h2 id="获取频道的聊天-ID"><a href="#获取频道的聊天-ID" class="headerlink" title="获取频道的聊天 ID"></a>获取频道的聊天 ID</h2><p>获取群聊 ID 的最简单方法是通过 Telegram 桌面应用程序。</p>
-<ol>
-<li><p>在桌面应用程序中打开 Telegram</p>
-</li>
-<li><p>将我们的 Telegram 机器人添加到聊天组中</p>
-</li>
-<li><p>发送消息至聊天组</p>
-</li>
-<li><p>右键单击该消息，然后单击</p>
-</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Copy Message Link</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>我们将得到一个像这样的链接：<code>https://t.me/c/194xxxx987/11/13</code></li>
-<li>图案：<code>https://t.me/c/&#123;group_chat_id&#125;/&#123;group_topic_id&#125;/&#123;message_id&#125;</code></li>
-<li>这是我们的聊天 ID：<code>194xxxx987</code></li>
-</ul>
-<ol start="5">
-<li><p>要在 API 中使用群聊 ID，我们需要在其前面加上 number 前缀<code>-100</code>，如下所示：<code>-100194xxxx987</code></p>
-</li>
-<li><p>现在让我们尝试发送消息<code>https://api.telegram.org/bot63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c/sendMessage?chat_id=-100194xxxx987&amp;text=test123</code></p>
-</li>
-</ol>
-<p>或者使用python：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">response = requests.post(</span><br><span class="line">    url=<span class="string">&#x27;https://api.telegram.org/bot&#123;0&#125;/&#123;1&#125;&#x27;</span>.<span class="built_in">format</span>(token, method),</span><br><span class="line">    data=&#123;<span class="string">&#x27;chat_id&#x27;</span>: <span class="number">12345</span>, <span class="string">&#x27;text&#x27;</span>: <span class="string">&#x27;hello friend&#x27;</span>&#125;</span><br><span class="line">).json()</span><br></pre></td></tr></table></figure>
-
-<ol start="7">
-<li>当我们正确设置机器人令牌和聊天 ID 时，消息<code>test123</code>应该会到达我们的群聊中。</li>
-</ol>
-<h2 id="获取群聊中某个主题的聊天-ID"><a href="#获取群聊中某个主题的聊天-ID" class="headerlink" title="获取群聊中某个主题的聊天 ID"></a>获取群聊中某个主题的聊天 ID</h2><p>为了向 Telegram 群组上的特定主题发送消息，我们需要获取主题 ID。</p>
-<ol>
-<li><p>与上面的步骤类似，我们点击 后<code>Copy Message Link</code>，会得到一个类似： 的链接<code>https://t.me/c/194xxxx987/11/13</code>，所以群组 Topic ID 为<code>11</code>。</p>
-</li>
-<li><p>现在我们可以像这样使用它（参见<code>message_thread_id</code>）：<code>https://api.telegram.org/bot783114779:AAEuRWDTFD2UQ7agBtFSuhJf2-NmvHN3OPc/sendMessage?chat_id=-100194xxxx987&amp;message_thread_id=11&amp;text=test123</code></p>
-</li>
-<li><p>当我们正确设置机器人令牌和聊天 ID 时，消息<code>test123</code>应该到达我们的群聊主题内。</p>
-</li>
-</ol>
-<p>参考链接：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api![](https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png)">https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api![](https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png)</a></p>
-<h2 id="更新内容"><a href="#更新内容" class="headerlink" title="更新内容"></a>更新内容</h2><p>将消息推送至群组</p>
-<ol>
-<li>将机器人拉入群组，发送<code>/&#123;message&#125;@bot</code>消息</li>
-<li>可以通过<code>https://api.telegram.org/bot&#123;token&#125;/getUpdates</code>获取群组id</li>
-</ol>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240829100959057.png" alt="image-20240829100959057"></p>
-<p>这里群组id为-4583**9819</p>
 
           
         

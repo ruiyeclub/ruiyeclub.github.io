@@ -234,6 +234,183 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/04/17/%E5%88%9B%E5%BB%BATelegram%E6%9C%BA%E5%99%A8%E4%BA%BA%F0%9F%A4%96API%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/17/%E5%88%9B%E5%BB%BATelegram%E6%9C%BA%E5%99%A8%E4%BA%BA%F0%9F%A4%96API%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82/" itemprop="url">创建Telegram机器人🤖API发送请求</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-04-17T15:14:49+08:00">
+                2024-04-17
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="申请TG机器人"><a href="#申请TG机器人" class="headerlink" title="申请TG机器人"></a>申请TG机器人</h2><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417152031003.png" alt="image-20240417152031003"></p>
+<ol>
+<li>打开 Telegram 应用程序然后搜索<code>@BotFather</code></li>
+<li>单击开始</li>
+<li>单击菜单 -&gt; &#x2F;newbot 或输入<code>/newbot</code>并点击发送</li>
+<li>按照说明进行操作，直到我们收到这样的消息</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Done! Congratulations on your new bot. You will find it at t.me/new_bot.</span><br><span class="line">You can now add a description.....</span><br><span class="line"></span><br><span class="line">Use this token to access the HTTP API:</span><br><span class="line">63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c</span><br><span class="line">Keep your token secure and store it safely, it can be used by anyone to control your bot.</span><br><span class="line"></span><br><span class="line">For a description of the Bot API, see this page: https://core.telegram.org/bots/api</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>这是我们的机器人令牌<code>63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c</code>（确保我们不会将其分享给任何人）。</li>
+</ol>
+<h2 id="获取私人聊天的聊天ID"><a href="#获取私人聊天的聊天ID" class="headerlink" title="获取私人聊天的聊天ID"></a>获取私人聊天的聊天ID</h2><ol>
+<li><p>搜索并打开我们新的 Telegram 机器人</p>
+</li>
+<li><p>单击“开始”或发送消息</p>
+</li>
+<li><p>在浏览器中打开此网址</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.telegram.org/bot&#123;our_bot_token&#125;/getUpdates</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>请注意，我们需要在令牌前加上 <code>bot</code></li>
+<li>例如：<code>https://api.telegram.org/bot63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c/getUpdates</code></li>
+</ul>
+<p>或者通过@raw_info_bot：</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png" alt="image-20240417151949471"></p>
+<ol start="4">
+<li>我们会看到这样的 json</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;ok&quot;: true,</span><br><span class="line">  &quot;result&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;update_id&quot;: 83xxxxx35,</span><br><span class="line">      &quot;message&quot;: &#123;</span><br><span class="line">        &quot;message_id&quot;: 2643,</span><br><span class="line">        &quot;from&quot;: &#123;...&#125;,</span><br><span class="line">        &quot;chat&quot;: &#123;</span><br><span class="line">          &quot;id&quot;: 21xxxxx38,</span><br><span class="line">          &quot;first_name&quot;: &quot;...&quot;,</span><br><span class="line">          &quot;last_name&quot;: &quot;...&quot;,</span><br><span class="line">          &quot;username&quot;: &quot;@username&quot;,</span><br><span class="line">          &quot;type&quot;: &quot;private&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;date&quot;: 1703062972,</span><br><span class="line">        &quot;text&quot;: &quot;/start&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><p>检查<code>result.0.message.chat.id</code>，这是我们的聊天 ID：<code>21xxxxx38</code></p>
+</li>
+<li><p>让我们尝试post发送一条消息<code>https://api.telegram.org/bot63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c/sendMessage?chat_id=21xxxxx38&amp;text=test123</code></p>
+</li>
+<li><p>当我们正确设置机器人令牌和聊天 ID 时，消息<code>test123</code>应该会到达我们的 Telegram 机器人聊天中。</p>
+</li>
+</ol>
+<h2 id="获取频道的聊天-ID"><a href="#获取频道的聊天-ID" class="headerlink" title="获取频道的聊天 ID"></a>获取频道的聊天 ID</h2><p>获取群聊 ID 的最简单方法是通过 Telegram 桌面应用程序。</p>
+<ol>
+<li><p>在桌面应用程序中打开 Telegram</p>
+</li>
+<li><p>将我们的 Telegram 机器人添加到聊天组中</p>
+</li>
+<li><p>发送消息至聊天组</p>
+</li>
+<li><p>右键单击该消息，然后单击</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Copy Message Link</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>我们将得到一个像这样的链接：<code>https://t.me/c/194xxxx987/11/13</code></li>
+<li>图案：<code>https://t.me/c/&#123;group_chat_id&#125;/&#123;group_topic_id&#125;/&#123;message_id&#125;</code></li>
+<li>这是我们的聊天 ID：<code>194xxxx987</code></li>
+</ul>
+<ol start="5">
+<li><p>要在 API 中使用群聊 ID，我们需要在其前面加上 number 前缀<code>-100</code>，如下所示：<code>-100194xxxx987</code></p>
+</li>
+<li><p>现在让我们尝试发送消息<code>https://api.telegram.org/bot63xxxxxx71:AAFoxxxxn0hwA-2TVSxxxNf4c/sendMessage?chat_id=-100194xxxx987&amp;text=test123</code></p>
+</li>
+</ol>
+<p>或者使用python：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">response = requests.post(</span><br><span class="line">    url=<span class="string">&#x27;https://api.telegram.org/bot&#123;0&#125;/&#123;1&#125;&#x27;</span>.<span class="built_in">format</span>(token, method),</span><br><span class="line">    data=&#123;<span class="string">&#x27;chat_id&#x27;</span>: <span class="number">12345</span>, <span class="string">&#x27;text&#x27;</span>: <span class="string">&#x27;hello friend&#x27;</span>&#125;</span><br><span class="line">).json()</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>当我们正确设置机器人令牌和聊天 ID 时，消息<code>test123</code>应该会到达我们的群聊中。</li>
+</ol>
+<h2 id="获取群聊中某个主题的聊天-ID"><a href="#获取群聊中某个主题的聊天-ID" class="headerlink" title="获取群聊中某个主题的聊天 ID"></a>获取群聊中某个主题的聊天 ID</h2><p>为了向 Telegram 群组上的特定主题发送消息，我们需要获取主题 ID。</p>
+<ol>
+<li><p>与上面的步骤类似，我们点击 后<code>Copy Message Link</code>，会得到一个类似： 的链接<code>https://t.me/c/194xxxx987/11/13</code>，所以群组 Topic ID 为<code>11</code>。</p>
+</li>
+<li><p>现在我们可以像这样使用它（参见<code>message_thread_id</code>）：<code>https://api.telegram.org/bot783114779:AAEuRWDTFD2UQ7agBtFSuhJf2-NmvHN3OPc/sendMessage?chat_id=-100194xxxx987&amp;message_thread_id=11&amp;text=test123</code></p>
+</li>
+<li><p>当我们正确设置机器人令牌和聊天 ID 时，消息<code>test123</code>应该到达我们的群聊主题内。</p>
+</li>
+</ol>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api![](https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png)">https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api![](https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240417151949471.png)</a></p>
+<h2 id="更新内容"><a href="#更新内容" class="headerlink" title="更新内容"></a>更新内容</h2><p>将消息推送至群组</p>
+<ol>
+<li>将机器人拉入群组，发送<code>/&#123;message&#125;@bot</code>消息</li>
+<li>可以通过<code>https://api.telegram.org/bot&#123;token&#125;/getUpdates</code>获取群组id</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240829100959057.png" alt="image-20240829100959057"></p>
+<p>这里群组id为-4583**9819</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/03/14/%E5%B0%86Python%E8%84%9A%E6%9C%AC%E6%89%93%E5%8C%85%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E7%9A%84exe%E6%96%87%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1506,126 +1683,6 @@
 </blockquote>
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f596969477578696e672f5472616e736c6174696f6e506c7567696e406d61737465722f696d616765732f73637265656e73686f74732e676966.gif" alt="translation"></p>
 <h3 id="11-其他"><a href="#11-其他" class="headerlink" title="11.其他"></a>11.其他</h3><p>Python、requirements等开发python的插件，让我可以更方便的在Idea中编写python代码。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/06/01/SpringBoot-Vue%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B(%E8%BD%AC)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/06/01/SpringBoot-Vue%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E6%95%99%E7%A8%8B(%E8%BD%AC)/" itemprop="url">SpringBoot+Vue前后端分离项目部署教程(转)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-06-01T09:39:56+08:00">
-                2022-06-01
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="1-打包后端项目jar包"><a href="#1-打包后端项目jar包" class="headerlink" title="1.打包后端项目jar包"></a>1.打包后端项目jar包</h2><p>打开pom.xml文件，修改packaging方式为jar<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/1b2cb327efd7ff924aed08f1b823c4a4.png" alt="image.png"></p>
-<p>点击右侧maven插件 -&gt; package<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/13824b79027f796b472c606e9fd34358.png" alt="image.png"></p>
-<p>打包成功后会在target目录下生成jar包<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/56a039e0a216ddb1119aea33946b87e0.png" alt="image.png"></p>
-<h2 id="2-编写Dockerfile文件"><a href="#2-编写Dockerfile文件" class="headerlink" title="2.编写Dockerfile文件"></a>2.编写Dockerfile文件</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FROM java:8</span><br><span class="line">VOLUME /tmp</span><br><span class="line">ADD blog-springboot-0.0.1.jar blog.jar       </span><br><span class="line">ENTRYPOINT [<span class="string">&quot;java&quot;</span>,<span class="string">&quot;-Djava.security.egd=file:/dev/./urandom&quot;</span>,<span class="string">&quot;-jar&quot;</span>,<span class="string">&quot;/blog.jar&quot;</span>] </span><br><span class="line">sh</span><br><span class="line">FROM java:8</span><br><span class="line">VOLUME /tmp</span><br><span class="line">ADD blog-springboot-0.0.1.jar blog.jar       </span><br><span class="line">ENTRYPOINT [<span class="string">&quot;java&quot;</span>,<span class="string">&quot;-Djava.security.egd=file:/dev/./urandom&quot;</span>,<span class="string">&quot;-jar&quot;</span>,<span class="string">&quot;/blog.jar&quot;</span>] </span><br></pre></td></tr></table></figure>
-<p>ps：Dockerfile文件不需要后缀，直接为文件格式</p>
-<h2 id="3-编写blog-start-sh脚本"><a href="#3-编写blog-start-sh脚本" class="headerlink" title="3.编写blog-start.sh脚本"></a>3.编写blog-start.sh脚本</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#源jar路径  </span></span><br><span class="line">SOURCE_PATH=/usr/local/docker</span><br><span class="line"><span class="comment">#docker 镜像/容器名字或者jar名字 这里都命名为这个</span></span><br><span class="line">SERVER_NAME=blog-springboot-0.0.1.jar</span><br><span class="line">TAG=latest</span><br><span class="line">SERVER_PORT=8080</span><br><span class="line"><span class="comment">#容器id</span></span><br><span class="line">CID=$(docker ps | grep <span class="string">&quot;<span class="variable">$SERVER_NAME</span>&quot;</span> | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>)</span><br><span class="line"><span class="comment">#镜像id</span></span><br><span class="line">IID=$(docker images | grep <span class="string">&quot;<span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span>&quot;</span> | awk <span class="string">&#x27;&#123;print $3&#125;&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$CID</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;存在容器<span class="variable">$SERVER_NAME</span>, CID-<span class="variable">$CID</span>&quot;</span></span><br><span class="line">  docker stop <span class="variable">$SERVER_NAME</span></span><br><span class="line">  docker <span class="built_in">rm</span> <span class="variable">$SERVER_NAME</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># 构建docker镜像</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$IID</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;存在<span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span>镜像，IID=<span class="variable">$IID</span>&quot;</span></span><br><span class="line">  docker rmi <span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;不存在<span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span>镜像，开始构建镜像&quot;</span></span><br><span class="line">  <span class="built_in">cd</span> <span class="variable">$SOURCE_PATH</span></span><br><span class="line">  docker build -t <span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span> .</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># 运行docker容器</span></span><br><span class="line">docker run --name <span class="variable">$SERVER_NAME</span> -v /usr/local/upload:/usr/local/upload -d -p <span class="variable">$SERVER_PORT</span>:<span class="variable">$SERVER_PORT</span> <span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$SERVER_NAME</span>容器创建完成&quot;</span></span><br><span class="line">sh</span><br><span class="line"><span class="comment">#源jar路径  </span></span><br><span class="line">SOURCE_PATH=/usr/local/docker</span><br><span class="line"><span class="comment">#docker 镜像/容器名字或者jar名字 这里都命名为这个</span></span><br><span class="line">SERVER_NAME=blog-springboot-0.0.1.jar</span><br><span class="line">TAG=latest</span><br><span class="line">SERVER_PORT=8080</span><br><span class="line"><span class="comment">#容器id</span></span><br><span class="line">CID=$(docker ps | grep <span class="string">&quot;<span class="variable">$SERVER_NAME</span>&quot;</span> | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>)</span><br><span class="line"><span class="comment">#镜像id</span></span><br><span class="line">IID=$(docker images | grep <span class="string">&quot;<span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span>&quot;</span> | awk <span class="string">&#x27;&#123;print $3&#125;&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$CID</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;存在容器<span class="variable">$SERVER_NAME</span>, CID-<span class="variable">$CID</span>&quot;</span></span><br><span class="line">  docker stop <span class="variable">$SERVER_NAME</span></span><br><span class="line">  docker <span class="built_in">rm</span> <span class="variable">$SERVER_NAME</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># 构建docker镜像</span></span><br><span class="line"><span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$IID</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;存在<span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span>镜像，IID=<span class="variable">$IID</span>&quot;</span></span><br><span class="line">  docker rmi <span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">&quot;不存在<span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span>镜像，开始构建镜像&quot;</span></span><br><span class="line">  <span class="built_in">cd</span> <span class="variable">$SOURCE_PATH</span></span><br><span class="line">  docker build -t <span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span> .</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># 运行docker容器</span></span><br><span class="line">docker run --name <span class="variable">$SERVER_NAME</span> -v /usr/local/upload:/usr/local/upload -d -p <span class="variable">$SERVER_PORT</span>:<span class="variable">$SERVER_PORT</span> <span class="variable">$SERVER_NAME</span>:<span class="variable">$TAG</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$SERVER_NAME</span>容器创建完成&quot;</span></span><br></pre></td></tr></table></figure>
-<p>ps：sh文件需要用notepad++转为Unix格式<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/aaed807d8df80aae11a94ea00df2264c.png" alt="image.png"></p>
-<h2 id="4-将文件传输到服务器"><a href="#4-将文件传输到服务器" class="headerlink" title="4.将文件传输到服务器"></a>4.将文件传输到服务器</h2><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/183030180db2eb36f8949a2c81cb02ea.png" alt="image.png"></p>
-<p>将上述三个文件传输到&#x2F;usr&#x2F;local&#x2F;docker下（手动创建文件夹）<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/d84ab03c0e7b56ee01dce5f89d30d554.png" alt="image.png"></p>
-<h2 id="5-docker运行后端项目"><a href="#5-docker运行后端项目" class="headerlink" title="5.docker运行后端项目"></a>5.docker运行后端项目</h2><p>进入服务器&#x2F;usr&#x2F;local&#x2F;docker下，构建后端镜像</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh ./blog-start.sh </span><br></pre></td></tr></table></figure>
-
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/9a59bf2c7c8c465b707e5645a4b175b1.png" alt="image.png"><br>ps：第一次时间可能比较长，耐心等待即可</p>
-<p>查看是否构建成功<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/1096233de4147cd81b65728a495914a7.png" alt="image.png"></p>
-<p>可以去测试下接口是否运行成功<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a91b807200f73c0c406eae9ffb1e4297.png" alt="image.png"><br>ps：需要重新部署只需重新传jar包，执行sh脚本即可</p>
-<h2 id="6-打包前端项目"><a href="#6-打包前端项目" class="headerlink" title="6.打包前端项目"></a>6.打包前端项目</h2><p>打开cmd，进入Vue项目路径 -&gt; npm run build<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/718358e5cc8e32b6ed1b0e0788dd7e22.png" alt="image.png"></p>
-<p>打包成功后会在目录下生成dist文件<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/0b0b7a9a815eeef02e658c15ea0b564b.png" alt="image.png"></p>
-<p>将Vue打包项目传输到&#x2F;usr&#x2F;local&#x2F;vue下（由于我前台和后台分为两个项目，所以改名dist文件）<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/d8eb85b7f7bd34b93b1d2ac9b24142fb.png" alt="image.png"></p>
-<h2 id="7-nginx配置-有域名选这个"><a href="#7-nginx配置-有域名选这个" class="headerlink" title="7.nginx配置(有域名选这个)"></a>7.nginx配置(有域名选这个)</h2><p>在&#x2F;usr&#x2F;local&#x2F;nginx下创建nginx.conf文件，格式如下</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    client_max_body_size     50m;</span><br><span class="line">    client_body_buffer_size  10m; </span><br><span class="line">    client_header_timeout    1m;</span><br><span class="line">    client_body_timeout      1m;</span><br><span class="line"></span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length  1k;</span><br><span class="line">    gzip_buffers     4 16k;</span><br><span class="line">    gzip_comp_level  4;</span><br><span class="line">    gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;</span><br><span class="line">    gzip_vary on;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  前台域名;</span><br><span class="line">     </span><br><span class="line">        location / &#123;		</span><br><span class="line">            root   /usr/local/vue/blog;</span><br><span class="line">            index  index.html index.htm; </span><br><span class="line">            try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;	</span><br><span class="line">        &#125;</span><br><span class="line">			</span><br><span class="line">	location ^~ /api/ &#123;		</span><br><span class="line">            proxy_pass http://你的ip:8080/;</span><br><span class="line">	    proxy_set_header   Host             <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header   X-Real-IP        <span class="variable">$remote_addr</span>;						</span><br><span class="line">            proxy_set_header   X-Forwarded-For  <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  后台子域名;</span><br><span class="line">     </span><br><span class="line">        location / &#123;		</span><br><span class="line">            root   /usr/local/vue/admin;</span><br><span class="line">            index  index.html index.htm; </span><br><span class="line">            try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;	</span><br><span class="line">        &#125;</span><br><span class="line">			</span><br><span class="line">	location ^~ /api/ &#123;		</span><br><span class="line">            proxy_pass http://你的ip:8080/;</span><br><span class="line">	    proxy_set_header   Host             <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header   X-Real-IP        <span class="variable">$remote_addr</span>;						</span><br><span class="line">            proxy_set_header   X-Forwarded-For  <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  websocket子域名;</span><br><span class="line">     </span><br><span class="line">        location / &#123;</span><br><span class="line">          proxy_pass http://你的ip:8080/websocket;</span><br><span class="line">          proxy_http_version 1.1;</span><br><span class="line">          proxy_set_header Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">          proxy_set_header Connection <span class="string">&quot;Upgrade&quot;</span>;</span><br><span class="line">          proxy_set_header Host <span class="variable">$host</span>:<span class="variable">$server_port</span>;</span><br><span class="line">          proxy_set_header X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">          proxy_set_header X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">          proxy_set_header X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br><span class="line">       &#125;</span><br><span class="line">	</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  上传文件子域名;</span><br><span class="line">     </span><br><span class="line">        location / &#123;		</span><br><span class="line">          <span class="built_in">alias</span> /usr/local/upload/; </span><br><span class="line">          autoindex on;</span><br><span class="line">          autoindex_exact_size on;</span><br><span class="line">          autoindex_localtime on;</span><br><span class="line">        &#125;		</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<p>ps：我前台和后台时分为两个域名，所以写了两个server，前端项目路径为之前传输的路径，其他两个为文件上传域名和websocket转发域名。</p>
-<p>docker启动nginx服务</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx --restart=always -p 80:80 -d -v /usr/local/nginx/nginx.conf:/etc/nginx/nginx.conf -v /usr/local/vue:/usr/local/vue -v /usr/local/upload:/usr/local/upload nginx </span><br></pre></td></tr></table></figure>
-
-<h2 id="8-nginx配置-无域名选这个"><a href="#8-nginx配置-无域名选这个" class="headerlink" title="8.nginx配置(无域名选这个)"></a>8.nginx配置(无域名选这个)</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    client_max_body_size     50m;</span><br><span class="line">    client_body_buffer_size  10m; </span><br><span class="line">    client_header_timeout    1m;</span><br><span class="line">    client_body_timeout      1m;</span><br><span class="line"></span><br><span class="line">    gzip on;</span><br><span class="line">    gzip_min_length  1k;</span><br><span class="line">    gzip_buffers     4 16k;</span><br><span class="line">    gzip_comp_level  4;</span><br><span class="line">    gzip_types text/plain application/javascript application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;</span><br><span class="line">    gzip_vary on;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  你的ip;</span><br><span class="line">     </span><br><span class="line">        location / &#123;		</span><br><span class="line">            root   /usr/local/vue/blog;</span><br><span class="line">            index  index.html index.htm; </span><br><span class="line">            try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;	</span><br><span class="line">        &#125;</span><br><span class="line">			</span><br><span class="line">	location ^~ /api/ &#123;		</span><br><span class="line">            proxy_pass http://你的ip:8080/;</span><br><span class="line">	    proxy_set_header   Host             <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header   X-Real-IP        <span class="variable">$remote_addr</span>;						</span><br><span class="line">            proxy_set_header   X-Forwarded-For  <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">server &#123;</span><br><span class="line">        listen       81;</span><br><span class="line">        server_name  你的ip;</span><br><span class="line">     </span><br><span class="line">        location / &#123;		</span><br><span class="line">            root   /usr/local/vue/admin;</span><br><span class="line">            index  index.html index.htm; </span><br><span class="line">            try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;	</span><br><span class="line">        &#125;</span><br><span class="line">			</span><br><span class="line">	location ^~ /api/ &#123;		</span><br><span class="line">            proxy_pass http://你的ip:8080/;</span><br><span class="line">	    proxy_set_header   Host             <span class="variable">$host</span>;</span><br><span class="line">            proxy_set_header   X-Real-IP        <span class="variable">$remote_addr</span>;						</span><br><span class="line">            proxy_set_header   X-Forwarded-For  <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen       82;</span><br><span class="line">        server_name  你的ip;</span><br><span class="line">     </span><br><span class="line">        location / &#123;</span><br><span class="line">          proxy_pass http://你的ip:8080/websocket;</span><br><span class="line">          proxy_http_version 1.1;</span><br><span class="line">          proxy_set_header Upgrade <span class="variable">$http_upgrade</span>;</span><br><span class="line">          proxy_set_header Connection <span class="string">&quot;Upgrade&quot;</span>;</span><br><span class="line">          proxy_set_header Host <span class="variable">$host</span>:<span class="variable">$server_port</span>;</span><br><span class="line">          proxy_set_header X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">          proxy_set_header X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">          proxy_set_header X-Forwarded-Proto <span class="variable">$scheme</span>;</span><br><span class="line">       &#125;</span><br><span class="line">	</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen       83;</span><br><span class="line">        server_name  你的ip;</span><br><span class="line">     </span><br><span class="line">        location / &#123;		</span><br><span class="line">          <span class="built_in">alias</span> /usr/local/upload/; </span><br><span class="line">          autoindex on;</span><br><span class="line">          autoindex_exact_size on;</span><br><span class="line">          autoindex_localtime on;</span><br><span class="line">        &#125;		</span><br><span class="line">		</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<p>docker启动nginx服务</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx --restart=always -p 80:80 -p 81:81 -p 82:82 -p 83:83 -d -v /usr/local/nginx/nginx.conf:/etc/nginx/nginx.conf -v /usr/local/vue:/usr/local/vue -v /usr/local/upload:/usr/local/upload nginx </span><br></pre></td></tr></table></figure>
-<p>ps：需要通过ip + 端口号访问项目</p>
-<h2 id="9-运行测试"><a href="#9-运行测试" class="headerlink" title="9.运行测试"></a>9.运行测试</h2><p>去浏览器测试下是否运行成功<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/66732d08619276eea4be2f8ab7f32551.png" alt="image.png"></p>
-<h2 id="10-其他设置"><a href="#10-其他设置" class="headerlink" title="10.其他设置"></a>10.其他设置</h2><p>进入后台管理 -&gt; 网站管理 -&gt; 其他设置，配置websocket域名<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a97b2594f13b2928072728067ac68968.png" alt="image.png"></p>
-<h2 id="11-总结"><a href="#11-总结" class="headerlink" title="11.总结"></a>11.总结</h2><p>整个前后端分离的部署教程到这里就结束啦，第一次部署可能会比较麻烦，不过后面就轻车熟路了，有问题的可以私聊问我或者在评论区留言。</p>
 
           
         
