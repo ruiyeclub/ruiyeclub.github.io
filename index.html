@@ -234,6 +234,124 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/04/01/%E4%BD%BF%E7%94%A8Redis%E5%92%8CRedisTemplate%E8%AE%BE%E8%AE%A1%E5%BD%93%E6%97%A5%E8%AE%BF%E9%97%AE%E9%87%8F%E5%92%8C%E8%AE%BF%E9%97%AE%E4%BA%BA%E6%95%B0%E7%BB%9F%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/04/01/%E4%BD%BF%E7%94%A8Redis%E5%92%8CRedisTemplate%E8%AE%BE%E8%AE%A1%E5%BD%93%E6%97%A5%E8%AE%BF%E9%97%AE%E9%87%8F%E5%92%8C%E8%AE%BF%E9%97%AE%E4%BA%BA%E6%95%B0%E7%BB%9F%E8%AE%A1/" itemprop="url">使用Redis和RedisTemplate设计当日访问量和访问人数统计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-04-01T22:32:07+08:00">
+                2025-04-01
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>在Java中使用Redis和RedisTemplate来统计当日访问量和访问人数（UV）是一个常见的需求。下面我将提供一个完整的实现方案。</p>
+</blockquote>
+<h2 id="1-设计思路"><a href="#1-设计思路" class="headerlink" title="1. 设计思路"></a>1. 设计思路</h2><p>• **访问量(PV)**：使用Redis的INCR命令统计总访问次数<br>• **访问人数(UV)**：使用Redis的HyperLogLog数据结构统计独立访客数<br>• <strong>过期时间</strong>：设置当日24点自动过期</p>
+<h2 id="2-实现代码"><a href="#2-实现代码" class="headerlink" title="2. 实现代码"></a>2. 实现代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.ValueOperations;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalDate;</span><br><span class="line"><span class="keyword">import</span> java.time.ZoneId;</span><br><span class="line"><span class="keyword">import</span> java.time.ZonedDateTime;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VisitStatisticsService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RedisTemplate&lt;String, String&gt; redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">VisitStatisticsService</span><span class="params">(RedisTemplate&lt;String, String&gt; redisTemplate)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.redisTemplate = redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当日PV的key</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">getTodayPVKey</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;stat:pv:&quot;</span> + LocalDate.now().toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当日UV的key</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">getTodayUVKey</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;stat:uv:&quot;</span> + LocalDate.now().toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当天剩余的秒数（到24点的秒数）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">getRemainingSecondsToday</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">ZonedDateTime</span> <span class="variable">now</span> <span class="operator">=</span> ZonedDateTime.now(ZoneId.systemDefault());</span><br><span class="line">        <span class="type">ZonedDateTime</span> <span class="variable">midnight</span> <span class="operator">=</span> now.toLocalDate().plusDays(<span class="number">1</span>).atStartOfDay(ZoneId.systemDefault());</span><br><span class="line">        <span class="keyword">return</span> midnight.toEpochSecond() - now.toEpochSecond();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 记录访问</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userId 用户ID（可以为IP地址或其他唯一标识）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">recordVisit</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取当天剩余的秒数</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">remainingSeconds</span> <span class="operator">=</span> getRemainingSecondsToday();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录PV（访问量）</span></span><br><span class="line">        ValueOperations&lt;String, String&gt; valueOps = redisTemplate.opsForValue();</span><br><span class="line">        <span class="type">String</span> <span class="variable">pvKey</span> <span class="operator">=</span> getTodayPVKey();</span><br><span class="line">        valueOps.increment(pvKey);</span><br><span class="line">        redisTemplate.expire(pvKey, remainingSeconds, TimeUnit.SECONDS);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录UV（独立访客）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">uvKey</span> <span class="operator">=</span> getTodayUVKey();</span><br><span class="line">        redisTemplate.opsForHyperLogLog().add(uvKey, userId);</span><br><span class="line">        redisTemplate.expire(uvKey, remainingSeconds, TimeUnit.SECONDS);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当日访问量(PV)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getTodayPV</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">pvKey</span> <span class="operator">=</span> getTodayPVKey();</span><br><span class="line">        <span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> redisTemplate.opsForValue().get(pvKey);</span><br><span class="line">        <span class="keyword">return</span> value == <span class="literal">null</span> ? <span class="number">0L</span> : Long.parseLong(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当日访问人数(UV)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getTodayUV</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">uvKey</span> <span class="operator">=</span> getTodayUVKey();</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForHyperLogLog().size(uvKey);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取历史某天的访问量(PV)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> date 日期</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getPVByDate</span><span class="params">(LocalDate date)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">pvKey</span> <span class="operator">=</span> <span class="string">&quot;stat:pv:&quot;</span> + date.toString();</span><br><span class="line">        <span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> redisTemplate.opsForValue().get(pvKey);</span><br><span class="line">        <span class="keyword">return</span> value == <span class="literal">null</span> ? <span class="number">0L</span> : Long.parseLong(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取历史某天的访问人数(UV)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> date 日期</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getUVByDate</span><span class="params">(LocalDate date)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">uvKey</span> <span class="operator">=</span> <span class="string">&quot;stat:uv:&quot;</span> + date.toString();</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForHyperLogLog().size(uvKey);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-使用示例"><a href="#3-使用示例" class="headerlink" title="3. 使用示例"></a>3. 使用示例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api/visit&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VisitController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> VisitStatisticsService visitStatisticsService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">VisitController</span><span class="params">(VisitStatisticsService visitStatisticsService)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.visitStatisticsService = visitStatisticsService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/record&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">recordVisit</span><span class="params">(<span class="meta">@RequestParam</span> String userId)</span> &#123;</span><br><span class="line">        visitStatisticsService.recordVisit(userId);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Visit recorded for user: &quot;</span> + userId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/stats&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getStats</span><span class="params">()</span> &#123;</span><br><span class="line">        Map&lt;String, Object&gt; result = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        result.put(<span class="string">&quot;pv&quot;</span>, visitStatisticsService.getTodayPV());</span><br><span class="line">        result.put(<span class="string">&quot;uv&quot;</span>, visitStatisticsService.getTodayUV());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-设计说明"><a href="#4-设计说明" class="headerlink" title="4. 设计说明"></a>4. 设计说明</h2><ol>
+<li><p><strong>PV统计</strong>：<br>• 使用简单的计数器（INCR命令）<br>• 每个访问请求调用一次INCR<br>• 键格式：<code>stat:pv:yyyy-MM-dd</code></p>
+</li>
+<li><p><strong>UV统计</strong>：<br>• 使用HyperLogLog数据结构<br>• 内存占用小（每个HyperLogLog约12KB）<br>• 误差率约0.81%<br>• 键格式：<code>stat:uv:yyyy-MM-dd</code></p>
+</li>
+<li><p><strong>过期时间</strong>：<br>• 自动计算到当天24点的剩余秒数<br>• 设置键的过期时间<br>• 避免数据无限增长</p>
+</li>
+<li><p><strong>扩展性</strong>：<br>• 可以轻松扩展为按小时、周、月统计<br>• 可以添加用户行为分析（如访问页面、停留时间等）</p>
+</li>
+</ol>
+<h2 id="5-性能优化"><a href="#5-性能优化" class="headerlink" title="5. 性能优化"></a>5. 性能优化</h2><ol>
+<li><strong>批量操作</strong>：如果有批量记录需求，可以使用pipeline提高性能</li>
+<li><strong>持久化</strong>：如果需要长期保存数据，可以定期将Redis数据持久化到数据库</li>
+<li><strong>分布式</strong>：此方案天然支持分布式环境</li>
+</ol>
+<h2 id="6-注意事项"><a href="#6-注意事项" class="headerlink" title="6. 注意事项"></a>6. 注意事项</h2><ol>
+<li>HyperLogLog有约0.81%的误差率，如果要求精确计数，可以使用Set数据结构（但内存消耗更大）</li>
+<li>Redis重启可能导致数据丢失，重要数据应考虑持久化方案</li>
+<li>在高并发场景下，INCR命令是原子操作，无需担心并发问题</li>
+</ol>
+<p>这个实现方案简单高效，适合大多数Web应用的访问统计需求。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1418,123 +1536,6 @@
 <h2 id="四、配置多个域名"><a href="#四、配置多个域名" class="headerlink" title="四、配置多个域名"></a>四、配置多个域名</h2><p>可以现在nginx.conf中配置域名，然后在输入<code>sudo certbot --nginx</code></p>
 <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240730185947293.png" alt="image-20240730185947293"></p>
 <p>参考文章：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/696518542">Let’s Encrypt在Linux上免费配置HTTPS</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/" itemprop="url">Mac使用Web的自动化测试工具selenium</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-05-27T17:03:33+08:00">
-                2024-05-27
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>使用 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Selenium/18266">selenium</a> 模拟浏览器渲染数据，需要依赖各浏览器的驱动才能完成，因此需要单独安装chrome driver。</p>
-</blockquote>
-<h3 id="一、下载对应chrome浏览器驱动"><a href="#一、下载对应chrome浏览器驱动" class="headerlink" title="一、下载对应chrome浏览器驱动"></a>一、下载对应<code>chrome</code>浏览器驱动</h3><ol>
-<li>下载地址：<a target="_blank" rel="noopener" href="https://googlechromelabs.github.io/chrome-for-testing/">chrome driver</a></li>
-</ol>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240527155408011.png" alt="image-20240527155408011"></p>
-<ol start="2">
-<li><p>安装 chrome driver</p>
-</li>
-<li><p>解压完 zip 压缩包之后，拷贝二进制文件到 &#x2F;usr&#x2F;local&#x2F;bin 目录下即可</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">拷贝</span></span><br><span class="line">cp chromedriver-mac-arm64/chromedriver /usr/local/bin</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">授权</span></span><br><span class="line">cd /usr/local/bin</span><br><span class="line">xattr -d com.apple.quarantine chromedriver</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h3 id="二、python调用selenium"><a href="#二、python调用selenium" class="headerlink" title="二、python调用selenium"></a>二、python调用selenium</h3><ol>
-<li>安装selenium</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>唤起谷歌浏览器</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="comment"># 启动谷歌浏览器</span></span><br><span class="line">driver=webdriver.Chrome() </span><br><span class="line"><span class="comment"># 访问一个网页</span></span><br><span class="line">driver.get(<span class="string">&quot;http://www.zhihu.com&quot;</span>) </span><br><span class="line"><span class="comment"># 退出浏览器</span></span><br><span class="line">driver.quit() </span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>调用页面接口</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个ChromeOptions对象，用于设置Chrome浏览器的启动选项。</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 使Chrome以无头模式运行（即不显示浏览器窗口）。这通常用于在服务器环境中进行自动化操作。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用GPU硬件加速。这是为了在某些无头模式的情况下避免一些bug。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--disable-gpu&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用沙盒模式。沙盒模式通常用于安全性，但在某些环境中可能会导致问题，因此这里将其禁用。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--no-sandbox&#x27;</span>)</span><br><span class="line"><span class="comment"># 设置浏览器的user-agent字符串。这使得请求看起来像是来自一个正常的桌面浏览器，而不是一个自动化工具，从而减少被反爬虫机制识别的风险。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span>)</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 让浏览器访问指定的URL，即https://investing.com。</span></span><br><span class="line">driver.get(<span class="string">&#x27;https://investing.com&#x27;</span>)</span><br><span class="line"><span class="comment"># 使用浏览器执行JavaScript代码，通过fetch API发送一个HTTP请求到指定的API endpoint，并返回其响应。该响应将被解析为JSON格式并存储在response变量中。</span></span><br><span class="line">response = driver.execute_script(<span class="string">&quot;return fetch(&#x27;https://api.investing.com/api/financialdata/7310/historical/chart/?interval=P1D&amp;pointscount=160&#x27;).then(res =&gt; res.json())&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
-
 
           
         

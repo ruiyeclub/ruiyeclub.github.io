@@ -234,6 +234,123 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/27/Mac%E4%BD%BF%E7%94%A8Web%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7selenium/" itemprop="url">Mac使用Web的自动化测试工具selenium</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-05-27T17:03:33+08:00">
+                2024-05-27
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>使用 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/Selenium/18266">selenium</a> 模拟浏览器渲染数据，需要依赖各浏览器的驱动才能完成，因此需要单独安装chrome driver。</p>
+</blockquote>
+<h3 id="一、下载对应chrome浏览器驱动"><a href="#一、下载对应chrome浏览器驱动" class="headerlink" title="一、下载对应chrome浏览器驱动"></a>一、下载对应<code>chrome</code>浏览器驱动</h3><ol>
+<li>下载地址：<a target="_blank" rel="noopener" href="https://googlechromelabs.github.io/chrome-for-testing/">chrome driver</a></li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240527155408011.png" alt="image-20240527155408011"></p>
+<ol start="2">
+<li><p>安装 chrome driver</p>
+</li>
+<li><p>解压完 zip 压缩包之后，拷贝二进制文件到 &#x2F;usr&#x2F;local&#x2F;bin 目录下即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">拷贝</span></span><br><span class="line">cp chromedriver-mac-arm64/chromedriver /usr/local/bin</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">授权</span></span><br><span class="line">cd /usr/local/bin</span><br><span class="line">xattr -d com.apple.quarantine chromedriver</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="二、python调用selenium"><a href="#二、python调用selenium" class="headerlink" title="二、python调用selenium"></a>二、python调用selenium</h3><ol>
+<li>安装selenium</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install selenium</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>唤起谷歌浏览器</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="comment"># 启动谷歌浏览器</span></span><br><span class="line">driver=webdriver.Chrome() </span><br><span class="line"><span class="comment"># 访问一个网页</span></span><br><span class="line">driver.get(<span class="string">&quot;http://www.zhihu.com&quot;</span>) </span><br><span class="line"><span class="comment"># 退出浏览器</span></span><br><span class="line">driver.quit() </span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>调用页面接口</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个ChromeOptions对象，用于设置Chrome浏览器的启动选项。</span></span><br><span class="line">options = webdriver.ChromeOptions()</span><br><span class="line"><span class="comment"># 使Chrome以无头模式运行（即不显示浏览器窗口）。这通常用于在服务器环境中进行自动化操作。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--headless&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用GPU硬件加速。这是为了在某些无头模式的情况下避免一些bug。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--disable-gpu&#x27;</span>)</span><br><span class="line"><span class="comment"># 禁用沙盒模式。沙盒模式通常用于安全性，但在某些环境中可能会导致问题，因此这里将其禁用。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;--no-sandbox&#x27;</span>)</span><br><span class="line"><span class="comment"># 设置浏览器的user-agent字符串。这使得请求看起来像是来自一个正常的桌面浏览器，而不是一个自动化工具，从而减少被反爬虫机制识别的风险。</span></span><br><span class="line">options.add_argument(<span class="string">&#x27;user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&#x27;</span>)</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome(options=options)</span><br><span class="line"><span class="comment"># 让浏览器访问指定的URL，即https://investing.com。</span></span><br><span class="line">driver.get(<span class="string">&#x27;https://investing.com&#x27;</span>)</span><br><span class="line"><span class="comment"># 使用浏览器执行JavaScript代码，通过fetch API发送一个HTTP请求到指定的API endpoint，并返回其响应。该响应将被解析为JSON格式并存储在response变量中。</span></span><br><span class="line">response = driver.execute_script(<span class="string">&quot;return fetch(&#x27;https://api.investing.com/api/financialdata/7310/historical/chart/?interval=P1D&amp;pointscount=160&#x27;).then(res =&gt; res.json())&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response)</span><br><span class="line"></span><br><span class="line">driver.quit()</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/04/17/%E5%88%9B%E5%BB%BATelegram%E6%9C%BA%E5%99%A8%E4%BA%BA%F0%9F%A4%96API%E5%8F%91%E9%80%81%E8%AF%B7%E6%B1%82/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1558,131 +1675,6 @@
 
 <p>这里的–name参数是给你的应用设置一个名字，– run start是告诉pm2运行package.json中定义的start脚本。</p>
 <p>如果你的npm脚本是用来启动一个服务器，那么–name参数非常有用，这样你可以随时查看服务状态或者重启服务。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/07/27/Idea%E5%BC%80%E5%8F%91%E5%BF%85%E8%A3%85%E6%8F%92%E4%BB%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/07/27/Idea%E5%BC%80%E5%8F%91%E5%BF%85%E8%A3%85%E6%8F%92%E4%BB%B6/" itemprop="url">Idea开发必装插件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-07-27T15:24:24+08:00">
-                2022-07-27
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>＂工欲善其事必先利其器＂，分享一下我工作中必备的Idea开发插件</p>
-</blockquote>
-<h3 id="1-Alibaba-Java-Coding-Guidelines"><a href="#1-Alibaba-Java-Coding-Guidelines" class="headerlink" title="1.Alibaba Java Coding Guidelines"></a>1.Alibaba Java Coding Guidelines</h3><blockquote>
-<p>我们很高兴推出阿里巴巴 Java 编码指南，它整合了阿里巴巴集团技术团队多年来的最佳编程实践。大量的 Java 编程团队对跨项目的代码质量提出了苛刻的要求，因为我们鼓励重用和更好地理解彼此的程序。过去我们见过很多编程问题。例如，有缺陷的数据库表结构和索引设计可能会导致软件架构缺陷和性能风险。另一个例子是难以维护的混乱代码结构。此外，未经身份验证的易受攻击的代码很容易受到黑客的攻击。为了解决这些问题，我们为阿里巴巴的 Java 开发人员编写了这份文档。</p>
-</blockquote>
-<p>阿里巴巴代码规范检查插件，有助于我们的代码更加规范。</p>
-<h3 id="2-ignore"><a href="#2-ignore" class="headerlink" title="2.ignore"></a>2.ignore</h3><p>忽略Git不必要提交的文件</p>
-<h3 id="3-Codota-Ai"><a href="#3-Codota-Ai" class="headerlink" title="3.Codota Ai"></a>3.Codota Ai</h3><p>适用于Java和JavaScript的Codota AI自动补全代码插件</p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.codota.com/">Codota</a>基于数百万个开源 Java 程序和您的上下文完成代码行，帮助您更快地编写代码并减少错误。新版 Codota 提供以下功能：</p>
-</blockquote>
-<ul>
-<li>全线AI自动完成</li>
-<li>行内和相关的代码示例</li>
-<li>基于您自己的编码实践的代码建议</li>
-</ul>
-<h3 id="4-Easy-Code"><a href="#4-Easy-Code" class="headerlink" title="4.Easy Code"></a>4.Easy Code</h3><blockquote>
-<p>EasyCode是基于IntelliJ IDEA Ultimate版开发的一个代码生成插件，主要通过自定义模板（基于velocity）来生成各种你想要的代码。通常用于生成Entity、Dao、Service、Controller。如果你动手能力强还可以用于生成HTML、JS、PHP等代码。理论上来说只要是与数据有关的代码都是可以生成的。</p>
-</blockquote>
-<h3 id="5-JavaDoc"><a href="#5-JavaDoc" class="headerlink" title="5.JavaDoc"></a>5.JavaDoc</h3><p>快速生成javadoc文档注释</p>
-<h3 id="6-Lombok"><a href="#6-Lombok" class="headerlink" title="6.Lombok"></a>6.Lombok</h3><p>主要用途是提供了简单的注解的形式来帮助我们简化消除一些必须有但显得很臃肿的 java 代码，提高编码效率，使代码更简洁。</p>
-<h3 id="7-MyBatisPlus"><a href="#7-MyBatisPlus" class="headerlink" title="7.MyBatisPlus"></a>7.MyBatisPlus</h3><blockquote>
-<p>generator code<br>live template<br>MybatisPlus plugin from java to xml or from xml to java</p>
-</blockquote>
-<h3 id="8-Nyan-Progress-Bar"><a href="#8-Nyan-Progress-Bar" class="headerlink" title="8.Nyan Progress Bar"></a>8.Nyan Progress Bar</h3><blockquote>
-<p>Pretty progress bars with nyan cat for IJ based IDEs.</p>
-</blockquote>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20220727142237704.png" alt="Nyan Progress Bar"></p>
-<h3 id="9-One-Dark-theme"><a href="#9-One-Dark-theme" class="headerlink" title="9.One Dark theme"></a>9.One Dark theme</h3><p>其中One Dark Vivid主题真的很简洁、舒服，看腻了Idea自带的系统，可以考虑换个主题试试。</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20220727143552405.png" alt="One Dark Vivid"></p>
-<h3 id="10-Translation"><a href="#10-Translation" class="headerlink" title="10.Translation"></a>10.Translation</h3><blockquote>
-<p>Translation plugin for IntelliJ based IDEs&#x2F;Android Studio&#x2F;HUAWEI DevEco Studio.</p>
-</blockquote>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f596969477578696e672f5472616e736c6174696f6e506c7567696e406d61737465722f696d616765732f73637265656e73686f74732e676966.gif" alt="translation"></p>
-<h3 id="11-其他"><a href="#11-其他" class="headerlink" title="11.其他"></a>11.其他</h3><p>Python、requirements等开发python的插件，让我可以更方便的在Idea中编写python代码。</p>
 
           
         

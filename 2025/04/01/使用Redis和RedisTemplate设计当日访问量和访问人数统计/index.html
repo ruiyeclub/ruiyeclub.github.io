@@ -64,19 +64,17 @@
 
 
 
-<meta name="description" content="Cloudflare 的 5秒盾（Under Attack Mode）是网站防护的常见手段，通过 JavaScript 挑战验证访客真实性。很多网站会使用Cloudflare提供安全服务，导致爬虫的时候显示403状态。   一、解决方案及代码示例1. 使用 cloudscraper 库原理：模拟 Cloudflare 预期的请求特征 12345import cloudscraperscraper">
+<meta name="description" content="在Java中使用Redis和RedisTemplate来统计当日访问量和访问人数（UV）是一个常见的需求。下面我将提供一个完整的实现方案。  1. 设计思路• **访问量(PV)**：使用Redis的INCR命令统计总访问次数• **访问人数(UV)**：使用Redis的HyperLogLog数据结构统计独立访客数• 过期时间：设置当日24点自动过期 2. 实现代码123456789101112">
 <meta property="og:type" content="article">
-<meta property="og:title" content="绕过cloudflare 5秒盾的技术方案解析">
-<meta property="og:url" content="https://ruiyeclub.cn/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:title" content="使用Redis和RedisTemplate设计当日访问量和访问人数统计">
+<meta property="og:url" content="https://ruiyeclub.cn/2025/04/01/%E4%BD%BF%E7%94%A8Redis%E5%92%8CRedisTemplate%E8%AE%BE%E8%AE%A1%E5%BD%93%E6%97%A5%E8%AE%BF%E9%97%AE%E9%87%8F%E5%92%8C%E8%AE%BF%E9%97%AE%E4%BA%BA%E6%95%B0%E7%BB%9F%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Ruiyeclub">
-<meta property="og:description" content="Cloudflare 的 5秒盾（Under Attack Mode）是网站防护的常见手段，通过 JavaScript 挑战验证访客真实性。很多网站会使用Cloudflare提供安全服务，导致爬虫的时候显示403状态。   一、解决方案及代码示例1. 使用 cloudscraper 库原理：模拟 Cloudflare 预期的请求特征 12345import cloudscraperscraper">
+<meta property="og:description" content="在Java中使用Redis和RedisTemplate来统计当日访问量和访问人数（UV）是一个常见的需求。下面我将提供一个完整的实现方案。  1. 设计思路• **访问量(PV)**：使用Redis的INCR命令统计总访问次数• **访问人数(UV)**：使用Redis的HyperLogLog数据结构统计独立访客数• 过期时间：设置当日24点自动过期 2. 实现代码123456789101112">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/55187d199c2a9079caff09622c6f78f9933ed773.png">
-<meta property="article:published_time" content="2025-02-18T07:03:59.000Z">
-<meta property="article:modified_time" content="2025-02-18T07:05:27.550Z">
+<meta property="article:published_time" content="2025-04-01T14:32:07.000Z">
+<meta property="article:modified_time" content="2025-04-01T14:32:48.261Z">
 <meta property="article:author" content="Cr.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/55187d199c2a9079caff09622c6f78f9933ed773.png">
 
 
 
@@ -106,13 +104,13 @@
 
 
 
-  <link rel="canonical" href="https://ruiyeclub.cn/2025/02/18/绕过Cloudflare 5秒盾的技术方案解析/"/>
+  <link rel="canonical" href="https://ruiyeclub.cn/2025/04/01/使用Redis和RedisTemplate设计当日访问量和访问人数统计/"/>
 
 
 
 
 
-  <title>绕过cloudflare 5秒盾的技术方案解析 | Ruiyeclub</title>
+  <title>使用Redis和RedisTemplate设计当日访问量和访问人数统计 | Ruiyeclub</title>
   
 
 
@@ -237,7 +235,7 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/04/01/%E4%BD%BF%E7%94%A8Redis%E5%92%8CRedisTemplate%E8%AE%BE%E8%AE%A1%E5%BD%93%E6%97%A5%E8%AE%BF%E9%97%AE%E9%87%8F%E5%92%8C%E8%AE%BF%E9%97%AE%E4%BA%BA%E6%95%B0%E7%BB%9F%E8%AE%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -254,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">绕过cloudflare 5秒盾的技术方案解析</h1>
+          <h1 class="post-title" itemprop="name headline">使用Redis和RedisTemplate设计当日访问量和访问人数统计</h1>
         
 
         <div class="post-meta">
@@ -266,8 +264,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-02-18T15:03:59+08:00">
-                2025-02-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-04-01T22:32:07+08:00">
+                2025-04-01
               </time>
             
           </span>
@@ -286,75 +284,34 @@
 
       
         <blockquote>
-<p>Cloudflare 的 5秒盾（Under Attack Mode）是网站防护的常见手段，通过 JavaScript 挑战验证访客真实性。很多网站会使用Cloudflare提供安全服务，导致爬虫的时候显示403状态。</p>
+<p>在Java中使用Redis和RedisTemplate来统计当日访问量和访问人数（UV）是一个常见的需求。下面我将提供一个完整的实现方案。</p>
 </blockquote>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/55187d199c2a9079caff09622c6f78f9933ed773.png" alt="55187d199c2a9079caff09622c6f78f9933ed773"></p>
-<h2 id="一、解决方案及代码示例"><a href="#一、解决方案及代码示例" class="headerlink" title="一、解决方案及代码示例"></a>一、解决方案及代码示例</h2><h4 id="1-使用-cloudscraper-库"><a href="#1-使用-cloudscraper-库" class="headerlink" title="1. 使用 cloudscraper 库"></a>1. 使用 cloudscraper 库</h4><p><strong>原理</strong>：模拟 Cloudflare 预期的请求特征</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cloudscraper</span><br><span class="line"></span><br><span class="line">scraper = cloudscraper.create_scraper()</span><br><span class="line">response = scraper.get(<span class="string">&quot;https://target-site.com&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
+<h2 id="1-设计思路"><a href="#1-设计思路" class="headerlink" title="1. 设计思路"></a>1. 设计思路</h2><p>• **访问量(PV)**：使用Redis的INCR命令统计总访问次数<br>• **访问人数(UV)**：使用Redis的HyperLogLog数据结构统计独立访客数<br>• <strong>过期时间</strong>：设置当日24点自动过期</p>
+<h2 id="2-实现代码"><a href="#2-实现代码" class="headerlink" title="2. 实现代码"></a>2. 实现代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.ValueOperations;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.LocalDate;</span><br><span class="line"><span class="keyword">import</span> java.time.ZoneId;</span><br><span class="line"><span class="keyword">import</span> java.time.ZonedDateTime;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VisitStatisticsService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RedisTemplate&lt;String, String&gt; redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">VisitStatisticsService</span><span class="params">(RedisTemplate&lt;String, String&gt; redisTemplate)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.redisTemplate = redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当日PV的key</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">getTodayPVKey</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;stat:pv:&quot;</span> + LocalDate.now().toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当日UV的key</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">getTodayUVKey</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;stat:uv:&quot;</span> + LocalDate.now().toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当天剩余的秒数（到24点的秒数）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">getRemainingSecondsToday</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">ZonedDateTime</span> <span class="variable">now</span> <span class="operator">=</span> ZonedDateTime.now(ZoneId.systemDefault());</span><br><span class="line">        <span class="type">ZonedDateTime</span> <span class="variable">midnight</span> <span class="operator">=</span> now.toLocalDate().plusDays(<span class="number">1</span>).atStartOfDay(ZoneId.systemDefault());</span><br><span class="line">        <span class="keyword">return</span> midnight.toEpochSecond() - now.toEpochSecond();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 记录访问</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userId 用户ID（可以为IP地址或其他唯一标识）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">recordVisit</span><span class="params">(String userId)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取当天剩余的秒数</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">remainingSeconds</span> <span class="operator">=</span> getRemainingSecondsToday();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录PV（访问量）</span></span><br><span class="line">        ValueOperations&lt;String, String&gt; valueOps = redisTemplate.opsForValue();</span><br><span class="line">        <span class="type">String</span> <span class="variable">pvKey</span> <span class="operator">=</span> getTodayPVKey();</span><br><span class="line">        valueOps.increment(pvKey);</span><br><span class="line">        redisTemplate.expire(pvKey, remainingSeconds, TimeUnit.SECONDS);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 记录UV（独立访客）</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">uvKey</span> <span class="operator">=</span> getTodayUVKey();</span><br><span class="line">        redisTemplate.opsForHyperLogLog().add(uvKey, userId);</span><br><span class="line">        redisTemplate.expire(uvKey, remainingSeconds, TimeUnit.SECONDS);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当日访问量(PV)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getTodayPV</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">pvKey</span> <span class="operator">=</span> getTodayPVKey();</span><br><span class="line">        <span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> redisTemplate.opsForValue().get(pvKey);</span><br><span class="line">        <span class="keyword">return</span> value == <span class="literal">null</span> ? <span class="number">0L</span> : Long.parseLong(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取当日访问人数(UV)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getTodayUV</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">uvKey</span> <span class="operator">=</span> getTodayUVKey();</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForHyperLogLog().size(uvKey);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取历史某天的访问量(PV)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> date 日期</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getPVByDate</span><span class="params">(LocalDate date)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">pvKey</span> <span class="operator">=</span> <span class="string">&quot;stat:pv:&quot;</span> + date.toString();</span><br><span class="line">        <span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> redisTemplate.opsForValue().get(pvKey);</span><br><span class="line">        <span class="keyword">return</span> value == <span class="literal">null</span> ? <span class="number">0L</span> : Long.parseLong(value);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取历史某天的访问人数(UV)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> date 日期</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">getUVByDate</span><span class="params">(LocalDate date)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">uvKey</span> <span class="operator">=</span> <span class="string">&quot;stat:uv:&quot;</span> + date.toString();</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForHyperLogLog().size(uvKey);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="2-使用-curl-cffi-库"><a href="#2-使用-curl-cffi-库" class="headerlink" title="2. 使用 curl_cffi 库"></a>2. 使用 curl_cffi 库</h4><p><strong>优势</strong>：支持多浏览器指纹模拟</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> curl_cffi <span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">response = requests.get(</span><br><span class="line">    <span class="string">&quot;https://target-site.com&quot;</span>,</span><br><span class="line">    impersonate=<span class="string">&quot;chrome110&quot;</span>  <span class="comment"># 支持 chrome99-110 / edge99-110</span></span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
+<h2 id="3-使用示例"><a href="#3-使用示例" class="headerlink" title="3. 使用示例"></a>3. 使用示例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api/visit&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VisitController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> VisitStatisticsService visitStatisticsService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">VisitController</span><span class="params">(VisitStatisticsService visitStatisticsService)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.visitStatisticsService = visitStatisticsService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/record&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">recordVisit</span><span class="params">(<span class="meta">@RequestParam</span> String userId)</span> &#123;</span><br><span class="line">        visitStatisticsService.recordVisit(userId);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Visit recorded for user: &quot;</span> + userId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/stats&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getStats</span><span class="params">()</span> &#123;</span><br><span class="line">        Map&lt;String, Object&gt; result = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        result.put(<span class="string">&quot;pv&quot;</span>, visitStatisticsService.getTodayPV());</span><br><span class="line">        result.put(<span class="string">&quot;uv&quot;</span>, visitStatisticsService.getTodayUV());</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="3-第三方-API-服务"><a href="#3-第三方-API-服务" class="headerlink" title="3. 第三方 API 服务"></a>3. 第三方 API 服务</h4><p><strong>推荐服务</strong>：</p>
-<ul>
-<li>ScrapingBee（自带代理轮转）</li>
-<li>ScraperAPI</li>
-<li>ZenRows</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">API_KEY = <span class="string">&quot;your_api_key&quot;</span></span><br><span class="line">response = requests.get(</span><br><span class="line">    <span class="string">f&quot;https://api.scrapingbee.com/v1/?api_key=<span class="subst">&#123;API_KEY&#125;</span>&amp;url=target-site.com&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-FlareSolverr-服务"><a href="#4-FlareSolverr-服务" class="headerlink" title="4. FlareSolverr 服务"></a>4. FlareSolverr 服务</h4><p><strong>架构</strong>：基于 Puppeteer 的中间件服务</p>
-<p>部署步骤：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name flaresolverr \</span><br><span class="line">  -p 8191:8191 \</span><br><span class="line">  -e LOG_LEVEL=info \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  ghcr.io/flaresolverr/flaresolverr:latest</span><br></pre></td></tr></table></figure>
-
-<p>调用示例：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">payload = &#123;</span><br><span class="line">    <span class="string">&quot;cmd&quot;</span>: <span class="string">&quot;request.get&quot;</span>,</span><br><span class="line">    <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://target-site.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;maxTimeout&quot;</span>: <span class="number">60000</span></span><br><span class="line">&#125;</span><br><span class="line">response = requests.post(<span class="string">&quot;http://localhost:8191/v1&quot;</span>, json=payload)</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、方案对比分析"><a href="#二、方案对比分析" class="headerlink" title="二、方案对比分析"></a>二、方案对比分析</h2><table>
-<thead>
-<tr>
-<th>方案</th>
-<th>执行速度</th>
-<th>维护成本</th>
-<th>隐匿性</th>
-<th>适用场景</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>cloudscraper</td>
-<td>★★★★</td>
-<td>低</td>
-<td>中</td>
-<td>中小规模常规采集</td>
-</tr>
-<tr>
-<td>curl_cffi</td>
-<td>★★★★★</td>
-<td>低</td>
-<td>高</td>
-<td>需要最新指纹场景</td>
-</tr>
-<tr>
-<td>第三方API</td>
-<td>★★★</td>
-<td>中</td>
-<td>高</td>
-<td>企业级高频采集</td>
-</tr>
-<tr>
-<td>FlareSolverr</td>
-<td>★★</td>
-<td>高</td>
-<td>极高</td>
-<td>复杂JS验证场景</td>
-</tr>
-</tbody></table>
-<h2 id="三、对抗升级建议"><a href="#三、对抗升级建议" class="headerlink" title="三、对抗升级建议"></a>三、对抗升级建议</h2><ol>
-<li><strong>IP轮换策略</strong>：结合住宅代理使用（推荐 BrightData）</li>
-<li><strong>指纹随机化</strong>：定期更换 User-Agent&#x2F;TLS 指纹</li>
-<li><strong>请求限速</strong>：设置 3-10 秒随机延迟</li>
-<li><strong>头信息校验</strong>：携带完整 Accept-Encoding&#x2F;Cookie 等头</li>
+<h2 id="4-设计说明"><a href="#4-设计说明" class="headerlink" title="4. 设计说明"></a>4. 设计说明</h2><ol>
+<li><p><strong>PV统计</strong>：<br>• 使用简单的计数器（INCR命令）<br>• 每个访问请求调用一次INCR<br>• 键格式：<code>stat:pv:yyyy-MM-dd</code></p>
+</li>
+<li><p><strong>UV统计</strong>：<br>• 使用HyperLogLog数据结构<br>• 内存占用小（每个HyperLogLog约12KB）<br>• 误差率约0.81%<br>• 键格式：<code>stat:uv:yyyy-MM-dd</code></p>
+</li>
+<li><p><strong>过期时间</strong>：<br>• 自动计算到当天24点的剩余秒数<br>• 设置键的过期时间<br>• 避免数据无限增长</p>
+</li>
+<li><p><strong>扩展性</strong>：<br>• 可以轻松扩展为按小时、周、月统计<br>• 可以添加用户行为分析（如访问页面、停留时间等）</p>
+</li>
 </ol>
+<h2 id="5-性能优化"><a href="#5-性能优化" class="headerlink" title="5. 性能优化"></a>5. 性能优化</h2><ol>
+<li><strong>批量操作</strong>：如果有批量记录需求，可以使用pipeline提高性能</li>
+<li><strong>持久化</strong>：如果需要长期保存数据，可以定期将Redis数据持久化到数据库</li>
+<li><strong>分布式</strong>：此方案天然支持分布式环境</li>
+</ol>
+<h2 id="6-注意事项"><a href="#6-注意事项" class="headerlink" title="6. 注意事项"></a>6. 注意事项</h2><ol>
+<li>HyperLogLog有约0.81%的误差率，如果要求精确计数，可以使用Set数据结构（但内存消耗更大）</li>
+<li>Redis重启可能导致数据丢失，重要数据应考虑持久化方案</li>
+<li>在高并发场景下，INCR命令是原子操作，无需担心并发问题</li>
+</ol>
+<p>这个实现方案简单高效，适合大多数Web应用的访问统计需求。</p>
 
       
     </div>
@@ -405,8 +362,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2025/02/07/RabbitMQ%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/" rel="next" title="RabbitMQ常见面试题技术文档">
-                <i class="fa fa-chevron-left"></i> RabbitMQ常见面试题技术文档
+              <a href="/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/" rel="next" title="绕过cloudflare 5秒盾的技术方案解析">
+                <i class="fa fa-chevron-left"></i> 绕过cloudflare 5秒盾的技术方案解析
               </a>
             
           </div>
@@ -414,10 +371,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2025/04/01/%E4%BD%BF%E7%94%A8Redis%E5%92%8CRedisTemplate%E8%AE%BE%E8%AE%A1%E5%BD%93%E6%97%A5%E8%AE%BF%E9%97%AE%E9%87%8F%E5%92%8C%E8%AE%BF%E9%97%AE%E4%BA%BA%E6%95%B0%E7%BB%9F%E8%AE%A1/" rel="prev" title="使用Redis和RedisTemplate设计当日访问量和访问人数统计">
-                使用Redis和RedisTemplate设计当日访问量和访问人数统计 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -563,7 +516,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E5%8F%8A%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.</span> <span class="nav-text">一、解决方案及代码示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BD%BF%E7%94%A8-cloudscraper-%E5%BA%93"><span class="nav-number">1.0.1.</span> <span class="nav-text">1. 使用 cloudscraper 库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8-curl-cffi-%E5%BA%93"><span class="nav-number">1.0.2.</span> <span class="nav-text">2. 使用 curl_cffi 库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E7%AC%AC%E4%B8%89%E6%96%B9-API-%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.0.3.</span> <span class="nav-text">3. 第三方 API 服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-FlareSolverr-%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.0.4.</span> <span class="nav-text">4. FlareSolverr 服务</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">二、方案对比分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%AF%B9%E6%8A%97%E5%8D%87%E7%BA%A7%E5%BB%BA%E8%AE%AE"><span class="nav-number">3.</span> <span class="nav-text">三、对抗升级建议</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">1.</span> <span class="nav-text">1. 设计思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">2. 实现代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">3. 使用示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E8%AE%BE%E8%AE%A1%E8%AF%B4%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">4. 设计说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">5. 性能优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">6.</span> <span class="nav-text">6. 注意事项</span></a></li></ol></div>
             
 
           </div>
