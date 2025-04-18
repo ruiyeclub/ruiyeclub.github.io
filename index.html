@@ -234,6 +234,138 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/04/18/Docker%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%AE%B9%E5%99%A8%E5%90%8D%E7%A7%B0%E8%BF%9B%E8%A1%8C%E8%BF%9E%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/04/18/Docker%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%AE%B9%E5%99%A8%E5%90%8D%E7%A7%B0%E8%BF%9B%E8%A1%8C%E8%BF%9E%E6%8E%A5/" itemprop="url">Docker如何通过容器名称进行连接</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-04-18T22:24:47+08:00">
+                2025-04-18
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>在Docker环境中，容器间的通信是构建微服务架构的基础。使用容器名称进行连接相比直接使用IP地址具有显著优势。</p>
+</blockquote>
+<h3 id="一、为什么需要使用容器名称连接？"><a href="#一、为什么需要使用容器名称连接？" class="headerlink" title="一、为什么需要使用容器名称连接？"></a>一、为什么需要使用容器名称连接？</h3><ol>
+<li><p><strong>IP地址不稳定性问题</strong>：<br>• 容器每次重启可能获得不同的IP地址（容器启动时会从子网中动态获取可用IP）<br>• 在集群环境中IP地址变化更为频繁<br>• 硬编码IP地址会导致连接失效</p>
+</li>
+<li><p><strong>管理复杂性降低</strong>：<br>• 使用有意义的名称比记忆IP更直观<br>• 无需维护IP地址映射表<br>• 配置文件中使用名称更具可读性</p>
+</li>
+<li><p><strong>动态扩展支持</strong>：<br>• 服务扩容时无需修改连接配置<br>• 自动适应容器替换和迁移<br>• 与负载均衡和服务发现机制更好配合</p>
+</li>
+</ol>
+<h3 id="二、实现容器名称连接的核心条件"><a href="#二、实现容器名称连接的核心条件" class="headerlink" title="二、实现容器名称连接的核心条件"></a>二、实现容器名称连接的核心条件</h3><h3 id="1-必须使用自定义网络"><a href="#1-必须使用自定义网络" class="headerlink" title="1. 必须使用自定义网络"></a>1. 必须使用自定义网络</h3><p>Docker的默认bridge网络（docker0）<strong>不支持</strong>通过容器名称连接，只有自定义网络才提供内置DNS服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建支持名称解析的自定义网络</span></span><br><span class="line">docker network create my-app-network</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-容器必须加入同一网络"><a href="#2-容器必须加入同一网络" class="headerlink" title="2. 容器必须加入同一网络"></a>2. 容器必须加入同一网络</h3><p>所有需要互相通信的容器必须连接到同一个自定义网络：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name service-a --network my-app-network my-image</span><br><span class="line">docker run -d --name service-b --network my-app-network my-image</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、实战演示：通过名称连接MySQL与应用"><a href="#三、实战演示：通过名称连接MySQL与应用" class="headerlink" title="三、实战演示：通过名称连接MySQL与应用"></a>三、实战演示：通过名称连接MySQL与应用</h3><h3 id="场景准备"><a href="#场景准备" class="headerlink" title="场景准备"></a>场景准备</h3><p>假设我们需要部署一个Web应用连接MySQL数据库</p>
+<h3 id="步骤1：创建专用网络"><a href="#步骤1：创建专用网络" class="headerlink" title="步骤1：创建专用网络"></a>步骤1：创建专用网络</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create app-network</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤2：启动MySQL容器"><a href="#步骤2：启动MySQL容器" class="headerlink" title="步骤2：启动MySQL容器"></a>步骤2：启动MySQL容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name mysql-db \</span><br><span class="line">  --network app-network \</span><br><span class="line">  -e MYSQL_ROOT_PASSWORD=secret \</span><br><span class="line">  -e MYSQL_DATABASE=myapp \</span><br><span class="line">  mysql:8.0</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤3：启动应用容器"><a href="#步骤3：启动应用容器" class="headerlink" title="步骤3：启动应用容器"></a>步骤3：启动应用容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name web-app \</span><br><span class="line">  --network app-network \</span><br><span class="line">  -e DB_HOST=mysql-db \</span><br><span class="line">  -e DB_PASSWORD=secret \</span><br><span class="line">  -p 8080:8080 \</span><br><span class="line">  my-web-app</span><br></pre></td></tr></table></figure>
+
+<h3 id="连接验证"><a href="#连接验证" class="headerlink" title="连接验证"></a>连接验证</h3><p>在web-app容器中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入容器shell</span></span><br><span class="line">docker <span class="built_in">exec</span> -it web-app sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试连接MySQL</span></span><br><span class="line">ping mysql-db  <span class="comment"># 应能成功解析</span></span><br><span class="line">nc -zv mysql-db 3306  <span class="comment"># 检查端口连通性</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="四、特殊场景处理：1Panel环境下的网络集成"><a href="#四、特殊场景处理：1Panel环境下的网络集成" class="headerlink" title="四、特殊场景处理：1Panel环境下的网络集成"></a>四、特殊场景处理：1Panel环境下的网络集成</h3><p>1Panel等管理面板会创建自己的网络（如<code>1panel-network</code>），需要将自定义容器加入该网络：</p>
+<h3 id="查看1Panel管理的MySQL网络"><a href="#查看1Panel管理的MySQL网络" class="headerlink" title="查看1Panel管理的MySQL网络"></a>查看1Panel管理的MySQL网络</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect 1Panel-mysql-Zhb7 | grep NetworkMode</span><br></pre></td></tr></table></figure>
+
+<h3 id="将应用容器加入同一网络"><a href="#将应用容器加入同一网络" class="headerlink" title="将应用容器加入同一网络"></a>将应用容器加入同一网络</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network connect 1panel-network my-app-container</span><br></pre></td></tr></table></figure>
+
+<h3 id="验证连接"><a href="#验证连接" class="headerlink" title="验证连接"></a>验证连接</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在应用容器中测试</span></span><br><span class="line">ping 1Panel-mysql-Zhb7</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、常见问题排查"><a href="#五、常见问题排查" class="headerlink" title="五、常见问题排查"></a>五、常见问题排查</h3><ol>
+<li><p><strong>无法解析容器名</strong>：<br>• 确认容器在同一自定义网络<br>• 检查网络连接状态：<code>docker network inspect &lt;network&gt;</code><br>• 验证DNS解析：<code>docker exec -it container-name nslookup target-name</code></p>
+</li>
+<li><p><strong>连接超时</strong>：<br>• 检查目标服务是否监听正确端口<br>• 验证防火墙&#x2F;安全组设置<br>• 测试基础连通性：<code>ping</code>和<code>telnet</code></p>
+</li>
+<li><p><strong>1Panel环境特殊问题</strong>：<br>• 确认容器已加入<code>1panel-network</code><br>• 检查1Panel的网络隔离策略<br>• 查看1Panel的日志获取连接失败详情</p>
+</li>
+</ol>
+<h3 id="六、踩坑记录"><a href="#六、踩坑记录" class="headerlink" title="六、踩坑记录"></a>六、踩坑记录</h3><p><a target="_blank" rel="noopener" href="https://bbs.fit2cloud.com/t/topic/6388">关于mysql的容器应用连接</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/04/01/%E4%BD%BF%E7%94%A8Redis%E5%92%8CRedisTemplate%E8%AE%BE%E8%AE%A1%E5%BD%93%E6%97%A5%E8%AE%BF%E9%97%AE%E9%87%8F%E5%92%8C%E8%AE%BF%E9%97%AE%E4%BA%BA%E6%95%B0%E7%BB%9F%E8%AE%A1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1427,149 +1559,11 @@
   <hr/>
 
     
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/06/27/Linux%E5%AE%89%E8%A3%85nginx%E5%92%8C%E9%85%8D%E7%BD%AEhttps/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/06/27/Linux%E5%AE%89%E8%A3%85nginx%E5%92%8C%E9%85%8D%E7%BD%AEhttps/" itemprop="url">Linux安装nginx和配置https</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-06-27T21:33:35+08:00">
-                2024-06-27
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="1-安装nginx"><a href="#1-安装nginx" class="headerlink" title="1.安装nginx"></a>1.安装nginx</h3><p>如果你还没有安装Nginx，可以使用你的Linux发行版的包管理器来安装。以下是一些常见发行版的安装命令：</p>
-<ul>
-<li>对于Debian&#x2F;Ubuntu系统：</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update  </span><br><span class="line">sudo apt install nginx</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>对于CentOS&#x2F;RHEL系统（使用yum）：</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install nginx</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-启动nginx"><a href="#2-启动nginx" class="headerlink" title="2.启动nginx"></a>2.启动nginx</h3><ul>
-<li><p>安装完成后，启动Nginx服务：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>并且设置它开机自启：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> nginx</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="3-检查Nginx状态"><a href="#3-检查Nginx状态" class="headerlink" title="3. 检查Nginx状态"></a>3. 检查Nginx状态</h3><p>你可以检查Nginx的状态来确保它正在运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status nginx</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-配置Nginx"><a href="#4-配置Nginx" class="headerlink" title="4. 配置Nginx"></a>4. 配置Nginx</h3><p>Nginx的主要配置文件通常位于<code>/etc/nginx/</code>目录下，特别是<code>nginx.conf</code>文件。但大多数配置更改通常会在<code>sites-available/</code>或<code>conf.d/</code>目录中的单独文件中进行，然后通过在<code>nginx.conf</code>中包含这些文件来应用。</p>
-<ul>
-<li>打开Nginx的主配置文件（如果你需要直接编辑它）：</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>重新加载Nginx配置以使更改生效：</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl reload nginx</span><br></pre></td></tr></table></figure>
-
-<p>或者你可以完全重启Nginx服务：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart nginx</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="二、Let’s-Encrypt在Linux上免费配置HTTPS"><a href="#二、Let’s-Encrypt在Linux上免费配置HTTPS" class="headerlink" title="二、Let’s Encrypt在Linux上免费配置HTTPS"></a>二、Let’s Encrypt在Linux上免费配置HTTPS</h2><p>Let’s Encrypt简介Let’s Encrypt是一个由Mozilla、Cisco、Akamai、IdenTrust和EFF等组织发起的项目，旨在通过自动化方式为网站提供免费的SSL&#x2F;TLS证书。它的目标是促进互联网的加密化，保障用户的在线安全。Let’s Encrypt提供的证书有效期为90天，但可以通过自动化过程免费续期。</p>
-<h3 id="1-安装Certbot"><a href="#1-安装Certbot" class="headerlink" title="1.安装Certbot"></a>1.安装Certbot</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install certbot python3-certbot-nginx</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-配置HTTPS"><a href="#2-配置HTTPS" class="headerlink" title="2.配置HTTPS"></a>2.配置HTTPS</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot --nginx</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240627212626690.png" alt="image-20240627212626690"></p>
-<p>在浏览器地址栏中输入你的域名并加上https:&#x2F;&#x2F;前缀（例如：<a target="_blank" rel="noopener" href="https://www.example.com),如果浏览器显示了一个绿色的锁形图标,并且url地址以https//%E5%BC%80%E5%A4%B4%EF%BC%8C%E9%82%A3%E4%B9%88%E6%81%AD%E5%96%9C%E4%BD%A0%EF%BC%8C%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E5%B7%B2%E7%BB%8F%E6%88%90%E5%8A%9F%E9%85%8D%E7%BD%AE%E4%BA%86HTTPS%EF%BC%81">https://www.example.com），如果浏览器显示了一个绿色的锁形图标，并且URL地址以https://开头，那么恭喜你，你的网站已经成功配置了HTTPS！</a></p>
-<h2 id="三、配置nginx-conf"><a href="#三、配置nginx-conf" class="headerlink" title="三、配置nginx.conf"></a>三、配置nginx.conf</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">       listen <span class="number">443</span> ssl;</span><br><span class="line">       server_name 域名.com;</span><br><span class="line"></span><br><span class="line">       ssl_certificate /etc/letsencrypt/live/地址/fullchain.pem;</span><br><span class="line">       ssl_certificate_key /etc/letsencrypt/live/地址/privkey.pem;</span><br><span class="line"></span><br><span class="line">       location / &#123;</span><br><span class="line">          proxy_pass http://ip:port;</span><br><span class="line">          proxy_set_header Host $host;</span><br><span class="line">          proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">          proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="四、配置多个域名"><a href="#四、配置多个域名" class="headerlink" title="四、配置多个域名"></a>四、配置多个域名</h2><p>可以现在nginx.conf中配置域名，然后在输入<code>sudo certbot --nginx</code></p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240730185947293.png" alt="image-20240730185947293"></p>
-<p>参考文章：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/696518542">Let’s Encrypt在Linux上免费配置HTTPS</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"></a>
   </nav>
 
 

@@ -67,7 +67,7 @@
 <meta name="description" content="Awesome guy.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ruiyeclub">
-<meta property="og:url" content="https://ruiyeclub.cn/archives/2024/08/index.html">
+<meta property="og:url" content="https://ruiyeclub.cn/page/5/index.html">
 <meta property="og:site_name" content="Ruiyeclub">
 <meta property="og:description" content="Awesome guy.">
 <meta property="og:locale" content="en_US">
@@ -102,13 +102,13 @@
 
 
 
-  <link rel="canonical" href="https://ruiyeclub.cn/archives/2024/08/"/>
+  <link rel="canonical" href="https://ruiyeclub.cn/page/5/"/>
 
 
 
 
 
-  <title>Archive | Ruiyeclub</title>
+  <title>Ruiyeclub</title>
   
 
 
@@ -124,7 +124,8 @@
 
   <style>@media (min-width:768px) and (max-width:991px){body .header-innerr{width:700px!important}}.header-innerr{margin:0 auto;padding:100px 0 70px;width:880px}@media (min-width:1600px){.container .header-innerr{width:1200px}}.header-innerr{position:relative}.header-innerr{padding:20px 0 0}.header-innerr:after,.header-innerr:before{content:" ";display:table}.header-innerr:after{clear:both}@media (max-width:767px){.header-innerr{width:auto;padding:10px;margin-bottom:-20px}}</style>
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -223,69 +224,136 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        There are 41 posts in total. posts in total till now
-      </span>
-
+  <section id="posts" class="posts-expand">
+    
       
 
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2022/01/31/JVM%E5%9F%BA%E7%A1%80%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/01/31/JVM%E5%9F%BA%E7%A1%80%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E7%AF%87/" itemprop="url">JVM基础快速入门篇</a></h1>
         
 
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-01-31T17:35:40+08:00">
+                2022-01-31
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
         
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2024">2024</h1>
-          </div>
+            <p><strong>Java是一门可以跨平台的语言，但是Java本身是不可以实现跨平台的，需要JVM实现跨平台。javac编译好后的class文件，在Windows、Linux、Mac等系统上，只要该系统安装对应的Java虚拟机，class文件都可以运行。达到”一次编译，到处运行”的效果。</strong></p>
+<h2 id="一、JVM是什么？"><a href="#一、JVM是什么？" class="headerlink" title="一、JVM是什么？"></a>一、JVM是什么？</h2><p>而JVM到底是什么呢？引用百度百科对JVM的介绍：</p>
+<blockquote>
+<p>JVM是Java Virtual Machine（Java虚拟机）的缩写，JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。</p>
+</blockquote>
+<h2 id="二、JVM架构知识"><a href="#二、JVM架构知识" class="headerlink" title="二、JVM架构知识"></a>二、JVM架构知识</h2><p>1.JVM主要包含<strong>类装载器、运行时数据区（内存模型）、执行引擎</strong>。里面内存模型有可以细分包括本地方法栈、堆、栈（线程）、方法区（元空间）、程序计数器。<br>如图所示：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/351bc7933dbca9d91c52db9f79bec760.png" alt="image.png"></p>
+<p>1.类装载器的作用就是负责加载class文件，class文件在文件开头有特定的文件标示，将class文件字节码内容加载到内存中，并将这些内容转换成方法区中的运行时数据结构并且ClassLoader只负责class文件的加载，至于它是否可以运行，则由执行引擎（Execution Engine）决定。类加载器又有四大类加载器：</p>
+<p>启动类加载器（Bootstrap ClassLoader）:负责加载JRE核心类库，像JRE中的rt.jar等（C&#x2F;C++）；</p>
+<p>扩展类加载器（Extension ClassLoader）：负责加载JRE扩展目录ext中的jar包；</p>
+<p>系统类加载器（Application ClassLoader）：负责加载ClassPath路径下的类包；</p>
+<p>自定义的类加载器（User ClassLoader）：只加载指定目录下的jar和class，想加载其它位置的类或jar时得自行定义类加载器；</p>
+<p>2.<strong>JVM中，对象都是在堆中分配内存空间的，栈只用于保存局部变量和临时变量，如果是对象，只保存引用</strong>，实际内存还是在堆中。栈的特点是先进后出，假设一个main方法，里面执行了一个方法，我们是后执行的那个方法即那个线程，但是执行完毕后，那个线程是先销毁的。<strong>每个方法在执行的同时都会创建一个栈帧，用于存储局部变量表（存放局部变量的）、操作数栈（存放需要运算的数据）、动态链接、方法出口（执行完方法 回到main方法的位置）等信息</strong>，每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机中入栈到出栈的过程。即一个方法对应一块栈帧内存区域（存放本方法的局部变量）。</p>
+<p>3.方法区存储已被虚拟机加载的类信息、常量（堆中的对象常量地址）、静态变量、即时编译器编译后的代码等数据。</p>
+<p>4.本地方法栈和栈的作用类似，但是它服务的对象是native方法，该方法得由c语言来实现。</p>
+<p>5.程序计数器作用是当CPU多线程切换的时候，切回到当前线程的时候，回到程序计数器计数的位置，继续执行。</p>
+<h2 id="三、堆内存的结构模型"><a href="#三、堆内存的结构模型" class="headerlink" title="三、堆内存的结构模型"></a>三、堆内存的结构模型</h2><p>新生代包括Eden加上2个survivor区，执行minor gc之后，大多数的对象会被回收，活着的进入s0，再次minor gc，活着的对象eden+s0-&gt;s1，再次minor gc，eden+s1-&gt;s0…这里虚拟机采取了分代收集的思想来管理内存，JVM给每个对象一个对象年龄计数器，分代年龄达到15后即对象被执行了15次minor gc后移入老年代。除此之外，s区装不下的大对象也会直接进入老年代。</p>
+<p>最后，老年代存的就是一些大对象和需要连续内存空间的对象（静态变量、缓存、线程池等），老年代满了的话，会执行Full GC垃圾收集。官网对Full GC的解释中介绍了个词”Stop-The-World”，它会把所有的应用线程停掉，这时候系统会卡掉。<strong>JVM虚拟机调优的目标就是减少full gc即减少STW。</strong><br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/a79e182e285aa8a998b64f8c2929cea2.png" alt="image.png"></p>
+<h2 id="四、垃圾回收机制"><a href="#四、垃圾回收机制" class="headerlink" title="四、垃圾回收机制"></a>四、垃圾回收机制</h2><p><strong>堆里面存放new的对象和数组</strong>，Java优于其他语言一个很重要的原因就是它能自动处理垃圾对象，也就是有垃圾回收机制（GC）。有了垃圾回收机制有几点好处编程简单，系统不容易出错。</p>
+<p>1.什么是垃圾？</p>
+<p><strong>我们把没有任何引用指向的对象或者一堆对象（循环引用）定义为垃圾。</strong></p>
+<p>2.系统如何定位垃圾</p>
+<ul>
+<li>引用计数算法-简单且高效但是主流的Java虚拟机里并没有选用引用计数算法来管理内存，因为它不能解决循环引用的问题。</li>
+<li><strong>根可达分析算法</strong>-将”GC Roots”对象作为起点，从这些节点开始向下搜索引用的对象，找到的对象都标记为非垃圾对象，其余未标记的对象都是垃圾对象。线程栈的本地变量、静态变量、本地方法栈的变量等等都可以称作GC Roots跟节点。<br>如图：<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/articles/313951e066caf10cfb67e43c4a5a6dcc.png" alt="image.png"></li>
+</ul>
+<p>3.常见的垃圾回收算法</p>
+<ul>
+<li><strong>复制算法</strong>-没有碎片 浪费内存空间（目前使用新生代使用的是复制算法）</li>
+<li>标记清除-位置不连续 产生内存碎片</li>
+<li>标记压缩-没有碎片 效率偏低<br>复制算法它将可用内存按容量分为大小相等的两块，每次只使用其中的一块，当这一块的内存用完了，就将还存活的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。</li>
+</ul>
+<h2 id="五-常见垃圾回收器"><a href="#五-常见垃圾回收器" class="headerlink" title="五.常见垃圾回收器"></a>五.常见垃圾回收器</h2><p>新生代收集器：Serial、ParNew、Parallel Scavenge<br>老年代收集器：CMS、Serial Old、Parallel Old<br>整堆收集器： G1</p>
+<p><strong>jdk1.8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）</strong></p>
+
+          
         
-        
+      
+    </div>
 
-        
+    
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/" itemprop="url">
-              
-                <span itemprop="name">使用ohttps自动部署https证书</span>
-              
-            </a>
-        
-      </h2>
+    
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2024-08-12T13:03:01+08:00"
-              content="2024-08-12" >
-          08-12
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+    <footer class="post-footer">
+      
 
       
 
-    </div>
-  </div>
-  
-  
-  
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+  </section>
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+  </nav>
 
 
 
