@@ -234,6 +234,247 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/07/25/SpringBoot%E7%9B%91%E5%90%ACRedis%E8%BF%87%E6%9C%9Fkey/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/07/25/SpringBoot%E7%9B%91%E5%90%ACRedis%E8%BF%87%E6%9C%9Fkey/" itemprop="url">SpringBoot监听Redis过期key</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-07-25T19:22:22+08:00">
+                2024-07-25
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>在SpringBoot项目中配置Redis的过期提醒，通过修改<code>redis.conf</code>或命令行设置<code>notify-keyspace-events</code>，并创建自定义的Redis消息监听器来处理过期事件。</p>
+</blockquote>
+<h3 id="一、开启Redis-key过期提醒"><a href="#一、开启Redis-key过期提醒" class="headerlink" title="一、开启Redis key过期提醒"></a>一、开启Redis key过期提醒</h3><ul>
+<li>方式一：修改redis.conf配置文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">默认 notify-keyspace-events <span class="string">&quot;&quot;</span></span></span><br><span class="line">notify-keyspace-events Ex</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>方式二：命令行开启</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG SET notify-keyspace-events Ex</span><br><span class="line">CONFIG GET notify-keyspace-events</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="二、项目导入redis依赖"><a href="#二、项目导入redis依赖" class="headerlink" title="二、项目导入redis依赖"></a>二、项目导入redis依赖</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、配置config配置类"><a href="#三、配置config配置类" class="headerlink" title="三、配置config配置类"></a>三、配置config配置类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisListenerConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	RedisMessageListenerContainer <span class="title function_">container</span><span class="params">(RedisConnectionFactory connectionFactory)</span> &#123;</span><br><span class="line">		<span class="type">RedisMessageListenerContainer</span> <span class="variable">container</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RedisMessageListenerContainer</span>();</span><br><span class="line">		container.setConnectionFactory(connectionFactory);</span><br><span class="line">		<span class="keyword">return</span> container;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="四、配置监听代码"><a href="#四、配置监听代码" class="headerlink" title="四、配置监听代码"></a>四、配置监听代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KeyExpiredListener</span> <span class="keyword">extends</span> <span class="title class_">KeyExpirationEventMessageListener</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">KeyExpiredListener</span><span class="params">(RedisMessageListenerContainer listenerContainer)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(listenerContainer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(Message message, <span class="type">byte</span>[] pattern)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">channel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(message.getChannel(), StandardCharsets.UTF_8);</span><br><span class="line">        <span class="comment">// 过期的key</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(message.getBody(), StandardCharsets.UTF_8);</span><br><span class="line">        log.info(<span class="string">&quot;redis key 过期：pattern=&#123;&#125;,channel=&#123;&#125;,key=&#123;&#125;&quot;</span>, <span class="keyword">new</span> <span class="title class_">String</span>(pattern), channel, key);</span><br><span class="line">        <span class="keyword">if</span> (key.equals(INVEST_WS_EXPIRED_KEY)) &#123;</span><br><span class="line">            <span class="comment">// 处理业务逻辑...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/" itemprop="url">Mac上使用homebrew安装nvm</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-07-20T16:04:55+08:00">
+                2024-07-20
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>NVM（Node Version Manager）是一个用于在基于Linux系统上安装和管理Node.js的shell脚本。macOS用户可以使用<code>homebrew</code>来安装NVM。</p>
+</blockquote>
+<p>安装Homebrew（如果你还没有安装）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>卸载现有node版本</li>
+</ol>
+<p>如果你的系统已经安装了node，请先卸载它。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew uninstall --ignore-dependencies node </span><br><span class="line">brew uninstall --force node </span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>使用Homebrew安装nvm：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install nvm</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>将nvm初始化脚本添加到你的shell配置文件中。如果你使用的是zsh，那么你需要在你的<code>~/.zshrc</code>文件中添加以下行：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="subst">$([ -z <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME-&#125;</span>&quot;</span> ] &amp;&amp; printf %s <span class="string">&quot;<span class="variable">$&#123;HOME&#125;</span>/.nvm&quot;</span> || printf %s <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME&#125;</span>/nvm&quot;</span>)</span>&quot;</span></span><br><span class="line">[ -s <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> <span class="comment"># This loads nvm</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>使更改生效，你可以重新启动你的终端，或者运行以下命令：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>验证nvm安装成功：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
+
+<p>以上步骤将会在你的macOS系统上安装nvm，并且设置zsh使其能够识别nvm命令。</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">nvm -v //查看nvm版本</span><br><span class="line">nvm <span class="built_in">ls</span> //查看本机已经安装node版本</span><br><span class="line">nvm use 切换到指定版本node</span><br><span class="line">nvm ls-remote //列出所有可安装的远程node版本</span><br><span class="line">nvm install stable    //安装最新版本</span><br><span class="line">nvm install &lt;version&gt; //安装指定版本</span><br><span class="line">nvm uninstall stable   //卸载最新版本</span><br><span class="line">nvm uninstall &lt;version&gt;   //卸载指定版本</span><br><span class="line">nvm current //查看当前使用的node版本</span><br><span class="line">npm <span class="built_in">which</span> [current|&lt;version&gt;] //显示已安装node的安装路径。</span><br><span class="line">nvm cache <span class="built_in">dir</span> //显示nvm的缓存目录</span><br><span class="line">nvm cache clear //清楚nvm的缓存目录</span><br><span class="line">nvm node_mirror [url] //设置node镜像</span><br><span class="line">nvm npm_mirror [url] //设置npm镜像</span><br><span class="line">nvm on //开启node.js版本管理</span><br><span class="line">nvm off //关闭node.js版本管理</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">更新npm到最新版本</span><br><span class="line">npm install -g npm@latest</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="踩坑记录："><a href="#踩坑记录：" class="headerlink" title="踩坑记录："></a>踩坑记录：</h3><p>终端安装好了nvm和node，但是在vscode打开后无法执行命令，需要在<code> vi ~/.zshrc</code>加入<code>export PATH=&quot;~/.composer/vendor/bin:$PATH&quot;</code></p>
+<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7083026831263137800">如何在macOS上安装NVM</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/famensaodiseng/p/10427673.html">Mac下安装nvm后vscode输入node -v不起作用</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/06/27/Linux%E5%AE%89%E8%A3%85nginx%E5%92%8C%E9%85%8D%E7%BD%AEhttps/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1394,265 +1635,6 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup python -u your_program.py &gt;app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
 
 <p>参考文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xunfengdumo/article/details/132448270">Python nohup 启动python脚本，后台没有日志</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/01/04/%E5%BC%80%E5%8F%91%E5%BF%85%E5%A4%87%E8%BD%AF%E4%BB%B6-Typora%E9%85%8D%E5%90%88PicGo%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE(%E8%BD%AC)/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/01/04/%E5%BC%80%E5%8F%91%E5%BF%85%E5%A4%87%E8%BD%AF%E4%BB%B6-Typora%E9%85%8D%E5%90%88PicGo%E9%98%BF%E9%87%8C%E4%BA%91%E5%9B%BE%E5%BA%8A%E9%85%8D%E7%BD%AE(%E8%BD%AC)/" itemprop="url">开发必备软件-Typora配合PicGo阿里云图床配置(转)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-01-04T11:20:40+08:00">
-                2024-01-04
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>写博客的时候，刚开始直接在各大平台上直接写，后来还是觉得不太方便，需要在各大平台之间来回切换。于是就改用Typora，但是有个问题就是图片的处理，只能放在本地。想要发布到各大平台，就需要图床。本文结合阿里云OSS、PicGo图床配置、Typora配置，能够做到一次文章编写，各大平台统一输出。</p>
-</blockquote>
-<h2 id="阿里云配置"><a href="#阿里云配置" class="headerlink" title="阿里云配置"></a>阿里云配置</h2><h3 id="创建对象存储Bucket"><a href="#创建对象存储Bucket" class="headerlink" title="创建对象存储Bucket"></a><strong>创建对象存储Bucket</strong></h3><p>登录阿里云后，选择对象存储</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/4b40339b-f3ee-415a-8348-1a371e5c4b6d.png" alt="image-20221222125850693"></p>
-<p>新人开通试用3个月免费</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/14da8647-0f63-43ae-bcfa-69b5829db289.png" alt="image-20221222130109938"></p>
-<p>开通后，进入管理控制台</p>
-<p>点击Bucket列表，创建Bucket</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/dc718170-d70f-458c-918b-67d2c495739e.png" alt="image-20221222130233633"></p>
-<p>访问控制开启公共读</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/5154a85d-5292-49b2-bd4d-035cd8fadc36.png" alt="image-20221222130527365"></p>
-<h3 id="访问控制RAM配置"><a href="#访问控制RAM配置" class="headerlink" title="访问控制RAM配置"></a><strong>访问控制RAM配置</strong></h3><p>点击右上角AccessKey管理</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/10ecacba-67dd-4bd0-b2b0-05d6bd2c8280.png" alt="image-20221222134259058"></p>
-<p><strong>创建AccessKey，注意这里的AccessKey ID 和 AccessKey Secret保存下来，后面要用到</strong></p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/46ad3a39-cd1b-49b9-9d72-d4dc2e43730f.png" alt="image-20221222134507363"></p>
-<h2 id="PicGo下载安装"><a href="#PicGo下载安装" class="headerlink" title="PicGo下载安装"></a>PicGo下载安装</h2><p>下载地址</p>
-<p><a target="_blank" rel="noopener" href="https://picgo.github.io/PicGo-Doc/zh/guide/#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85">https://picgo.github.io/PicGo-Doc/zh/guide/#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85</a></p>
-<p>可以选择山东大学的镜像站</p>
-<p><a target="_blank" rel="noopener" href="https://mirrors.sdu.edu.cn/github-release/Molunerfinn_PicGo">https://mirrors.sdu.edu.cn/github-release/Molunerfinn_PicGo</a></p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/9bc5c527-4845-4ba7-b575-f6ac1c57ea3d.png" alt="image-20221222133605621"></p>
-<h3 id="PicGo配置"><a href="#PicGo配置" class="headerlink" title="PicGo配置"></a><strong>PicGo配置</strong></h3><ul>
-<li>KeyId 、KeySecret 就是上面阿里云的AccessKey ID 和 AccessKey Secret</li>
-<li>Bucket 就是阿里云的bucket名称</li>
-</ul>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/326fb8c6-44a6-491b-96e8-c58bc4c08282.png" alt="image-20221222134810396"></p>
-<ul>
-<li>存储区域，对应阿里云Endpoint的前面，我这里是oss-cn-hangzhou</li>
-<li>存储路径，自己随便定义一个，比如 img&#x2F;</li>
-<li>自定义域名，对应阿里云 Bucket域名</li>
-</ul>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/6cf44a45-802d-4553-a499-c43726a92782.png" alt="image-20221222135020880"></p>
-<h2 id="Typora下载及配置"><a href="#Typora下载及配置" class="headerlink" title="Typora下载及配置"></a>Typora下载及配置</h2><p>Typora目前收费，想要免费可使用，可参考笔者的这个下载地址</p>
-<blockquote>
-<p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1bCxmIPk23R0B9SVCqY37wg?pwd=F93i">https://pan.baidu.com/s/1bCxmIPk23R0B9SVCqY37wg?pwd=F93i</a> 提取码：F93i</p>
-</blockquote>
-<h3 id="设置"><a href="#设置" class="headerlink" title="设置"></a><strong>设置</strong></h3><p>找到设置，点击图像设置</p>
-<p>上传图片的服务，选择PicGo.app</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/18f35e1f-8a91-4200-a71d-91b6d8f65ec9.png" alt="image-20221222135334696"></p>
-<p><strong>注意：PicGo.app需要填写输入正确的安装路径，填写后可通过旁边的验证功能查看是否填写成功</strong></p>
-<h3 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a><strong>实际效果</strong></h3><ul>
-<li>截图软件，粘贴效果，typora直接转换成了阿里云OSS的地址<img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/53d7a28b-96f3-4ba5-8fbc-e47b5bddae99.png" alt="image-20221222140236233"></li>
-<li>外站粘贴过来的也是同样效果</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2023/12/28/Node-js%E6%A8%A1%E5%9D%97%E5%8C%96%E9%80%89%E6%8B%A9Commonjs%E5%92%8CES6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2023/12/28/Node-js%E6%A8%A1%E5%9D%97%E5%8C%96%E9%80%89%E6%8B%A9Commonjs%E5%92%8CES6/" itemprop="url">Node.js模块化选择Commonjs和ES6</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2023-12-28T18:03:40+08:00">
-                2023-12-28
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>Node.js 使用的模块系统是基于 CommonJS 的，但随着时间的推移，ES6 模块也得到了越来越多的支持。以下是关于 CommonJS 和 ES6 模块的简要概述：</p>
-</blockquote>
-<p>1.<strong>CommonJS</strong>：</p>
-<ul>
-<li>最初为 Node.js 设计，所以又称 Node.js 模块系统。</li>
-<li>使用 <code>require()</code> 函数来导入模块，使用 <code>module.exports</code> 或 <code>exports</code> 对象来导出模块。</li>
-</ul>
-<p>2.<strong>ES6 模块</strong>：</p>
-<ul>
-<li>是 ECMAScript 6 (ES2015) 中引入的新模块系统。</li>
-<li>使用 <code>import</code> 语句来导入模块，使用 <code>export</code> 语句来导出模块。</li>
-<li>有静态和动态两种导入方式，提供更强的类型检查和代码编译时优化。</li>
-</ul>
-<blockquote>
-<p>请注意，随着Node.js的发展，许多库已经迁移到ES模块，因此确保你使用的库与你当前的Node.js版本兼容是很重要的。</p>
-</blockquote>
-<h3 id="一、搭建ES6模块系统"><a href="#一、搭建ES6模块系统" class="headerlink" title="一、搭建ES6模块系统"></a>一、搭建ES6模块系统</h3><p>1.把需要更换的<code>require</code>全部换成<code>import</code></p>
-<p>2.在src下创建一个.babelrc文件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;presets&quot;</span>:[<span class="string">&quot;es2015&quot;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>3.在package.json中的一段加上<code>--exec babel-node</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;name&quot;</span>: <span class="string">&quot;api&quot;</span>,</span><br><span class="line">  <span class="string">&quot;version&quot;</span>: <span class="string">&quot;1.0.0&quot;</span>,</span><br><span class="line">  <span class="string">&quot;description&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">  <span class="string">&quot;type&quot;</span>: <span class="string">&quot;module&quot;</span>, <span class="comment">// 添加type类型</span></span><br><span class="line">  <span class="string">&quot;main&quot;</span>: <span class="string">&quot;index.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;dev&quot;</span>: <span class="string">&quot;nodemon ./src/main.js --exec babel-node&quot;</span>,</span><br><span class="line">    <span class="string">&quot;test&quot;</span>: <span class="string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1 --exec babel-node&quot;</span></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
-
-<p>4.安装插件 <code>npm install babel-preset-es2015</code></p>
-<h3 id="二、关于两者的引用区别"><a href="#二、关于两者的引用区别" class="headerlink" title="二、关于两者的引用区别"></a>二、关于两者的引用区别</h3><p>1.Commonjs：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// moduleA.js  </span></span><br><span class="line"><span class="keyword">const</span> message = <span class="string">&#x27;Hello from CommonJS&#x27;</span>;  </span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = message;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js  </span></span><br><span class="line"><span class="keyword">const</span> moduleA = <span class="built_in">require</span>(<span class="string">&#x27;./moduleA&#x27;</span>);  </span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(moduleA); <span class="comment">// 输出 &#x27;Hello from CommonJS&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>需要注意的是，CommonJS 的 <code>require</code> 函数返回的是一个对象，该对象的属性对应于模块导出的内容。在上面的例子中，<code>moduleA</code> 是一个包含 <code>message</code> 属性的对象。因此，我们可以使用 <code>moduleA.message</code> 来访问导出的内容。</strong></p>
-<p>2.ES6：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// moduleA.js  </span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> message = <span class="string">&#x27;Hello from ES6&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js  </span></span><br><span class="line"><span class="keyword">import</span> &#123; message &#125; <span class="keyword">from</span> <span class="string">&#x27;./moduleA&#x27;</span>;  </span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(message); <span class="comment">// 输出 &#x27;Hello from ES6&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>需要注意的是，ES6 的 <code>import</code> 语句返回的是导出的内容本身，而不是一个对象。因此，我们可以直接使用导入的内容，而不需要通过属性来访问。</strong></p>
 
           
         

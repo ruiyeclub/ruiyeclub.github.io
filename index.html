@@ -234,6 +234,279 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/06/01/%E5%BD%93%E4%BD%BF%E7%94%A8synchronized%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E8%BF%98%E6%98%AF%E5%87%BA%E7%8E%B0%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/06/01/%E5%BD%93%E4%BD%BF%E7%94%A8synchronized%E5%92%8C%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E8%BF%98%E6%98%AF%E5%87%BA%E7%8E%B0%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98/" itemprop="url">当使用synchronized和分布式锁还是出现并发问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-06-01T23:40:59+08:00">
+                2025-06-01
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>📝记录一下，尽管使用了同步锁甚至是分布式锁还是查询并发问题的情况。</p>
+<p>对同一条数据进行”查询状态-&gt;更新状态”操作时，出现多次更新状态。</p>
+</blockquote>
+<p>这个是我业务代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Transactional(rollbackFor = Exception.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Long modelId)</span> <span class="keyword">throws</span> GseException &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="comment">//业务逻辑代码</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用redis分布式锁的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Transactional(rollbackFor = Exception.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Long modelId)</span> <span class="keyword">throws</span> GseException &#123;</span><br><span class="line">    <span class="type">RLock</span> <span class="variable">lock</span> <span class="operator">=</span> redissonClient.getLock(REDIS_COST_MODEL_ID_LOCK + modelId);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (lock.tryLock(<span class="number">20</span>, <span class="number">2</span>, TimeUnit.SECONDS)) &#123;</span><br><span class="line">            <span class="comment">//业务逻辑代码</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            log.error(<span class="string">&quot;获取分布式锁失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">// 判断当前线程是否持有锁</span></span><br><span class="line">        <span class="keyword">if</span> (lock.isHeldByCurrentThread()) &#123;</span><br><span class="line">            <span class="comment">//释放当前锁</span></span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="一、存在的问题以及原因"><a href="#一、存在的问题以及原因" class="headerlink" title="一、存在的问题以及原因"></a>一、存在的问题以及原因</h3><p>问题就是以上两种写法都没有生效，但是为什么呢？ 在解释这个问题之前，我们首先要弄清楚两个问题：</p>
+<ol>
+<li><p>@Transactional的底层实现原理，开启事务和提交事务的时机是什么？</p>
+</li>
+<li><p>分布式锁，和本地锁机制释放锁的时机是什么时候？3.1 @Transactional的底层实现原理，开启事务和提交事务的时机是什么？</p>
+</li>
+</ol>
+<p>它的底层实现原理主要依赖于 Spring 的面向切面编程（AOP）机制。 底层实现原理</p>
+<ul>
+<li>AOP 代理：当一个类或方法被 @Transactional 注解标记时，Spring 容器在初始化 Bean 时会检测到这个注解。对于使用 Spring<br>的代理模式（如 JDK 动态代理或 CGLIB），Spring 会为该 Bean<br>创建一个代理对象。这个代理对象会在调用实际方法前后插入事务管理相关的代码，即在方法执行前开启事务，在方法执行完毕后根据执行情况提交或回滚事务。</li>
+<li>解析注解：Spring 通过扫描 Bean 定义，识别出带有 @Transactional 注解的方法或类，并配置相应的事务属性，如传播行为、隔离级别、超时时间、是否只读等。</li>
+<li>事务拦截器：Spring 使用 AOP 机制中的拦截器（Interceptor）或Advice（通常为 TransactionInterceptor 或 AspectJ<br>的切面），在方法调用前后织入事务处理逻辑。在方法调用前，根据事务属性设置事务的开始；在方法正常结束时提交事务，如果方法抛出未检查异常（继承自<br>RuntimeException 的异常）或已检查异常（被 @Transactional 的 rollbackFor 属性指定的异常）则回滚事务。</li>
+</ul>
+<p>开启事务和提交事务的时机</p>
+<ul>
+<li>开启事务：<strong>事务通常在进入被 @Transactional 注解的方法之前立即开始</strong>。这意味着在执行业务逻辑之前，Spring<br>会确保与当前环境匹配的事务上下文已经建立。这包括选择合适的事务管理器，根据事务属性配置事务的隔离级别、传播行为等，并在数据库中实际开启事务。</li>
+<li>提交事务：<strong>如果被注解的方法正常执行结束，没有抛出任何异常，Spring 会在离开该方法之前提交事务</strong><br>。提交事务意味着将所有挂起的更改永久化到数据库中，使事务中的所有操作对外可见。</li>
+<li>回滚事务：如果在被注解的方法执行过程中抛出了异常，并且该异常未被 @Transactional 的 noRollbackFor 属性豁免，Spring<br>将在捕获到异常后立即回滚事务，撤销所有在事务中已完成但未提交的操作，保持数据的一致性。</li>
+</ul>
+<h3 id="二、分布式锁，和本地锁机制释放锁的时机是什么时候？"><a href="#二、分布式锁，和本地锁机制释放锁的时机是什么时候？" class="headerlink" title="二、分布式锁，和本地锁机制释放锁的时机是什么时候？"></a>二、分布式锁，和本地锁机制释放锁的时机是什么时候？</h3><p>答案是：本地锁，如果是synchronized，看你包裹起来的范围。Lock的话 看你手动释放锁的时候。 分布式锁：看你手动释放锁的时候。</p>
+<p>那么造成问题的原因就出来了，如下图：</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/5b139d52fdd74a7f81d6455270c34e5f~tplv-73owjymdk6-jj-mark-v1_0_0_0_0_5o6Y6YeR5oqA5pyv56S-5Yy6IEAgd3Vr_q75.webp" alt="5b139d52fdd74a7f81d6455270c34e5f~tplv-73owjymdk6-jj-mark-v1_0_0_0_0_5o6Y6YeR5oqA5pyv56S-5Yy6IEAgd3Vr_q75"></p>
+<p><strong>也就是说最终提交事务和释放锁的顺序有问题，按照上面的代码写法，因为当只有方法执行完了，AOP切面才会提交事务，那么如果你将上锁的代码写到被@Transactional注解的方法里面，那么提交事务永远都会处于释放锁之后，那么在释放锁之后，提交事务之前的这段时间，就会有并发问题。</strong></p>
+<h3 id="三、正确的写法"><a href="#三、正确的写法" class="headerlink" title="三、正确的写法"></a>三、正确的写法</h3><ol>
+<li>本地锁</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addLock</span><span class="params">(Long modelId)</span> <span class="keyword">throws</span> GseException &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        update(modelId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional(rollbackFor = Exception.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">xxxCopy</span><span class="params">(Long modelId)</span> <span class="keyword">throws</span> GseException &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="comment">//业务逻辑代码</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>分布式锁</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addLock</span><span class="params">(Long modelId)</span> <span class="keyword">throws</span> GseException &#123;</span><br><span class="line">  <span class="type">RLock</span> <span class="variable">lock</span> <span class="operator">=</span> redissonClient.getLock(REDIS_COST_MODEL_ID_LOCK + modelId);</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (lock.tryLock(<span class="number">20</span>, <span class="number">2</span>, TimeUnit.SECONDS)) &#123;</span><br><span class="line">          update(modelId);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          log.error(<span class="string">&quot;获取分布式锁失败&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      <span class="comment">// 判断当前线程是否持有锁</span></span><br><span class="line">      <span class="keyword">if</span> (lock.isHeldByCurrentThread()) &#123;</span><br><span class="line">          <span class="comment">//释放当前锁</span></span><br><span class="line">          lock.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional(rollbackFor = Exception.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(Long modelId)</span> <span class="keyword">throws</span> GseException &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="comment">//业务逻辑代码</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的写法，成功避免了并发问题，<strong>被@Transactional注解的方法，在执行完毕以后，就会提交事务，然后到了调用方法里面，再去释放锁。</strong></p>
+<h3 id="四、使用悲观锁和乐观锁"><a href="#四、使用悲观锁和乐观锁" class="headerlink" title="四、使用悲观锁和乐观锁"></a>四、使用悲观锁和乐观锁</h3><p>问题分析</p>
+<ol>
+<li>请求A：查询状态 → 符合条件 → 更新状态（但数据库卡顿，更新缓慢）</li>
+<li>请求B：在A完成前查询状态 → 看到的状态未被修改 → 也执行更新</li>
+</ol>
+<p>这会导致：</p>
+<ul>
+<li>数据不一致（如重复扣减库存）</li>
+<li>业务逻辑错误（如订单重复支付）</li>
+<li>资源超用（如优惠券被多个用户同时使用）</li>
+</ul>
+<p>解决方案</p>
+<ol>
+<li>事务 + SELECT FOR UPDATE（推荐）</li>
+</ol>
+<p>在事务中使用<code>SELECT FOR UPDATE</code>锁定行，确保更新操作的原子性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateWithLock</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">    <span class="comment">// 使用SELECT FOR UPDATE锁定行</span></span><br><span class="line">    <span class="type">MyData</span> <span class="variable">data</span> <span class="operator">=</span> myDataMapper.selectForUpdate(id);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检查状态</span></span><br><span class="line">    <span class="keyword">if</span> (data.getStatus() == TARGET_STATUS) &#123;</span><br><span class="line">        <span class="comment">// 执行更新</span></span><br><span class="line">        data.setStatus(NEW_STATUS);</span><br><span class="line">        myDataMapper.update(data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SQL映射：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 使用FOR UPDATE锁定行 --&gt;</span><br><span class="line">&lt;select id=&quot;selectForUpdate&quot; resultType=&quot;MyData&quot;&gt;</span><br><span class="line">    SELECT * FROM my_table WHERE id = #&#123;id&#125; FOR UPDATE</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>乐观锁（使用版本号）</li>
+</ol>
+<p>添加版本号字段，每次更新检查版本号：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">updateWithVersion</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">    <span class="type">MyData</span> <span class="variable">data</span> <span class="operator">=</span> myDataMapper.findById(id);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (data.getStatus() != TARGET_STATUS) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 带版本号的更新</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">rows</span> <span class="operator">=</span> myDataMapper.updateWithVersion(</span><br><span class="line">            id,</span><br><span class="line">            NEW_STATUS,</span><br><span class="line">            data.getVersion(),  <span class="comment">// 当前版本</span></span><br><span class="line">            data.getVersion() + <span class="number">1</span> <span class="comment">// 新版本</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> rows &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>SQL映射：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;update id=<span class="string">&quot;updateWithVersion&quot;</span>&gt;</span><br><span class="line">UPDATE my_table</span><br><span class="line"><span class="type">SET</span> <span class="variable">status</span> <span class="operator">=</span> #&#123;newStatus&#125;,</span><br><span class="line">version = #&#123;newVersion&#125;</span><br><span class="line"><span class="type">WHERE</span> <span class="variable">id</span> <span class="operator">=</span> #&#123;id&#125;</span><br><span class="line"><span class="type">AND</span> <span class="variable">version</span> <span class="operator">=</span> #&#123;oldVersion&#125;</span><br><span class="line">&lt;/update&gt;</span><br></pre></td></tr></table></figure>
+
+<p>参考文章：<a target="_blank" rel="noopener" href="https://article.juejin.cn/post/7392104848974528552">记录一次Redisson使用synchronized和分布式锁不生效的原因</a><br>参考文章：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/dalaba/p/17879895.html">悲观锁、乐观锁、mybatis-plus实现乐观锁</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/05/08/Docker%E5%AE%89%E8%A3%85nacos%E4%BD%BF%E7%94%A8mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/05/08/Docker%E5%AE%89%E8%A3%85nacos%E4%BD%BF%E7%94%A8mysql/" itemprop="url">Docker安装nacos使用mysql</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-05-08T14:03:23+08:00">
+                2025-05-08
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>要在 Docker 中安装并运行 Nacos 服务器并使用 MySQL 作为其数据库，您可以遵循以下步骤。Nacos 是一个更易于构建云原生应用的动态服务发现、配置和服务管理平台，它支持多种数据库作为其存储后端，包括 MySQL。</p>
+<h3 id="步骤-1-安装-Docker"><a href="#步骤-1-安装-Docker" class="headerlink" title="步骤 1: 安装 Docker"></a>步骤 1: 安装 Docker</h3><p>确保您的系统上已安装 Docker。您可以通过以下命令检查 Docker 是否已安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker --version</span><br></pre></td></tr></table></figure>
+
+<p>如果未安装，请访问 <a target="_blank" rel="noopener" href="https://docs.docker.com/get-docker/">Docker 官网</a> 获取安装指南。</p>
+<h3 id="步骤-2-启动-MySQL-容器"><a href="#步骤-2-启动-MySQL-容器" class="headerlink" title="步骤 2: 启动 MySQL 容器"></a>步骤 2: 启动 MySQL 容器</h3><p>首先，您需要运行一个 MySQL 容器。可以使用官方的 MySQL 镜像。创建一个名为 <code>nacos-mysql</code> 的容器，并为它设置一些环境变量，例如 root 用户的密码和数据库名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nacos-mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:5.7</span><br></pre></td></tr></table></figure>
+
+<p>这条命令会启动一个 MySQL 5.7 容器，root 密码设置为 <code>root</code>，并且将容器的 3306 端口映射到宿主机的 3306 端口。</p>
+<h3 id="步骤-3-创建-Nacos-所需的数据库和用户"><a href="#步骤-3-创建-Nacos-所需的数据库和用户" class="headerlink" title="步骤 3: 创建 Nacos 所需的数据库和用户"></a>步骤 3: 创建 Nacos 所需的数据库和用户</h3><p>登录到 MySQL 容器中，并创建一个数据库和用户供 Nacos 使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it nacos-mysql mysql -uroot -p</span><br></pre></td></tr></table></figure>
+
+<p>输入密码后，执行以下 SQL 命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE nacos DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;CREATE USER &#x27;nacos&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;nacos&#x27;;GRANT ALL PRIVILEGES ON nacos.* TO &#x27;nacos&#x27;@&#x27;%&#x27;;FLUSH PRIVILEGES;EXIT;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-4-拉取并运行-Nacos-容器"><a href="#步骤-4-拉取并运行-Nacos-容器" class="headerlink" title="步骤 4: 拉取并运行 Nacos 容器"></a>步骤 4: 拉取并运行 Nacos 容器</h3><p>接下来，拉取 Nacos 的官方 Docker 镜像并运行它，指定使用 MySQL 作为存储：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nacos -e MODE=standalone -e MYSQL_SERVICE_HOST=nacos-mysql -e MYSQL_SERVICE_PORT=3306 -e MYSQL_SERVICE_DB_NAME=nacos -e MYSQL_SERVICE_USER=nacos -e MYSQL_SERVICE_PASSWORD=nacos -p 8848:8848 -d nacos/nacos-server:latest</span><br></pre></td></tr></table></figure>
+
+<p>这条命令会启动一个 Nacos 容器，配置为使用上面创建的 MySQL 数据库。<code>MYSQL_SERVICE_HOST</code> 应与 MySQL 容器的名称相同（这里是 <code>nacos-mysql</code>），而 <code>MYSQL_SERVICE_PORT</code> 是 MySQL 容器的端口（这里是 <code>3306</code>）。确保这些值与您在步骤 2 中设置的相匹配。</p>
+<h3 id="步骤-5-验证-Nacos-是否正常运行"><a href="#步骤-5-验证-Nacos-是否正常运行" class="headerlink" title="步骤 5: 验证 Nacos 是否正常运行"></a>步骤 5: 验证 Nacos 是否正常运行</h3><p>打开浏览器，访问 <code>http://localhost:8848/nacos</code>，默认用户名和密码都是 <code>nacos</code>。如果一切设置正确，您应该能够看到 Nacos 的管理界面。</p>
+<p>通过以上步骤，您就可以在 Docker 中成功安装并运行 Nacos 服务器，使用 MySQL 作为其存储后端了。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/04/18/Docker%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%AE%B9%E5%99%A8%E5%90%8D%E7%A7%B0%E8%BF%9B%E8%A1%8C%E8%BF%9E%E6%8E%A5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1289,247 +1562,6 @@
 <li><p><strong>平滑停止Nginx服务</strong> nginx -s quit</p>
 </li>
 </ul>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/07/25/SpringBoot%E7%9B%91%E5%90%ACRedis%E8%BF%87%E6%9C%9Fkey/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/07/25/SpringBoot%E7%9B%91%E5%90%ACRedis%E8%BF%87%E6%9C%9Fkey/" itemprop="url">SpringBoot监听Redis过期key</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-07-25T19:22:22+08:00">
-                2024-07-25
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>在SpringBoot项目中配置Redis的过期提醒，通过修改<code>redis.conf</code>或命令行设置<code>notify-keyspace-events</code>，并创建自定义的Redis消息监听器来处理过期事件。</p>
-</blockquote>
-<h3 id="一、开启Redis-key过期提醒"><a href="#一、开启Redis-key过期提醒" class="headerlink" title="一、开启Redis key过期提醒"></a>一、开启Redis key过期提醒</h3><ul>
-<li>方式一：修改redis.conf配置文件</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">默认 notify-keyspace-events <span class="string">&quot;&quot;</span></span></span><br><span class="line">notify-keyspace-events Ex</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>方式二：命令行开启</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONFIG SET notify-keyspace-events Ex</span><br><span class="line">CONFIG GET notify-keyspace-events</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="二、项目导入redis依赖"><a href="#二、项目导入redis依赖" class="headerlink" title="二、项目导入redis依赖"></a>二、项目导入redis依赖</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="三、配置config配置类"><a href="#三、配置config配置类" class="headerlink" title="三、配置config配置类"></a>三、配置config配置类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisListenerConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	RedisMessageListenerContainer <span class="title function_">container</span><span class="params">(RedisConnectionFactory connectionFactory)</span> &#123;</span><br><span class="line">		<span class="type">RedisMessageListenerContainer</span> <span class="variable">container</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RedisMessageListenerContainer</span>();</span><br><span class="line">		container.setConnectionFactory(connectionFactory);</span><br><span class="line">		<span class="keyword">return</span> container;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="四、配置监听代码"><a href="#四、配置监听代码" class="headerlink" title="四、配置监听代码"></a>四、配置监听代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">KeyExpiredListener</span> <span class="keyword">extends</span> <span class="title class_">KeyExpirationEventMessageListener</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">KeyExpiredListener</span><span class="params">(RedisMessageListenerContainer listenerContainer)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(listenerContainer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(Message message, <span class="type">byte</span>[] pattern)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">channel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(message.getChannel(), StandardCharsets.UTF_8);</span><br><span class="line">        <span class="comment">// 过期的key</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(message.getBody(), StandardCharsets.UTF_8);</span><br><span class="line">        log.info(<span class="string">&quot;redis key 过期：pattern=&#123;&#125;,channel=&#123;&#125;,key=&#123;&#125;&quot;</span>, <span class="keyword">new</span> <span class="title class_">String</span>(pattern), channel, key);</span><br><span class="line">        <span class="keyword">if</span> (key.equals(INVEST_WS_EXPIRED_KEY)) &#123;</span><br><span class="line">            <span class="comment">// 处理业务逻辑...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/07/20/Mac%E4%B8%8A%E4%BD%BF%E7%94%A8homebrew%E5%AE%89%E8%A3%85nvm/" itemprop="url">Mac上使用homebrew安装nvm</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-07-20T16:04:55+08:00">
-                2024-07-20
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>NVM（Node Version Manager）是一个用于在基于Linux系统上安装和管理Node.js的shell脚本。macOS用户可以使用<code>homebrew</code>来安装NVM。</p>
-</blockquote>
-<p>安装Homebrew（如果你还没有安装）：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>卸载现有node版本</li>
-</ol>
-<p>如果你的系统已经安装了node，请先卸载它。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew uninstall --ignore-dependencies node </span><br><span class="line">brew uninstall --force node </span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>使用Homebrew安装nvm：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install nvm</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>将nvm初始化脚本添加到你的shell配置文件中。如果你使用的是zsh，那么你需要在你的<code>~/.zshrc</code>文件中添加以下行：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="subst">$([ -z <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME-&#125;</span>&quot;</span> ] &amp;&amp; printf %s <span class="string">&quot;<span class="variable">$&#123;HOME&#125;</span>/.nvm&quot;</span> || printf %s <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME&#125;</span>/nvm&quot;</span>)</span>&quot;</span></span><br><span class="line">[ -s <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> <span class="comment"># This loads nvm</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li>使更改生效，你可以重新启动你的终端，或者运行以下命令：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<ol start="5">
-<li>验证nvm安装成功：</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
-
-<p>以上步骤将会在你的macOS系统上安装nvm，并且设置zsh使其能够识别nvm命令。</p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">nvm -v //查看nvm版本</span><br><span class="line">nvm <span class="built_in">ls</span> //查看本机已经安装node版本</span><br><span class="line">nvm use 切换到指定版本node</span><br><span class="line">nvm ls-remote //列出所有可安装的远程node版本</span><br><span class="line">nvm install stable    //安装最新版本</span><br><span class="line">nvm install &lt;version&gt; //安装指定版本</span><br><span class="line">nvm uninstall stable   //卸载最新版本</span><br><span class="line">nvm uninstall &lt;version&gt;   //卸载指定版本</span><br><span class="line">nvm current //查看当前使用的node版本</span><br><span class="line">npm <span class="built_in">which</span> [current|&lt;version&gt;] //显示已安装node的安装路径。</span><br><span class="line">nvm cache <span class="built_in">dir</span> //显示nvm的缓存目录</span><br><span class="line">nvm cache clear //清楚nvm的缓存目录</span><br><span class="line">nvm node_mirror [url] //设置node镜像</span><br><span class="line">nvm npm_mirror [url] //设置npm镜像</span><br><span class="line">nvm on //开启node.js版本管理</span><br><span class="line">nvm off //关闭node.js版本管理</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">更新npm到最新版本</span><br><span class="line">npm install -g npm@latest</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="踩坑记录："><a href="#踩坑记录：" class="headerlink" title="踩坑记录："></a>踩坑记录：</h3><p>终端安装好了nvm和node，但是在vscode打开后无法执行命令，需要在<code> vi ~/.zshrc</code>加入<code>export PATH=&quot;~/.composer/vendor/bin:$PATH&quot;</code></p>
-<h3 id="参考文章："><a href="#参考文章：" class="headerlink" title="参考文章："></a>参考文章：</h3><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7083026831263137800">如何在macOS上安装NVM</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/famensaodiseng/p/10427673.html">Mac下安装nvm后vscode输入node -v不起作用</a></p>
 
           
         
