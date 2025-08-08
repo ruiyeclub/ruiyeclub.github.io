@@ -234,6 +234,130 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/08/12/%E4%BD%BF%E7%94%A8ohttps%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2https%E8%AF%81%E4%B9%A6/" itemprop="url">使用ohttps自动部署https证书</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-08-12T13:03:01+08:00">
+                2024-08-12
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>在使用第三方托管网站做个人网站，例如：Github Pages，想要给网站加上https，可以通过ohttps来创建Let’s Encrypt的https证书，单纯想给网站加上https也可以。</p>
+</blockquote>
+<h3 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h3><p>先确保服务器(我这里是win服务器)已经安装了<a target="_blank" rel="noopener" href="https://nginx.org/en/download.html">nginx</a>，选择适合自己的版本，然后下载解压到服务器上，双击运行nginx.exe，访问服务器ip地址，出现Welcome to Nginx!则表示安装启动成功。</p>
+<h3 id="使用ohttps部署ssl证书"><a href="#使用ohttps部署ssl证书" class="headerlink" title="使用ohttps部署ssl证书"></a>使用ohttps部署ssl证书</h3><ol>
+<li>创建证书</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124550577.png" alt="image-20240812124550577"></p>
+<ol start="2">
+<li>需要在自己域名管理解析中加入ohttps的记录</li>
+</ol>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812124657919.png" alt="image-20240812124657919"></p>
+<ol start="3">
+<li>在nginx配置中需要ssl_certificate_key和ssl_certificate</li>
+</ol>
+<p><strong>ssl_certificate_key</strong>: 私钥文件通常包含与SSL证书配对的私钥，用于加密和解密通信中的数据，文件后缀.key，内容开头—–BEGIN RSA PRIVATE KEY—–</p>
+<p><strong>ssl_certificate</strong>: SSL证书文件包含用于验证服务器身份的公钥以及相关信息，如服务器的域名和证书颁发机构（CA）的签名，文件后缀为.crt或者是.pem，内容开头—–BEGIN CERTIFICATE—–</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240812125505357.png" alt="image-20240812125505357"></p>
+<p>下载这两个文件，然后存放到服务器上</p>
+<h3 id="配置Nginx-conf"><a href="#配置Nginx-conf" class="headerlink" title="配置Nginx.conf"></a>配置Nginx.conf</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    server_names_hash_bucket_size 64;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 443 ssl;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name wechat.ruiyeclub.cn;</span><br><span class="line"></span><br><span class="line">        ssl_certificate      绝对路径/key/fullchain.pem;</span><br><span class="line">        ssl_certificate_key  路径/key/cert.key;</span><br><span class="line">        ssl_session_cache    shared:SSL:1m;</span><br><span class="line">        ssl_session_timeout  5m;</span><br><span class="line">        ssl_ciphers  HIGH:!aNULL:!MD5;</span><br><span class="line">        ssl_prefer_server_ciphers  on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://localhost:8080;</span><br><span class="line">            proxy_set_header Host $host;</span><br><span class="line">            proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">            proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx常用命令"><a href="#Nginx常用命令" class="headerlink" title="Nginx常用命令"></a>Nginx常用命令</h3><ul>
+<li><p><strong>启动Nginx服务</strong> nginx</p>
+</li>
+<li><p><strong>停止Nginx服务</strong> nginx -s stop</p>
+</li>
+<li><p><strong>检测配置文件的正确性</strong> nginx -t</p>
+</li>
+<li><p><strong>重新加载Nginx配置文件</strong> nginx -s reload</p>
+</li>
+<li><p><strong>查看Nginx版本信息</strong> nginx -v</p>
+</li>
+<li><p><strong>平滑停止Nginx服务</strong> nginx -s quit</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/07/25/SpringBoot%E7%9B%91%E5%90%ACRedis%E8%BF%87%E6%9C%9Fkey/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1488,153 +1612,6 @@
 <p>假如我们想要99%的打包成功率，可以设置Max Priority Fee为0.1，设置max fee为26。</p>
 <p>参考文章：<a target="_blank" rel="noopener" href="https://www.wwsww.cn/qianbao/9482.html">MetaMask钱包已支持EIP-1559，一次了解调整优先费、进阶设置</a><br>参考文章：<a target="_blank" rel="noopener" href="https://mirror.xyz/looplove.eth/SOhMBCF_Z4vIWFHu4r8fpdBaLMhRTBCvNj6i5d4pNMU">Web3.0学习树|3.区块链通识 Ⅲ</a></p>
 <p>内容来源：<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Qpq00RGT5Bc">油管</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/01/10/Linux%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%83%A8%E7%BD%B2Python%E8%84%9A%E6%9C%AC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/01/10/Linux%E7%8E%AF%E5%A2%83%E4%B8%8B%E9%83%A8%E7%BD%B2Python%E8%84%9A%E6%9C%AC/" itemprop="url">Linux环境下部署Python脚本</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-01-10T14:32:41+08:00">
-                2024-01-10
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>系统用的是Centos，自带了python环境，考虑到后期维护使用virtualenv虚拟环境来为应用创建”隔离”的python运行环境。</p>
-<p>virtualenv虚拟环境是一个创建隔绝的Python环境的工具。</p>
-</blockquote>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240110124003769.png" alt="image-20240110124003769"></p>
-<ul>
-<li><strong>隔离性</strong>：virtualenv可以创建一个隔离的环境，这个环境与其他Python环境（如系统环境或全局环境）完全隔离。这意味着，在这个环境中安装的包不会影响其他环境，反之亦然。这有助于解决不同项目之间的依赖冲突问题。</li>
-<li><strong>易于管理</strong>：每个虚拟环境都有自己的<code>pip</code>版本，这意味着你可以为每个项目安装特定版本的<code>pip</code>。此外，每个环境都有自己的Python解释器，这使得版本控制变得简单。</li>
-<li><strong>安全性</strong>：由于每个环境都是隔离的，因此在一个环境中安装的包不会影响其他环境。这意味着在一个环境中安装的恶意包不会影响其他环境。</li>
-<li><strong>灵活性</strong>：你可以为不同的项目创建不同的虚拟环境，每个环境都有自己的Python解释器和pip版本。这使得你可以根据项目的需求来配置环境。</li>
-<li><strong>易于使用</strong>：virtualenv易于安装和使用。你只需要在命令行中输入一些命令就可以创建新的环境，安装包等。这对于初学者来说非常友好。</li>
-</ul>
-<h3 id="一、部署项目"><a href="#一、部署项目" class="headerlink" title="一、部署项目"></a>一、部署项目</h3><p>1.导出项目所需要的依赖包</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip freeze &gt; requements.txt</span><br></pre></td></tr></table></figure>
-
-<p>2.创建python虚拟环境（env_name当前环境的名称）</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m venv env_name</span><br></pre></td></tr></table></figure>
-
-<p>创建后会生成一个文件夹，里面包含了项目运行所需要的环境</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240110125725202.png" alt="image-20240110125725202"></p>
-<p>3.启动虚拟环境</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source env_name/bin/activate</span><br></pre></td></tr></table></figure>
-
-<p>3.启动python脚本</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install -r requements.txt # 先导入依赖包</span><br><span class="line">python xx.py # 运行程序文件</span><br></pre></td></tr></table></figure>
-
-<p>4.关闭虚拟环境命令</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="二、后台运行python脚本"><a href="#二、后台运行python脚本" class="headerlink" title="二、后台运行python脚本"></a>二、后台运行python脚本</h2><p>1.nohup命令可以使你在注销账户或关闭终端时，程序仍然保持运行。该命令的基本语法为：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nohup python your_program.py &amp;</span><br><span class="line">或者：nohup python your_program.py &gt;app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-
-<p>&amp;1是一个指向标准输出的指针，2是标准错误输出的文件描述符，该命令会将标准输出和标准错误写入到app.log</p>
-<p>2.其中，<code>your_program.py</code>为需要后台运行的Python程序文件名，<code>&amp;</code>符号表示在后台运行程序。运行上述命令后，你可以看到如下输出：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup: ignoring input and appending output to &#x27;nohup.out&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>3.这意味着你的Python程序已经在后台运行，并将输出信息保存在nohup.out文件中。你可以使用<code>tail</code>命令跟踪该文件以查看程序输出信息。如果你想停止程序的运行，可以使用<code>kill</code>命令。示例代码如下：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tail -f nohup.out</span><br><span class="line">kill PID</span><br></pre></td></tr></table></figure>
-
-<p>4.其中，<code>PID</code>为你程序的进程ID，在运行<code>nohup</code>命令后你可以使用：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep python # 命令查找进程ID。</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="三、升级python版本"><a href="#三、升级python版本" class="headerlink" title="三、升级python版本"></a>三、升级python版本</h2><p>1.<a href="%5Bwww.python.org/downloads/%5D(https://link.juejin.cn/?target=https://www.python.org/downloads/)">官网下载安装包</a></p>
-<p>2.解压：<code>tar  -xf   Python-3.10.4.tgz</code></p>
-<p>3.进入解压后的目录：<code>./configure &amp;&amp; make &amp;&amp; make install </code></p>
-<p>4.先找到python文件，准备创建软链接</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20240119145905288.png" alt="image-20240119145905288"></p>
-<p>5.创建软连接（&#x2F;usr&#x2F;local&#x2F;bin&#x2F;python3.10是存放python文件目录）</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -sf /usr/local/bin/python3.10 /usr/bin/python</span><br><span class="line">ln -sf /usr/local/bin/python3.10-config /usr/bin/python-config</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="四、踩坑记录"><a href="#四、踩坑记录" class="headerlink" title="四、踩坑记录"></a>四、踩坑记录</h2><p>1.使用nohup命令后，日志文件内没有日志输出，我遇到的问题是存在输出缓存，通过修改启动命令解决：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup python -u your_program.py &gt;app.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
-
-<p>参考文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xunfengdumo/article/details/132448270">Python nohup 启动python脚本，后台没有日志</a></p>
 
           
         
