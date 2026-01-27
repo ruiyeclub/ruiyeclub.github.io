@@ -234,6 +234,153 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2026/01/27/%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3-HikariCP-%E7%BA%BF%E7%A8%8B%E9%A5%A5%E9%A5%BF%EF%BC%9AThread-starvation-or-clock-leap-detected-housekeeper-delta-41m37s/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2026/01/27/%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3-HikariCP-%E7%BA%BF%E7%A8%8B%E9%A5%A5%E9%A5%BF%EF%BC%9AThread-starvation-or-clock-leap-detected-housekeeper-delta-41m37s/" itemprop="url">彻底解决 HikariCP 线程饥饿：Thread starvation or clock leap detected (housekeeper delta=41m37s...)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2026-01-27T16:15:30+08:00">
+                2026-01-27
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260127160905820.png" alt="image-20260127160905820"></p>
+<p>看到这个错误信息，第一反应可能是数据库连接池出问题了，但实际上 <strong>“Thread starvation or clock leap detected”</strong> 是一个典型的“系统健康状况”报警。</p>
+<p>数据库 housekeeper 线程延迟了 <strong>41 分钟</strong>（delta&#x3D;41m37s），这意味着在长达 41 分钟的时间里，HikariCP 的管理线程完全没有机会执行。</p>
+<h2 id="1-深度复盘：41-分钟到底发生了什么？"><a href="#1-深度复盘：41-分钟到底发生了什么？" class="headerlink" title="1. 深度复盘：41 分钟到底发生了什么？"></a>1. 深度复盘：41 分钟到底发生了什么？</h2><p>在 8核 16G 的高性能服务器上，出现秒级的延迟尚可理解，但 <strong>41 分钟</strong>的停滞通常指向以下三个非代码层面的原因：</p>
+<ul>
+<li><strong>系统进入休眠（最常见于开发环境）：</strong> 如果你在本地 Docker 运行应用，电脑进入睡眠模式，系统时钟会暂停。唤醒后，HikariCP 发现时间“跳变”了，便会发出警报。</li>
+<li><strong>云服务器 CPU 积分耗尽：</strong> 如果使用突发型实例（如 AWS t系列、阿里 t系列），积分耗尽后 CPU 会被强制压制到极低性能，应用几乎处于“封印”状态。</li>
+<li><strong>严重的 Stop-The-World (STW) GC：</strong> 由于未限制 JVM 内存，Java 8 可能会因为申请不到物理内存而频繁触发超长 Full GC，或者在 Swap（交换分区）中挣扎。</li>
+</ul>
+<hr>
+<h2 id="2-诊断你的配置瓶颈"><a href="#2-诊断你的配置瓶颈" class="headerlink" title="2. 诊断你的配置瓶颈"></a>2. 诊断你的配置瓶颈</h2><p>通过分析你之前的配置，我们发现了几个“不匹配”的风险点：</p>
+<table>
+<thead>
+<tr>
+<th><strong>模块</strong></th>
+<th><strong>当前痛点</strong></th>
+<th><strong>风险</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>JVM</strong></td>
+<td>未指定 <code>-Xmx</code></td>
+<td>Java 8 在 Docker 中会误判内存，导致 OOM 或频繁 Full GC。</td>
+</tr>
+<tr>
+<td><strong>Undertow</strong></td>
+<td>Worker 线程 (200) 过多</td>
+<td>线程上下文切换开销大，且远超数据库连接池处理能力。</td>
+</tr>
+<tr>
+<td><strong>Undertow</strong></td>
+<td>Buffer Size (1024) 太小</td>
+<td>高并发下 I&#x2F;O 吞吐量受限。</td>
+</tr>
+<tr>
+<td><strong>HikariCP</strong></td>
+<td>连接池 (5~20) 动态伸缩</td>
+<td>频繁创建&#x2F;销毁连接会产生性能抖动，建议固定大小。</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-生产级优化方案-8核-16G-环境"><a href="#3-生产级优化方案-8核-16G-环境" class="headerlink" title="3. 生产级优化方案 (8核 16G 环境)"></a>3. 生产级优化方案 (8核 16G 环境)</h2><h3 id="3-1-优化-Dockerfile：赋予-JVM-“超能力”"><a href="#3-1-优化-Dockerfile：赋予-JVM-“超能力”" class="headerlink" title="3.1 优化 Dockerfile：赋予 JVM “超能力”"></a>3.1 优化 Dockerfile：赋予 JVM “超能力”</h3><p>不要让 Java 盲目猜测内存。针对 16G 宿主机，我们分配 8G 堆内存，并启用更适合大内存的 <strong>G1 垃圾回收器</strong>。</p>
+<p>Dockerfile</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">FROM</span> <span class="string">amazoncorretto:8</span></span><br><span class="line"><span class="string">LABEL</span> <span class="string">maintainer=&quot;Ray&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置时区</span></span><br><span class="line"><span class="string">ENV</span> <span class="string">TZ=Asia/Shanghai</span></span><br><span class="line"><span class="string">RUN</span> <span class="string">ln</span> <span class="string">-snf</span> <span class="string">/usr/share/zoneinfo/$TZ</span> <span class="string">/etc/localtime</span> <span class="string">&amp;&amp;</span> <span class="string">echo</span> <span class="string">$TZ</span> <span class="string">&gt;</span> <span class="string">/etc/timezone</span></span><br><span class="line"></span><br><span class="line"><span class="string">COPY</span> <span class="string">boot-stock.jar</span> <span class="string">app.jar</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 关键：显式指定内存与 GC 策略</span></span><br><span class="line"><span class="string">ENTRYPOINT</span> [<span class="string">&quot;java&quot;</span>, <span class="string">\</span></span><br><span class="line">            <span class="string">&quot;-Xms8g&quot;</span>, <span class="string">\</span></span><br><span class="line">            <span class="string">&quot;-Xmx8g&quot;</span>, <span class="string">\</span></span><br><span class="line">            <span class="string">&quot;-XX:+UseG1GC&quot;</span>, <span class="string">\</span></span><br><span class="line">            <span class="string">&quot;-XX:MaxGCPauseMillis=200&quot;</span>, <span class="string">\</span></span><br><span class="line">            <span class="string">&quot;-Djava.security.egd=file:/dev/./urandom&quot;</span>, <span class="string">\</span></span><br><span class="line">            <span class="string">&quot;-jar&quot;</span>, <span class="string">\</span></span><br><span class="line">            <span class="string">&quot;/app.jar&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="string">EXPOSE</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-优化-YAML：平衡-Web-与-数据库"><a href="#3-2-优化-YAML：平衡-Web-与-数据库" class="headerlink" title="3.2 优化 YAML：平衡 Web 与 数据库"></a>3.2 优化 YAML：平衡 Web 与 数据库</h3><p>将 Undertow 的处理能力与 HikariCP 的承受能力相匹配，避免“交通拥堵”。</p>
+<p>YAML</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">undertow:</span></span><br><span class="line">    <span class="attr">threads:</span></span><br><span class="line">      <span class="attr">io:</span> <span class="number">8</span>           <span class="comment"># 匹配 CPU 核心数</span></span><br><span class="line">      <span class="attr">worker:</span> <span class="number">128</span>     <span class="comment"># 适度调低，减少上下文切换</span></span><br><span class="line">    <span class="attr">buffer-size:</span> <span class="number">16384</span> <span class="comment"># 提升至 16KB</span></span><br><span class="line">    <span class="attr">direct-buffers:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">hikari:</span></span><br><span class="line">      <span class="attr">pool-name:</span> <span class="string">DatebookHikariCP</span></span><br><span class="line">      <span class="comment"># 8核环境建议连接池设为核心数的 4 倍左右，并保持固定</span></span><br><span class="line">      <span class="attr">minimum-idle:</span> <span class="number">32</span></span><br><span class="line">      <span class="attr">maximum-pool-size:</span> <span class="number">32</span></span><br><span class="line">      <span class="attr">auto-commit:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">idle-timeout:</span> <span class="number">30000</span></span><br><span class="line">      <span class="attr">max-lifetime:</span> <span class="number">1800000</span> <span class="comment"># 30分钟</span></span><br><span class="line">      <span class="attr">connection-timeout:</span> <span class="number">30000</span></span><br><span class="line">      <span class="comment"># 现代驱动不再建议使用 connection-test-query</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-终极排查清单"><a href="#4-终极排查清单" class="headerlink" title="4. 终极排查清单"></a>4. 终极排查清单</h2><p>如果优化配置后，报错依然存在且 <code>delta</code> 依然巨大，请执行以下操作：</p>
+<ol>
+<li><strong>排查宿主机状态：</strong> 执行 <code>top</code> 命令查看 <code>%st</code> (Steal Time)。如果该值很高，说明你的云服务商在限制你的 CPU。</li>
+<li><strong>监控 GC 情况：</strong> 在容器内运行 <code>jstat -gcutil &lt;pid&gt; 1000</code>，观察 <code>FGC</code>（Full GC 次数）和 <code>FGCT</code>（Full GC 总时间）。</li>
+<li><strong>检查 Docker 限制：</strong> 确保 Docker 启动命令中没有设置过小的 <code>--memory</code> 限制（例如只给了容器 512MB，但你 JVM 却想申请 8GB）。</li>
+</ol>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>“Thread starvation”通常是系统资源告急的求救信号。通过<strong>固定连接池大小</strong>、<strong>合理限制 JVM 堆内存</strong>以及<strong>选择现代 GC 算法</strong>，你可以规避 90% 的性能抖动。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/12/08/%F0%9F%9A%80Tomcat%E5%AF%B9%E6%AF%94Undertow%EF%BC%9A%E9%AB%98%E6%80%A7%E8%83%BDWeb%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E9%80%89%E6%8B%A9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1532,115 +1679,6 @@
   <hr/>
 
     
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2024/10/16/Docker%E6%90%AD%E5%BB%BA%E5%92%8C%E9%83%A8%E7%BD%B2%E7%A6%85%E9%81%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/10/16/Docker%E6%90%AD%E5%BB%BA%E5%92%8C%E9%83%A8%E7%BD%B2%E7%A6%85%E9%81%93/" itemprop="url">Docker搭建和部署禅道</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2024-10-16T13:59:25+08:00">
-                2024-10-16
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>禅道项目管理工具提供了丰富的功能模块，包括任务管理、需求管理、Bug跟踪、版本控制、团队协作、项目报表等，这些功能覆盖了项目管理的各个方面。全面的功能模块使得项目团队可以在一个统一的平台上进行协同工作，无需再整合多个系统，从而提高了工作效率。</p>
-</blockquote>
-<p>公司使用禅道来管理项目需求、进度以及Bug测试，新版禅道添加了很多功能，这里我搭建使用的是老版本12.5.3。</p>
-<h3 id="Docker拉取禅道镜像"><a href="#Docker拉取禅道镜像" class="headerlink" title="Docker拉取禅道镜像"></a>Docker拉取禅道镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull idoop/zentao:12.5.3</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016134837422.png" alt="image-20241016134837422"></p>
-<h3 id="运行禅道容器"><a href="#运行禅道容器" class="headerlink" title="运行禅道容器"></a>运行禅道容器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run --privileged=true -d -p 8082:80 -p 3316:3306 \</span><br><span class="line">        -e ADMINER_USER=&quot;admin&quot; -e ADMINER_PASSWD=&quot;123456&quot; \</span><br><span class="line">        -v /dockerdatafile/chandao/:/opt/zbox/ \</span><br><span class="line">        --name zentao-server \</span><br><span class="line">        idoop/zentao:12.5.3</span><br></pre></td></tr></table></figure>
-
-<p>参数说明：</p>
-<ul>
-<li><p>ADMINER_USER：指定禅道管理员账号</p>
-</li>
-<li><p>ADMINER_PASSWD：指定禅道管理员首次登录密码</p>
-</li>
-</ul>
-<h3 id="访问禅道"><a href="#访问禅道" class="headerlink" title="访问禅道"></a>访问禅道</h3><p>浏览器访问宿主机器地址加8082端口，登录使用用户名 admin，密码 123456</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016135156614.png" alt="image-20241016135156614"></p>
-<h3 id="使用1Panel创建网站"><a href="#使用1Panel创建网站" class="headerlink" title="使用1Panel创建网站"></a>使用1Panel创建网站</h3><p>可通过域名进行访问</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20241016135651301.png" alt="image-20241016135651301"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
   </section>
 
   
@@ -1771,7 +1809,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright" style="display: inline-block">&copy; 2022 &mdash; <span itemprop="copyrightYear">2025</span>
+        <div class="copyright" style="display: inline-block">&copy; 2022 &mdash; <span itemprop="copyrightYear">2026</span>
   <span class="author" itemprop="copyrightHolder">Cr.</span>
 
   
