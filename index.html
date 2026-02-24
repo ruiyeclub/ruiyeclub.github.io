@@ -234,6 +234,173 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2026/02/24/SpringBoot%E9%9B%86%E6%88%90RabbitMQ%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2026/02/24/SpringBoot%E9%9B%86%E6%88%90RabbitMQ%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" itemprop="url">Spring Boot集成RabbitMQ消息队列</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2026-02-24T22:51:37+08:00">
+                2026-02-24
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>在两个Spring Boot项目中集成RabbitMQ，实现可靠的消息生产与消费。我们将使用Docker快速搭建RabbitMQ环境，并构建一个完整可用的消息队列系统。</p>
+</blockquote>
+<h2 id="一、快速搭建RabbitMQ环境"><a href="#一、快速搭建RabbitMQ环境" class="headerlink" title="一、快速搭建RabbitMQ环境"></a>一、快速搭建RabbitMQ环境</h2><p>首先，我们使用Docker一键部署RabbitMQ服务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  -p 15672:15672 \</span><br><span class="line">  -p 5672:5672 \</span><br><span class="line">  --restart=always \</span><br><span class="line">  -e RABBITMQ_DEFAULT_USER=admin \</span><br><span class="line">  -e RABBITMQ_DEFAULT_PASS=admin \</span><br><span class="line">  --name rabbitmq \</span><br><span class="line">  --network=1panel-network \</span><br><span class="line">  --hostname=rabbitmqhost \</span><br><span class="line">  rabbitmq:management</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明：</strong></p>
+<ul>
+<li><code>-p 15672:15672</code>：管理界面端口</li>
+<li><code>-p 5672:5672</code>：消息通信端口</li>
+<li><code>--restart=always</code>：容器自动重启</li>
+<li><code>-e</code>：环境变量，设置默认账号密码</li>
+<li><code>--network</code>：指定网络（使用1panel-network）</li>
+<li><code>rabbitmq:management</code>：带Web管理界面的版本</li>
+</ul>
+<p>启动后访问：<a target="_blank" rel="noopener" href="http://localhost:15672/">http://localhost:15672</a>，使用admin&#x2F;admin登录即可看到管理界面。</p>
+<h2 id="二、项目依赖配置"><a href="#二、项目依赖配置" class="headerlink" title="二、项目依赖配置"></a>二、项目依赖配置</h2><h3 id="1-添加Maven依赖"><a href="#1-添加Maven依赖" class="headerlink" title="1. 添加Maven依赖"></a>1. 添加Maven依赖</h3><p>在两个Spring Boot项目的<code>pom.xml</code>中添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-统一配置文件"><a href="#2-统一配置文件" class="headerlink" title="2. 统一配置文件"></a>2. 统一配置文件</h3><p>在两个项目的<code>application.yml</code>中配置RabbitMQ连接：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    host: localhost          # RabbitMQ服务器地址</span><br><span class="line">    port: 5672               # 消息通信端口</span><br><span class="line">    username: admin          # 管理界面设置的用户名</span><br><span class="line">    password: admin          # 密码</span><br><span class="line">    virtual-host: /          # 虚拟主机</span><br><span class="line">    # 生产者确认配置</span><br><span class="line">    publisher-confirm-type: correlated</span><br><span class="line">    publisher-returns: true</span><br><span class="line">    </span><br><span class="line">    listener:</span><br><span class="line">      simple:</span><br><span class="line">        acknowledge-mode: auto  # 自动确认</span><br><span class="line">        prefetch: 10            # 每次预取消息数</span><br><span class="line">        concurrency: 3          # 最小并发消费者</span><br><span class="line">        max-concurrency: 10     # 最大并发消费者</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、生产者服务设计"><a href="#三、生产者服务设计" class="headerlink" title="三、生产者服务设计"></a>三、生产者服务设计</h2><h3 id="1-RabbitMQ配置类"><a href="#1-RabbitMQ配置类" class="headerlink" title="1. RabbitMQ配置类"></a>1. RabbitMQ配置类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitMQConfig</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 交换机和队列常量定义</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEMO_EXCHANGE</span> <span class="operator">=</span> <span class="string">&quot;demo.direct.exchange&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEMO_QUEUE</span> <span class="operator">=</span> <span class="string">&quot;demo.message.queue&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEMO_ROUTING_KEY</span> <span class="operator">=</span> <span class="string">&quot;demo.routing.key&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建直连交换机</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> DirectExchange <span class="title function_">demoExchange</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ExchangeBuilder</span><br><span class="line">                .directExchange(DEMO_EXCHANGE)</span><br><span class="line">                .durable(<span class="literal">true</span>)      <span class="comment">// 持久化</span></span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建消息队列</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Queue <span class="title function_">demoQueue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> QueueBuilder</span><br><span class="line">                .durable(DEMO_QUEUE)</span><br><span class="line">                .withArgument(<span class="string">&quot;x-dead-letter-exchange&quot;</span>, <span class="string">&quot;&quot;</span>)  <span class="comment">// 死信交换机</span></span><br><span class="line">                .withArgument(<span class="string">&quot;x-dead-letter-routing-key&quot;</span>, <span class="string">&quot;demo.dlq&quot;</span>)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 绑定队列到交换机</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Binding <span class="title function_">demoBinding</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> BindingBuilder</span><br><span class="line">                .bind(demoQueue())</span><br><span class="line">                .to(demoExchange())</span><br><span class="line">                .with(DEMO_ROUTING_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// JSON消息转换器</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MessageConverter <span class="title function_">jsonMessageConverter</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonMessageConverter</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-生产者服务实现"><a href="#2-生产者服务实现" class="headerlink" title="2. 生产者服务实现"></a>2. 生产者服务实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MessageProducerService</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RabbitTemplate rabbitTemplate;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RabbitMQConfig rabbitMQConfig;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送简单文本消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">sendTextMessage</span><span class="params">(String content)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            rabbitTemplate.convertAndSend(</span><br><span class="line">                rabbitMQConfig.DEMO_EXCHANGE,</span><br><span class="line">                rabbitMQConfig.DEMO_ROUTING_KEY,</span><br><span class="line">                content</span><br><span class="line">            );</span><br><span class="line">            log.info(<span class="string">&quot;消息发送成功: &#123;&#125;&quot;</span>, content);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;消息发送失败: &#123;&#125;&quot;</span>, content, e);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 发送对象消息（自动JSON序列化）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendObjectMessage</span><span class="params">(MessageDTO messageDTO)</span> &#123;</span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>();</span><br><span class="line">        correlationData.setId(UUID.randomUUID().toString());</span><br><span class="line">        </span><br><span class="line">        rabbitTemplate.convertAndSend(</span><br><span class="line">            rabbitMQConfig.DEMO_EXCHANGE,</span><br><span class="line">            rabbitMQConfig.DEMO_ROUTING_KEY,</span><br><span class="line">            messageDTO,</span><br><span class="line">            message -&gt; &#123;</span><br><span class="line">                <span class="comment">// 设置消息属性</span></span><br><span class="line">                message.getMessageProperties().setMessageId(correlationData.getId());</span><br><span class="line">                message.getMessageProperties().setTimestamp(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">                message.getMessageProperties().setContentType(<span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> message;</span><br><span class="line">            &#125;,</span><br><span class="line">            correlationData</span><br><span class="line">        );</span><br><span class="line">        </span><br><span class="line">        log.info(<span class="string">&quot;对象消息发送完成，消息ID: &#123;&#125;&quot;</span>, correlationData.getId());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 带有确认回调的消息发送</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@PostConstruct</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initConfirmCallback</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 消息发送到Exchange确认回调</span></span><br><span class="line">        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (ack) &#123;</span><br><span class="line">                log.info(<span class="string">&quot;消息到达Exchange成功，消息ID: &#123;&#125;&quot;</span>, correlationData.getId());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                log.error(<span class="string">&quot;消息到达Exchange失败，消息ID: &#123;&#125;，原因: &#123;&#125;&quot;</span>, </span><br><span class="line">                         correlationData.getId(), cause);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 消息路由到Queue失败回调</span></span><br><span class="line">        rabbitTemplate.setReturnsCallback(returned -&gt; &#123;</span><br><span class="line">            log.error(<span class="string">&quot;消息路由到队列失败: &#123;&#125;&quot;</span>, returned.getMessage());</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-REST-API接口"><a href="#3-REST-API接口" class="headerlink" title="3. REST API接口"></a>3. REST API接口</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">@RequestMapping(&quot;/api/message&quot;)</span><br><span class="line">@Slf4j</span><br><span class="line">public class MessageController &#123;</span><br><span class="line">    </span><br><span class="line">    @Autowired</span><br><span class="line">    private MessageProducerService producerService;</span><br><span class="line">    </span><br><span class="line">    @PostMapping(&quot;/send&quot;)</span><br><span class="line">    public ResponseEntity&lt;?&gt; sendMessage(@RequestBody MessageRequest request) &#123;</span><br><span class="line">        boolean result = producerService.sendTextMessage(request.getContent());</span><br><span class="line">        </span><br><span class="line">        if (result) &#123;</span><br><span class="line">            return ResponseEntity.ok(</span><br><span class="line">                ResponseResult.success(&quot;消息发送成功&quot;)</span><br><span class="line">            );</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span><br><span class="line">                .body(ResponseResult.error(&quot;消息发送失败&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @PostMapping(&quot;/send-object&quot;)</span><br><span class="line">    public ResponseEntity&lt;?&gt; sendObjectMessage(@RequestBody MessageDTO messageDTO) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            producerService.sendObjectMessage(messageDTO);</span><br><span class="line">            return ResponseEntity.ok(</span><br><span class="line">                ResponseResult.success(&quot;对象消息发送成功&quot;)</span><br><span class="line">            );</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;发送对象消息异常&quot;, e);</span><br><span class="line">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span><br><span class="line">                .body(ResponseResult.error(&quot;对象消息发送失败&quot;));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、消费者服务设计"><a href="#四、消费者服务设计" class="headerlink" title="四、消费者服务设计"></a>四、消费者服务设计</h2><h3 id="1-消费者服务实现"><a href="#1-消费者服务实现" class="headerlink" title="1. 消费者服务实现"></a>1. 消费者服务实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MessageConsumerService</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 监听队列消息 - 自动确认模式</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RabbitListener(</span></span><br><span class="line"><span class="meta">        queues = RabbitMQConfig.DEMO_QUEUE,</span></span><br><span class="line"><span class="meta">        concurrency = &quot;3-10&quot;  // 动态调整消费者数量</span></span><br><span class="line"><span class="meta">    )</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;消费者[&#123;&#125;]收到消息: &#123;&#125;&quot;</span>, </span><br><span class="line">                Thread.currentThread().getName(), message);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 模拟业务处理</span></span><br><span class="line">            processBusinessLogic(message);</span><br><span class="line">            log.info(<span class="string">&quot;消息处理完成: &#123;&#125;&quot;</span>, message);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;处理消息失败: &#123;&#125;&quot;</span>, message, e);</span><br><span class="line">            <span class="comment">// 异常时根据策略决定是否重新入队</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AmqpRejectAndDontRequeueException</span>(<span class="string">&quot;处理失败，不重新入队&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 监听对象消息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RabbitListener(queues = RabbitMQConfig.DEMO_QUEUE)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleObjectMessage</span><span class="params">(MessageDTO messageDTO)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;收到对象消息: ID=&#123;&#125;, Content=&#123;&#125;&quot;</span>, </span><br><span class="line">                messageDTO.getId(), messageDTO.getContent());</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 处理对象消息</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 手动ACK模式 - 更精确的控制</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@RabbitListener(queues = RabbitMQConfig.DEMO_QUEUE)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessageWithAck</span><span class="params">(</span></span><br><span class="line"><span class="params">            Message message, </span></span><br><span class="line"><span class="params">            Channel channel)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="type">long</span> <span class="variable">deliveryTag</span> <span class="operator">=</span> message.getMessageProperties().getDeliveryTag();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">msgBody</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(message.getBody());</span><br><span class="line">            log.info(<span class="string">&quot;处理消息（手动ACK）: &#123;&#125;&quot;</span>, msgBody);</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 业务处理</span></span><br><span class="line">            <span class="type">boolean</span> <span class="variable">success</span> <span class="operator">=</span> processBusinessLogic(msgBody);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (success) &#123;</span><br><span class="line">                <span class="comment">// 确认消息</span></span><br><span class="line">                channel.basicAck(deliveryTag, <span class="literal">false</span>);</span><br><span class="line">                log.info(<span class="string">&quot;消息确认成功: &#123;&#125;&quot;</span>, deliveryTag);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 拒绝消息，不重新入队</span></span><br><span class="line">                channel.basicNack(deliveryTag, <span class="literal">false</span>, <span class="literal">false</span>);</span><br><span class="line">                log.warn(<span class="string">&quot;消息处理失败，已拒绝: &#123;&#125;&quot;</span>, deliveryTag);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;处理消息异常，消息ID: &#123;&#125;&quot;</span>, deliveryTag, e);</span><br><span class="line">            <span class="comment">// 异常时拒绝消息</span></span><br><span class="line">            channel.basicNack(deliveryTag, <span class="literal">false</span>, <span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">processBusinessLogic</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        <span class="comment">// 实际业务逻辑处理</span></span><br><span class="line">        <span class="comment">// 这里可以调用其他Service进行业务处理</span></span><br><span class="line">        log.debug(<span class="string">&quot;处理业务逻辑: &#123;&#125;&quot;</span>, message);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 模拟处理耗时</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            Thread.currentThread().interrupt();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-死信队列配置（处理失败消息）"><a href="#2-死信队列配置（处理失败消息）" class="headerlink" title="2. 死信队列配置（处理失败消息）"></a>2. 死信队列配置（处理失败消息）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class DeadLetterConfig &#123;</span><br><span class="line">    </span><br><span class="line">    public static final String DLX_EXCHANGE = &quot;demo.dlx.exchange&quot;;</span><br><span class="line">    public static final String DLQ_QUEUE = &quot;demo.dlq.queue&quot;;</span><br><span class="line">    public static final String DLQ_ROUTING_KEY = &quot;demo.dlq&quot;;</span><br><span class="line">    </span><br><span class="line">    // 死信交换机</span><br><span class="line">    @Bean</span><br><span class="line">    public DirectExchange dlxExchange() &#123;</span><br><span class="line">        return new DirectExchange(DLX_EXCHANGE);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 死信队列</span><br><span class="line">    @Bean</span><br><span class="line">    public Queue dlqQueue() &#123;</span><br><span class="line">        return QueueBuilder.durable(DLQ_QUEUE).build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 绑定死信队列</span><br><span class="line">    @Bean</span><br><span class="line">    public Binding dlqBinding() &#123;</span><br><span class="line">        return BindingBuilder.bind(dlqQueue())</span><br><span class="line">                .to(dlxExchange())</span><br><span class="line">                .with(DLQ_ROUTING_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-死信队列消费者"><a href="#3-死信队列消费者" class="headerlink" title="3. 死信队列消费者"></a>3. 死信队列消费者</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeadLetterConsumer</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@RabbitListener(queues = DeadLetterConfig.DLQ_QUEUE)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleDeadLetter</span><span class="params">(Message failedMessage)</span> &#123;</span><br><span class="line">        log.error(<span class="string">&quot;收到死信消息: &#123;&#125;&quot;</span>, <span class="keyword">new</span> <span class="title class_">String</span>(failedMessage.getBody()));</span><br><span class="line">        log.error(<span class="string">&quot;原始路由Key: &#123;&#125;&quot;</span>, failedMessage.getMessageProperties().getReceivedRoutingKey());</span><br><span class="line">        log.error(<span class="string">&quot;失败原因: &#123;&#125;&quot;</span>, failedMessage.getMessageProperties().getHeader(<span class="string">&quot;x-death&quot;</span>));</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 这里可以实现死信消息的处理逻辑</span></span><br><span class="line">        <span class="comment">// 1. 记录到数据库</span></span><br><span class="line">        <span class="comment">// 2. 发送告警通知</span></span><br><span class="line">        <span class="comment">// 3. 人工干预处理</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、业务实体定义"><a href="#五、业务实体定义" class="headerlink" title="五、业务实体定义"></a>五、业务实体定义</h2><h3 id="消息传输对象"><a href="#消息传输对象" class="headerlink" title="消息传输对象"></a>消息传输对象</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@NoArgsConstructor</span><br><span class="line">@AllArgsConstructor</span><br><span class="line">public class MessageDTO implements Serializable &#123;</span><br><span class="line">    </span><br><span class="line">    private String id;</span><br><span class="line">    private String content;</span><br><span class="line">    private String messageType;</span><br><span class="line">    private Date createTime;</span><br><span class="line">    private Map&lt;String, Object&gt; extraParams;</span><br><span class="line">    </span><br><span class="line">    public MessageDTO(String content) &#123;</span><br><span class="line">        this.id = UUID.randomUUID().toString();</span><br><span class="line">        this.content = content;</span><br><span class="line">        this.createTime = new Date();</span><br><span class="line">        this.extraParams = new HashMap&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="API请求响应对象"><a href="#API请求响应对象" class="headerlink" title="API请求响应对象"></a>API请求响应对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MessageRequest</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String content;</span><br><span class="line">    <span class="keyword">private</span> String type;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ResponseResult</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; ResponseResult&lt;T&gt; <span class="title function_">success</span><span class="params">(T data)</span> &#123;</span><br><span class="line">        ResponseResult&lt;T&gt; result = <span class="keyword">new</span> <span class="title class_">ResponseResult</span>&lt;&gt;();</span><br><span class="line">        result.setCode(<span class="number">200</span>);</span><br><span class="line">        result.setMessage(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">        result.setData(data);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ResponseResult&lt;?&gt; success(String message) &#123;</span><br><span class="line">        ResponseResult&lt;?&gt; result = <span class="keyword">new</span> <span class="title class_">ResponseResult</span>&lt;&gt;();</span><br><span class="line">        result.setCode(<span class="number">200</span>);</span><br><span class="line">        result.setMessage(message);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六、测试验证"><a href="#六、测试验证" class="headerlink" title="六、测试验证"></a>六、测试验证</h2><h3 id="1-发送消息测试"><a href="#1-发送消息测试" class="headerlink" title="1. 发送消息测试"></a>1. 发送消息测试</h3><p>使用Postman或curl测试生产者API：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 发送文本消息</span><br><span class="line">curl -X POST http://localhost:8080/api/message/send \</span><br><span class="line">  -H &quot;Content-Type: application/json&quot; \</span><br><span class="line">  -d &#x27;&#123;&quot;content&quot;:&quot;Hello RabbitMQ&quot;&#125;&#x27;</span><br><span class="line"></span><br><span class="line"># 发送对象消息</span><br><span class="line">curl -X POST http://localhost:8080/api/message/send-object \</span><br><span class="line">  -H &quot;Content-Type: application/json&quot; \</span><br><span class="line">  -d &#x27;&#123;&quot;content&quot;:&quot;测试消息&quot;,&quot;messageType&quot;:&quot;ORDER&quot;,&quot;extraParams&quot;:&#123;&quot;orderId&quot;:&quot;123456&quot;&#125;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-监控管理"><a href="#2-监控管理" class="headerlink" title="2. 监控管理"></a>2. 监控管理</h3><p>访问RabbitMQ管理界面：<a target="_blank" rel="noopener" href="http://localhost:15672/">http://localhost:15672</a></p>
+<p>在这里可以：</p>
+<ul>
+<li>查看队列消息堆积情况</li>
+<li>监控消费者连接</li>
+<li>手动管理队列（清除、删除等）</li>
+<li>查看消息流量统计</li>
+</ul>
+<h2 id="七、生产环境建议"><a href="#七、生产环境建议" class="headerlink" title="七、生产环境建议"></a>七、生产环境建议</h2><h3 id="1-连接池配置"><a href="#1-连接池配置" class="headerlink" title="1. 连接池配置"></a>1. 连接池配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    connection-timeout: 5000      # 连接超时时间</span><br><span class="line">    cache:</span><br><span class="line">      channel:</span><br><span class="line">        size: 25                  # 通道缓存大小</span><br><span class="line">      connection:</span><br><span class="line">        mode: connection          # 连接模式</span><br><span class="line">        size: 5                   # 连接池大小</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-高可用配置"><a href="#2-高可用配置" class="headerlink" title="2. 高可用配置"></a>2. 高可用配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    addresses: rabbit1:5672,rabbit2:5672,rabbit3:5672  # 集群地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-消息可靠性保障"><a href="#3-消息可靠性保障" class="headerlink" title="3. 消息可靠性保障"></a>3. 消息可靠性保障</h3><ul>
+<li><strong>生产者确认</strong>：确保消息到达Exchange</li>
+<li><strong>持久化</strong>：队列、消息都设置为持久化</li>
+<li><strong>消费者ACK</strong>：处理成功后才确认消息</li>
+<li><strong>死信队列</strong>：处理失败的消息</li>
+<li><strong>消息幂等</strong>：消费者端实现幂等处理</li>
+</ul>
+<h2 id="八、总结"><a href="#八、总结" class="headerlink" title="八、总结"></a>八、总结</h2><p>通过本文的完整实现，我们构建了一个生产可用的RabbitMQ消息队列系统，具备以下特点：</p>
+<ol>
+<li><strong>快速部署</strong>：Docker一键部署RabbitMQ</li>
+<li><strong>完整集成</strong>：Spring Boot完美整合</li>
+<li><strong>可靠传输</strong>：支持生产者确认、消息持久化</li>
+<li><strong>灵活消费</strong>：支持自动&#x2F;手动ACK、并发控制</li>
+<li><strong>容错处理</strong>：死信队列机制</li>
+<li><strong>易于监控</strong>：Web管理界面实时监控</li>
+</ol>
+<p>这个方案可以广泛应用于：</p>
+<ul>
+<li>订单处理异步化</li>
+<li>日志收集与分析</li>
+<li>系统解耦</li>
+<li>流量削峰填谷</li>
+<li>数据同步等场景</li>
+</ul>
+<p>希望这篇实战指南能帮助你在项目中顺利集成RabbitMQ！如果有任何问题，欢迎在评论区讨论。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2026/01/27/%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3-HikariCP-%E7%BA%BF%E7%A8%8B%E9%A5%A5%E9%A5%BF%EF%BC%9AThread-starvation-or-clock-leap-detected-housekeeper-delta-41m37s/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1537,119 +1704,6 @@
 <hr>
 <h2 id="文档说明"><a href="#文档说明" class="headerlink" title="文档说明"></a><strong>文档说明</strong></h2><p>本文档涵盖 RabbitMQ 的核心概念、工作机制及典型应用场景，适用于面试准备或技术方案设计参考。<br><strong>持续更新建议</strong>：结合 RabbitMQ 官方文档（<a target="_blank" rel="noopener" href="https://www.rabbitmq.com)和实际项目经验补充案例./">https://www.rabbitmq.com）和实际项目经验补充案例。</a></p>
 <p>PS: 该内容由DeepSeek R1深度学习总结（deepseek牛逼！！！）</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/01/15/%E4%BD%BF%E7%94%A81Panel%E4%BD%9C%E4%B8%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/01/15/%E4%BD%BF%E7%94%A81Panel%E4%BD%9C%E4%B8%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF/" itemprop="url">使用1Panel作为服务器管理面板</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-01-15T14:22:14+08:00">
-                2025-01-15
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>📝记录一下使用1panel作为服务器管理面板，之前基本是使用手搓命令构建服务，了解过宝塔面板，感觉太过臃肿且需要注册账户，后续考虑服务部署都是用1panel面板进行操作。</p>
-</blockquote>
-<p>官方文档：<a target="_blank" rel="noopener" href="https://1panel.cn/docs/">https://1panel.cn/docs/</a></p>
-<h2 id="一、产品介绍"><a href="#一、产品介绍" class="headerlink" title="一、产品介绍"></a>一、产品介绍</h2><p>1Panel 是一个现代化、开源的 Linux 服务器运维管理面板。<br><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/overview.png" alt="UI展示"></p>
-<h2 id="二、安装部署"><a href="#二、安装部署" class="headerlink" title="二、安装部署"></a>二、安装部署</h2><ol>
-<li>Ubuntu安装：</li>
-</ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://resource.fit2cloud.com/1panel/package/quick_start.sh -o quick_start.sh &amp;&amp; sudo bash quick_start.sh</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20250115134821023.png" alt="image-20250115134821023"></p>
-<ol start="2">
-<li>通过访问地址和面板用户密码进行登录</li>
-</ol>
-<h2 id="三、功能使用"><a href="#三、功能使用" class="headerlink" title="三、功能使用"></a>三、功能使用</h2><ol>
-<li>前端页面创建网址后选择静态网址进行配置，后台选择反向代理</li>
-</ol>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20250115140517787.png" alt="image-20250115140517787"></p>
-<ol start="2">
-<li>通过网址设置配置HTTPS和设置NGINX</li>
-</ol>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/%E5%9B%BE%E5%83%8F_%E5%89%AF%E6%9C%AC.png" alt="图像_副本"></p>
-<h2 id="四、计划任务"><a href="#四、计划任务" class="headerlink" title="四、计划任务"></a>四、计划任务</h2><p>可以通过linux定时任务自动执行shell等脚本命令</p>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/%E6%88%AA%E5%B1%8F2025-01-15%2014.16.51.png" alt="截屏2025-01-15 14.16.51"></p>
 
           
         
