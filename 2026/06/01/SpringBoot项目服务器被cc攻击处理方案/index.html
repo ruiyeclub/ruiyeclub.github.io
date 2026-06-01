@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+
+
+
+
+<html class="theme-next tumo" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/tumo.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Ray4j's Blog" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="痛点直击：攻击者不针对数据库，不针对服务器进程，而是专门针对 没有token校验接口发起海量请求。你的带宽先被打满，SpringBoot 连被访问的机会都没有。  如果你的 SpringBoot 项目正在遭受针对 Login 登录接口 的猛烈攻击，你会发现一个奇怪的现象：服务器 CPU 可能还没满，但 **带宽（出入流量）直接 100%**，导致正常用户无法访问，SSH 连不上，服务瘫痪。 这种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot项目服务器被cc攻击处理方案">
+<meta property="og:url" content="https://ruiyeclub.cn/2026/06/01/SpringBoot%E9%A1%B9%E7%9B%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A2%ABcc%E6%94%BB%E5%87%BB%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:site_name" content="Ruiyeclub">
+<meta property="og:description" content="痛点直击：攻击者不针对数据库，不针对服务器进程，而是专门针对 没有token校验接口发起海量请求。你的带宽先被打满，SpringBoot 连被访问的机会都没有。  如果你的 SpringBoot 项目正在遭受针对 Login 登录接口 的猛烈攻击，你会发现一个奇怪的现象：服务器 CPU 可能还没满，但 **带宽（出入流量）直接 100%**，导致正常用户无法访问，SSH 连不上，服务瘫痪。 这种">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601152334409.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601151121786.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601153234925.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601153151841.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601153817823.png">
+<meta property="og:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601154130955.png">
+<meta property="article:published_time" content="2026-06-01T07:53:47.000Z">
+<meta property="article:modified_time" content="2026-06-01T07:55:07.150Z">
+<meta property="article:author" content="Cr.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601152334409.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Tumo',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://ruiyeclub.cn/2026/06/01/SpringBoot项目服务器被cc攻击处理方案/"/>
+
+
+
+
+
+  <title>SpringBoot项目服务器被cc攻击处理方案 | Ruiyeclub</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" style="overflow-x:hidden;padding-right:320px" lang="en">
+
+  <style>@media (min-width:768px) and (max-width:991px){body .header-innerr{width:700px!important}}.header-innerr{margin:0 auto;padding:100px 0 70px;width:880px}@media (min-width:1600px){.container .header-innerr{width:1200px}}.header-innerr{position:relative}.header-innerr{padding:20px 0 0}.header-innerr:after,.header-innerr:before{content:" ";display:table}.header-innerr:after{clear:both}@media (max-width:767px){.header-innerr{width:auto;padding:10px;margin-bottom:-20px}}</style>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    
+    
+
+    <link href="/lib/font-awesome/css/font-merienda.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title" style="font-family:Merienda;font-size:1.3rem">Ruiyeclub</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            HOME
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            ARCHIVES
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            ABOUT
+          </a>
+        </li>
+      
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links/" rel="section">
+            LINKS
+          </a>
+        </li>
+      
+
+    </ul>
+  
+
+</nav>
+
+
+
+ </div>
+
+      <div class="header-innerr">
+        
+          <div class="note info" style="margin:0;letter-spacing:.15px">
+            🐤SpringBoot学习入门Demo，持续更新中...：
+            <a style="color:#40dab2;font-weight:600" 
+              href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" class="animsition-link">
+              https://github.com/ruiyeclub/SpringBoot-Hello
+            </a>
+          </div>
+        
+      </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2026/06/01/SpringBoot%E9%A1%B9%E7%9B%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A2%ABcc%E6%94%BB%E5%87%BB%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringBoot项目服务器被cc攻击处理方案</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2026-06-01T15:53:47+08:00">
+                2026-06-01
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p><strong>痛点直击</strong>：攻击者不针对数据库，不针对服务器进程，而是专门针对 没有token校验接口发起海量请求。你的带宽先被打满，SpringBoot 连被访问的机会都没有。</p>
+</blockquote>
+<p>如果你的 SpringBoot 项目正在遭受针对 <strong>Login 登录接口</strong> 的猛烈攻击，你会发现一个奇怪的现象：服务器 CPU 可能还没满，但 **带宽（出入流量）直接 100%**，导致正常用户无法访问，SSH 连不上，服务瘫痪。</p>
+<p>这种攻击通常被称为 <strong>CC 攻击（Challenge Collapsar）</strong>，是 DDoS 的一种应用层变种。对于这种攻击，<strong>千万别试图在 SpringBoot 代码里解决</strong>，必须在 <strong>Cloudflare (CF)</strong> 的边缘节点上将其拦截。</p>
+<p>以下是针对 Login 接口被攻击的 <strong>“止血+加固”</strong> 全流程。</p>
+<hr>
+<h2 id="一、-紧急止血：Cloudflare-上的“战争迷雾”"><a href="#一、-紧急止血：Cloudflare-上的“战争迷雾”" class="headerlink" title="一、 紧急止血：Cloudflare 上的“战争迷雾”"></a>一、 紧急止血：Cloudflare 上的“战争迷雾”</h2><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601152334409.png" alt="image-20260601152334409"></p>
+<p>既然攻击者是通过域名攻击，我们必须利用 Cloudflare 的全球网络，在流量到达你的源站服务器之前，就把它们吃掉。</p>
+<h3 id="1-开启-“Under-Attack-Mode”（正在被攻击模式）"><a href="#1-开启-“Under-Attack-Mode”（正在被攻击模式）" class="headerlink" title="1. 开启 “Under Attack Mode”（正在被攻击模式）"></a>1. 开启 “Under Attack Mode”（正在被攻击模式）</h3><p>这是 CF 的大招，虽然会影响一点用户体验，但能保住服务器。</p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601151121786.png" alt="image-20260601151121786"></p>
+<p>开启 Cloudflare Under Attack Mode（“5秒盾”）的步骤如下：</p>
+<ol>
+<li>登录 <a target="_blank" rel="noopener" href="https://dash.cloudflare.com/">Cloudflare 仪表板</a>，选择对应域名。  </li>
+<li>点击顶部菜单 “Security”（安全）选项卡。  </li>
+<li>在 “Security Level” 下方找到 “Under Attack Mode” 开关，将其设为 “On”（变绿即生效）。  </li>
+<li>开启后，访客访问网站会弹出 JavaScript 质询页面（俗称“5秒盾”），需等待或完成验证才能进入。</li>
+</ol>
+<p>⚠️ 注意：  </p>
+<ul>
+<li>此模式仅在遭遇 DDoS&#x2F;CC 攻击时临时启用，日常开启会降低正常用户体验（增加加载延迟）。  </li>
+<li>需确保域名已通过 Cloudflare 接入（DNS 已代理，状态为橙色云朵）。  </li>
+<li>免费计划支持该功能，但无法自定义质询页面内容（需 Enterprise 计划）。  </li>
+<li>若需 API 自动化开启，可发送 PATCH 请求至 <code>https://api.cloudflare.com/client/v4/zones/&#123;zone_id&#125;/settings/security_level</code>，设置 <code>value=under_attack</code>（需 Global API Key 和 Zone ID）。</li>
+</ul>
+<p>关闭时请手动切回“High”或默认安全等级，避免影响正常流量。</p>
+<h3 id="2-针对-login接口配置-WAF-速率限制（最关键）"><a href="#2-针对-login接口配置-WAF-速率限制（最关键）" class="headerlink" title="2. 针对 /login接口配置 WAF 速率限制（最关键）"></a>2. 针对 <code>/login</code>接口配置 WAF 速率限制（最关键）</h3><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601153234925.png" alt="image-20260601153234925"></p>
+<p>通用的限流不够，我们要对 <code>login</code>接口进行“精准打击”。</p>
+<p><strong>创建 WAF 自定义规则：</strong></p>
+<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601153151841.png" alt="image-20260601153151841"></p>
+<ol>
+<li><p>点 <strong>Create rate limiting rule</strong>（创建速率限制规则）</p>
+</li>
+<li><p>Rule name（规则名）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Block Login Brute Force</span><br></pre></td></tr></table></figure>
+
+<p>（随便写，能识别就行）</p>
+</li>
+<li><p>When incoming requests match（匹配条件，精准锁定登录接口）</p>
+</li>
+</ol>
+<p>推荐用 <strong>表达式模式（Edit expression）</strong> 更精准Cloudflare：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http.request.uri.path eq &quot;/api/auth/login&quot; and http.request.method eq &quot;POST&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把 <code>/api/auth/login</code> 换成你真实的登录接口路径</li>
+<li>只拦截 POST（登录一般都是 POST）Cloudflare</li>
+</ul>
+<ol start="4">
+<li>With the same characteristics（按什么限流）</li>
+</ol>
+<p>选：<strong>IP（源 IP）</strong></p>
+<p>含义：<strong>同一个 IP</strong> 才累计计数，完美防单 IP 暴力破解Cloudflare。</p>
+<ol start="5">
+<li>When rate exceeds（限流阈值，你要的 “10 秒 10 次”）</li>
+</ol>
+<ul>
+<li><strong>Requests（次数）</strong>：<code>10</code></li>
+<li><strong>Period（时间窗口）</strong>：<code>10 seconds</code></li>
+<li>Action（超限动作）<ul>
+<li>测试期：选 <strong>Managed Challenge（人机验证）</strong>，不误伤正常用户</li>
+<li>确认攻击：选 <strong>Block（直接拦截）</strong>Cloudflare</li>
+</ul>
+</li>
+</ul>
+<ol start="6">
+<li>其他默认即可</li>
+</ol>
+<ul>
+<li>不需要开 “Count only specific responses”（新手先不开）</li>
+<li>点 <strong>Save and Deploy（保存并部署）</strong>Cloudflare</li>
+</ul>
+<p><strong>效果</strong>：任何 IP 在 10 秒内请求 <code>/login</code>超过 10 次，直接被 Cloudflare 屏蔽。</p>
+<h3 id="3-启用-Bot-Fight-Mode"><a href="#3-启用-Bot-Fight-Mode" class="headerlink" title="3. 启用 Bot Fight Mode"></a>3. 启用 Bot Fight Mode</h3><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601153817823.png" alt="image-20260601153817823"></p>
+<p><strong>作用</strong>：自动识别并阻止已知的恶意机器人指纹，防止黑客使用常规的攻击工具扫描你的登录口。</p>
+<hr>
+<h2 id="二、-架构层：Nginx-兜底防护"><a href="#二、-架构层：Nginx-兜底防护" class="headerlink" title="二、 架构层：Nginx 兜底防护"></a>二、 架构层：Nginx 兜底防护</h2><p>即使 CF 拦住了 99%，剩下的 1% 也可能通过某种方式漏进来。我们需要在 Nginx 上再设一道关卡。</p>
+<h3 id="1-限制登录接口的并发与速率"><a href="#1-限制登录接口的并发与速率" class="headerlink" title="1. 限制登录接口的并发与速率"></a>1. 限制登录接口的并发与速率</h3><p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/image-20260601154130955.png" alt="image-20260601154130955"></p>
+<p>不要限制全站，只限制登录接口，避免影响其他业务。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    # 定义一个名为 &quot;login_limit&quot; 的区域，限制每个 IP 每秒 1 个请求</span><br><span class="line">    limit_req_zone $binary_remote_addr zone=login_limit:10m rate=1r/s;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 443 ssl;</span><br><span class="line">        server_name yourdomain.com;</span><br><span class="line"></span><br><span class="line">        location = /login &#123; # 精确匹配 login 接口</span><br><span class="line">            # 应用限流，burst=5 表示允许突发 5 个请求，nodelay 表示超出的直接拒绝</span><br><span class="line">            limit_req zone=login_limit burst=5 nodelay;</span><br><span class="line">            </span><br><span class="line">            # 限制连接数（可选）</span><br><span class="line">            limit_conn perip 3; </span><br><span class="line">            </span><br><span class="line">            proxy_pass http://your_springboot_app;</span><br><span class="line">            # ... 其他代理配置</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>注意</strong>：这里的 <code>rate=1r/s</code>非常严格，如果你们业务允许，可以调整为 <code>5r/s</code>。</li>
+</ul>
+<h3 id="2-封禁异常-UA-和空-Referer"><a href="#2-封禁异常-UA-和空-Referer" class="headerlink" title="2. 封禁异常 UA 和空 Referer"></a>2. 封禁异常 UA 和空 Referer</h3><p>很多攻击脚本不带浏览器标识。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">if ($request_uri ~* &quot;/login&quot;) &#123;</span><br><span class="line">    if ($http_user_agent ~* &quot;curl|wget|python|java|okhttp&quot;) &#123;</span><br><span class="line">        return 403;</span><br><span class="line">    &#125;</span><br><span class="line">    # 如果是 POST 请求且 Referer 为空（常见于直接发包攻击）</span><br><span class="line">    if ($request_method = POST) &#123;</span><br><span class="line">        set $block &quot;&quot;;</span><br><span class="line">        if ($http_referer = &quot;&quot;) &#123;</span><br><span class="line">            set $block &quot;$&#123;block&#125;1&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        if ($block = &quot;1&quot;) &#123;</span><br><span class="line">            return 403;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、-SpringBoot-代码层：防止“漏网之鱼”击穿数据库"><a href="#三、-SpringBoot-代码层：防止“漏网之鱼”击穿数据库" class="headerlink" title="三、 SpringBoot 代码层：防止“漏网之鱼”击穿数据库"></a>三、 SpringBoot 代码层：防止“漏网之鱼”击穿数据库</h2><p>当攻击流量穿透了 CF 和 Nginx，你的 SpringBoot 应用必须具备自我保护能力，防止数据库被打挂。</p>
+<h3 id="1-登录接口防刷（Redis-滑动窗口）"><a href="#1-登录接口防刷（Redis-滑动窗口）" class="headerlink" title="1. 登录接口防刷（Redis + 滑动窗口）"></a>1. 登录接口防刷（Redis + 滑动窗口）</h3><p>不要只依赖 Spring Security 的失败次数限制，那太重了。用 Redis 做轻量级限流。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class LoginLimitInterceptor implements HandlerInterceptor &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private StringRedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    private static final int MAX_ATTEMPTS = 5; // 最大尝试次数</span><br><span class="line">    private static final int LOCK_TIME_MINUTES = 15; // 锁定时长</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) &#123;</span><br><span class="line">        String ip = request.getRemoteAddr(); // 注意：如果用了CF/Nginx，这里要取 X-Forwarded-For</span><br><span class="line">        String key = &quot;login:limit:&quot; + ip;</span><br><span class="line"></span><br><span class="line">        Long count = redisTemplate.opsForValue().increment(key, 1);</span><br><span class="line">        if (count == 1) &#123;</span><br><span class="line">            // 设置过期时间，形成滑动窗口</span><br><span class="line">            redisTemplate.expire(key, LOCK_TIME_MINUTES, TimeUnit.MINUTES);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (count &gt; MAX_ATTEMPTS) &#123;</span><br><span class="line">            response.setStatus(429); // Too Many Requests</span><br><span class="line">            response.getWriter().write(&quot;Too many login attempts, please try again later.&quot;);</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-强制验证码（CAPTCHA）"><a href="#2-强制验证码（CAPTCHA）" class="headerlink" title="2. 强制验证码（CAPTCHA）"></a>2. 强制验证码（CAPTCHA）</h3><p>当检测到某 IP 登录失败次数过多时，强制弹出验证码。</p>
+<p>- </p>
+<p>  <strong>推荐</strong>：使用 <strong>Google reCAPTCHA v3</strong>（无感验证）或 <strong>极验（Geetest）</strong>。</p>
+<p>- </p>
+<p>  <strong>逻辑</strong>：在 Controller 中，如果 Redis 记录该 IP 失败次数 &gt; 3，要求前端必须携带验证码 token 才能提交登录。</p>
+<h3 id="3-账户锁定机制"><a href="#3-账户锁定机制" class="headerlink" title="3. 账户锁定机制"></a>3. 账户锁定机制</h3><p>在 Spring Security 中配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">    http</span><br><span class="line">        .authorizeRequests()</span><br><span class="line">            .anyRequest().authenticated()</span><br><span class="line">            .and()</span><br><span class="line">        .formLogin()</span><br><span class="line">            .and()</span><br><span class="line">        .sessionManagement()</span><br><span class="line">            .maximumSessions(1) // 限制同一账号只能一处登录</span><br><span class="line">            .maxSessionsPreventsLogin(true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并且数据库设计上要有 <code>account_non_locked</code>字段，连续输错密码 N 次，锁定账户 15 分钟。</p>
+<hr>
+<h2 id="四、-总结：Login-接口防御清单"><a href="#四、-总结：Login-接口防御清单" class="headerlink" title="四、 总结：Login 接口防御清单"></a>四、 总结：Login 接口防御清单</h2><table>
+<thead>
+<tr>
+<th>层级</th>
+<th>防御手段</th>
+<th>核心目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Cloudflare</strong></td>
+<td><strong>Under Attack Mode</strong></td>
+<td>瞬间挡住脚本流量，争取配置时间</td>
+</tr>
+<tr>
+<td><strong>Cloudflare WAF</strong></td>
+<td><strong>Rate Limiting (针对 &#x2F;login)</strong></td>
+<td>精准限制登录频率，这是最有效的手段</td>
+</tr>
+<tr>
+<td><strong>Nginx</strong></td>
+<td><strong>limit_req (1r&#x2F;s)</strong></td>
+<td>防止 CF 规则失效后的最后兜底</td>
+</tr>
+<tr>
+<td><strong>SpringBoot</strong></td>
+<td><strong>Redis 防刷 + 验证码</strong></td>
+<td>防止攻击绕过代理直接打源站</td>
+</tr>
+<tr>
+<td><strong>系统</strong></td>
+<td><strong>仅允许 CF IP 访问</strong></td>
+<td>让黑客找不到你的真实服务器</td>
+</tr>
+</tbody></table>
+<p><strong>最后叮嘱</strong>：</p>
+<p>黑客攻击登录接口往往是为了撞库（暴力破解密码）。除了限流，<strong>务必开启 Spring Security 的密码加密（BCrypt）</strong>，并定期提醒用户修改弱密码。只要你的登录接口响应够慢（因为限流）且密码足够复杂，黑客很快就会失去耐心转战下一个目标。</p>
+<hr>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>如果你觉得这篇文章帮助到了你，你可以帮作者买一杯果汁表示鼓励</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat_ray.jpg" alt=" WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_ray.jpg" alt=" Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/02/24/SpringBoot%E9%9B%86%E6%88%90RabbitMQ%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" rel="next" title="Spring Boot集成RabbitMQ消息队列">
+                <i class="fa fa-chevron-left"></i> Spring Boot集成RabbitMQ消息队列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+    
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">Contents</li>
+          <li class="sidebar-nav-overview" data-target="site-overview">Overview</li>
+        </ul>
+      
+
+  
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-overview">
+          <div class="sidebar-sticky sticky">
+            <div itemscope="" itemtype="http://schema.org/Person">
+              <div class="author__avatar">
+                
+                  <img itemprop="image"
+                    src="/images/avatar.jpg"
+                    alt="" /> 
+                
+              </div>
+              <div class="author__content">
+                <h3 class="author__name" itemprop="name"></h3>
+                <p class="author__bio" itemprop="description"></p>
+              </div>
+              
+                <div class="author__urls-wrapper">
+                  <button class="btn btn--inverse">Follow</button>
+                  <ul class="author__urls social-icons">
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub" target="_blank" title="GitHub">
+                            
+                              <i class="fa fa-fw fa-github"></i>&nbsp;&nbsp;GitHub</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/ray4j.top" target="_blank" title="Ray4j.top">
+                            
+                              <i class="fa fa-fw fa-link"></i>&nbsp;&nbsp;Ray4j.top</a>
+                      </li>
+                    
+                      <li>
+                        <a href="https://github.com/ruiyeclub/SpringBoot-Hello" target="_blank" title="Springboot-Hello">
+                            
+                              <i class="fa fa-fw fa-cloud"></i>&nbsp;&nbsp;Springboot-Hello</a>
+                      </li>
+                    
+
+                    
+                      <li class="menu-item menu-item-search">
+                        
+                          <a href="javascript:;" class="popup-trigger">
+                          <i class="fa fa-fw fa-search"></i>&nbsp;&nbsp;
+                        
+                          
+                          
+                          Search
+                        </a>
+                      </li>
+                    
+
+                    
+                      <div class="site-search">
+                        
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+                      </div>
+                    
+
+                  </ul>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81-%E7%B4%A7%E6%80%A5%E6%AD%A2%E8%A1%80%EF%BC%9ACloudflare-%E4%B8%8A%E7%9A%84%E2%80%9C%E6%88%98%E4%BA%89%E8%BF%B7%E9%9B%BE%E2%80%9D"><span class="nav-number">1.</span> <span class="nav-text">一、 紧急止血：Cloudflare 上的“战争迷雾”</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%BC%80%E5%90%AF-%E2%80%9CUnder-Attack-Mode%E2%80%9D%EF%BC%88%E6%AD%A3%E5%9C%A8%E8%A2%AB%E6%94%BB%E5%87%BB%E6%A8%A1%E5%BC%8F%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">1. 开启 “Under Attack Mode”（正在被攻击模式）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%92%88%E5%AF%B9-login%E6%8E%A5%E5%8F%A3%E9%85%8D%E7%BD%AE-WAF-%E9%80%9F%E7%8E%87%E9%99%90%E5%88%B6%EF%BC%88%E6%9C%80%E5%85%B3%E9%94%AE%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2. 针对 &#x2F;login接口配置 WAF 速率限制（最关键）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%90%AF%E7%94%A8-Bot-Fight-Mode"><span class="nav-number">1.3.</span> <span class="nav-text">3. 启用 Bot Fight Mode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-%E6%9E%B6%E6%9E%84%E5%B1%82%EF%BC%9ANginx-%E5%85%9C%E5%BA%95%E9%98%B2%E6%8A%A4"><span class="nav-number">2.</span> <span class="nav-text">二、 架构层：Nginx 兜底防护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%99%90%E5%88%B6%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%B9%B6%E5%8F%91%E4%B8%8E%E9%80%9F%E7%8E%87"><span class="nav-number">2.1.</span> <span class="nav-text">1. 限制登录接口的并发与速率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%B0%81%E7%A6%81%E5%BC%82%E5%B8%B8-UA-%E5%92%8C%E7%A9%BA-Referer"><span class="nav-number">2.2.</span> <span class="nav-text">2. 封禁异常 UA 和空 Referer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81-SpringBoot-%E4%BB%A3%E7%A0%81%E5%B1%82%EF%BC%9A%E9%98%B2%E6%AD%A2%E2%80%9C%E6%BC%8F%E7%BD%91%E4%B9%8B%E9%B1%BC%E2%80%9D%E5%87%BB%E7%A9%BF%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">三、 SpringBoot 代码层：防止“漏网之鱼”击穿数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3%E9%98%B2%E5%88%B7%EF%BC%88Redis-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">1. 登录接口防刷（Redis + 滑动窗口）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BC%BA%E5%88%B6%E9%AA%8C%E8%AF%81%E7%A0%81%EF%BC%88CAPTCHA%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">2. 强制验证码（CAPTCHA）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%B4%A6%E6%88%B7%E9%94%81%E5%AE%9A%E6%9C%BA%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">3. 账户锁定机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81-%E6%80%BB%E7%BB%93%EF%BC%9ALogin-%E6%8E%A5%E5%8F%A3%E9%98%B2%E5%BE%A1%E6%B8%85%E5%8D%95"><span class="nav-number">4.</span> <span class="nav-text">四、 总结：Login 接口防御清单</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" style="display: inline-block">&copy; 2022 &mdash; <span itemprop="copyrightYear">2026</span>
+  <span class="author" itemprop="copyrightHolder">Cr.</span>
+
+  
+  &nbsp;&nbsp; | &nbsp;&nbsp;
+</div>
+
+        
+<div class="busuanzi-count" style="display: inline-block">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      UV
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      PV
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <span style="font-family:'Source Sans Pro','Helvetica Neue',Arial,sans-serif;font-size:1.2em;font-weight:600">TOP</span>
+    </div>
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.json";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/mo.min.js"></script>
+  <script>$(function(){$("a").not(".nav-link,.cloud-tie-join-count,.ignore-href,.jstree-anchor").addClass("animsition-link")});var burst1=new mojs.Burst({left:0,top:0,radius:{5:40},children:{shape:"circle",fill:["red","cyan","orange"],fillOpacity:.8,radiusX:3.5,radiusY:3.5}});document.addEventListener("click",function(a){null==a.target.href&&"footer"!=a.target.className&&"copyright"!=a.target.className&&"author__urls social-icons"!=a.target.className&&"author__avatar"!=a.target.className&&"sidebar sidebar-active"!=a.target.className&&burst1.tune({x:a.pageX,y:a.pageY}).generate().replay()})</script>
+  <div data-name="mojs-shape"></div>
+  
+</body>
+</html>
