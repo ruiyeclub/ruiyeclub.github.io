@@ -234,6 +234,188 @@
   
   
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2026/08/01/Spring-Boot-%E4%BD%BF%E7%94%A8-Jasypt-%E4%BC%98%E9%9B%85%E5%8A%A0%E5%AF%86%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruiyeclub">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2026/08/01/Spring-Boot-%E4%BD%BF%E7%94%A8-Jasypt-%E4%BC%98%E9%9B%85%E5%8A%A0%E5%AF%86%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" itemprop="url">Spring Boot 使用 Jasypt 优雅加密配置文件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2026-08-01T11:42:48+08:00">
+                2026-08-01
+              </time>
+            
+          </span>
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Spring-Boot-使用-Jasypt-优雅加密配置文件"><a href="#Spring-Boot-使用-Jasypt-优雅加密配置文件" class="headerlink" title="Spring Boot 使用 Jasypt 优雅加密配置文件"></a>Spring Boot 使用 Jasypt 优雅加密配置文件</h1><blockquote>
+<p>本文适用于 Spring Boot 2.x &#x2F; 3.x，演示如何对数据库密码、短信密钥、邮箱密码等敏感配置进行加密，避免配置文件裸奔。</p>
+</blockquote>
+<hr>
+<h2 id="一、为什么要用-Jasypt？"><a href="#一、为什么要用-Jasypt？" class="headerlink" title="一、为什么要用 Jasypt？"></a>一、为什么要用 Jasypt？</h2><p>在实际项目中，<code>application.yml</code> &#x2F; <code>application.properties</code> 里经常能看到这样的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    password: 123456</span><br></pre></td></tr></table></figure>
+
+<p>一旦代码被误提交到 GitHub，数据库就直接“送人”了。</p>
+<p><strong>Jasypt（Java Simplified Encryption）</strong> 可以帮我们把这些敏感信息加密成密文，Spring Boot 启动时自动解密，既安全又无侵入。</p>
+<hr>
+<h2 id="二、依赖引入"><a href="#二、依赖引入" class="headerlink" title="二、依赖引入"></a>二、依赖引入</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&lt;dependency&gt;</span></span><br><span class="line">    <span class="string">&lt;groupId&gt;com.github.ulisesbocchio&lt;/groupId&gt;</span></span><br><span class="line">    <span class="string">&lt;artifactId&gt;jasypt-spring-boot-starter&lt;/artifactId&gt;</span></span><br><span class="line">    <span class="string">&lt;version&gt;3.0.5&lt;/version&gt;</span></span><br><span class="line"><span class="string">&lt;/dependency&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>✅ 推荐版本：<code>3.0.5</code>（稳定、兼容性好）</p>
+</blockquote>
+<hr>
+<h2 id="三、Jasypt-基础配置"><a href="#三、Jasypt-基础配置" class="headerlink" title="三、Jasypt 基础配置"></a>三、Jasypt 基础配置</h2><h3 id="application-yml"><a href="#application-yml" class="headerlink" title="application.yml"></a>application.yml</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jasypt:</span></span><br><span class="line">  <span class="attr">encryptor:</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">$&#123;JASYPT_PASSWORD:stock-jasypt-default&#125;</span></span><br><span class="line">    <span class="attr">algorithm:</span> <span class="string">PBEWithMD5AndDES</span></span><br><span class="line">    <span class="attr">salt-generator-classname:</span> <span class="string">org.jasypt.salt.RandomSaltGenerator</span></span><br><span class="line">    <span class="attr">iv-generator-classname:</span> <span class="string">org.jasypt.iv.NoIvGenerator</span></span><br><span class="line">    <span class="attr">property:</span></span><br><span class="line">      <span class="attr">prefix:</span> <span class="string">ENC(</span></span><br><span class="line">      <span class="attr">suffix:</span> <span class="string">)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="🔑-密钥加载优先级（非常重要）"><a href="#🔑-密钥加载优先级（非常重要）" class="headerlink" title="🔑 密钥加载优先级（非常重要）"></a>🔑 密钥加载优先级（非常重要）</h3><ol>
+<li>JVM 启动参数：<code>-Djasypt.encryptor.password=xxx</code></li>
+<li>环境变量：<code>JASYPT_PASSWORD</code></li>
+<li>默认值：<code>stock-jasypt-default</code>（⚠️ 仅限本地开发）</li>
+</ol>
+<hr>
+<h2 id="四、加密工具类（核心）"><a href="#四、加密工具类（核心）" class="headerlink" title="四、加密工具类（核心）"></a>四、加密工具类（核心）</h2><blockquote>
+<p>可直接复制使用</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.jasypt.encryption.pbe.StandardPBEStringEncryptor;</span><br><span class="line"><span class="keyword">import</span> org.jasypt.encryption.pbe.config.EnvironmentPBEConfig;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Jasypt 加密工具类 —— 用于生成 ENC(密文)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JasyptEncryptUtil</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> args.length &gt; <span class="number">1</span> ? args[<span class="number">1</span>] : <span class="string">&quot;stock-jasypt-default&quot;</span>;</span><br><span class="line">        <span class="type">String</span> <span class="variable">plainText</span> <span class="operator">=</span> args.length &gt; <span class="number">0</span> ? args[<span class="number">0</span>] : <span class="string">&quot;PMYR2PHYSEWTfKBP&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">StandardPBEStringEncryptor</span> <span class="variable">encryptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StandardPBEStringEncryptor</span>();</span><br><span class="line">        <span class="type">EnvironmentPBEConfig</span> <span class="variable">config</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EnvironmentPBEConfig</span>();</span><br><span class="line"></span><br><span class="line">        config.setAlgorithm(<span class="string">&quot;PBEWithMD5AndDES&quot;</span>);</span><br><span class="line">        config.setPassword(password);</span><br><span class="line">        config.setSaltGeneratorClassName(<span class="string">&quot;org.jasypt.salt.RandomSaltGenerator&quot;</span>);</span><br><span class="line">        config.setIvGeneratorClassName(<span class="string">&quot;org.jasypt.iv.NoIvGenerator&quot;</span>);</span><br><span class="line"></span><br><span class="line">        encryptor.setConfig(config);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">encrypted</span> <span class="operator">=</span> encryptor.encrypt(plainText);</span><br><span class="line">        <span class="type">String</span> <span class="variable">decrypted</span> <span class="operator">=</span> encryptor.decrypt(encrypted);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;===== Jasypt 加密工具 =====&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;原始明文: &quot;</span> + plainText);</span><br><span class="line">        System.out.println(<span class="string">&quot;加密结果: ENC(&quot;</span> + encrypted + <span class="string">&quot;)&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;解密验证: &quot;</span> + decrypted);</span><br><span class="line">        System.out.println(<span class="string">&quot;==========================&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、如何生成密文？"><a href="#五、如何生成密文？" class="headerlink" title="五、如何生成密文？"></a>五、如何生成密文？</h2><ol>
+<li>打开 <code>JasyptEncryptUtil</code></li>
+<li>修改 <code>plainText</code></li>
+<li>右键 → Run</li>
+</ol>
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">加密结果: ENC(A9xJ3ZkqW+2yQZ7vNc6tLw==)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="六、配置文件中如何使用？"><a href="#六、配置文件中如何使用？" class="headerlink" title="六、配置文件中如何使用？"></a>六、配置文件中如何使用？</h2><h3 id="YAML-示例"><a href="#YAML-示例" class="headerlink" title="YAML 示例"></a>YAML 示例</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">ENC(A9xJ3ZkqW+2yQZ7vNc6tLw==)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Properties-示例"><a href="#Properties-示例" class="headerlink" title="Properties 示例"></a>Properties 示例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mail.smtp.password=ENC(A9xJ3ZkqW+2yQZ7vNc6tLw==)</span><br></pre></td></tr></table></figure>
+
+<p>✅ Spring Boot 启动时会自动解密，<strong>业务代码零改动</strong>。</p>
+<hr>
+<h2 id="七、生产环境启动方式（重点）"><a href="#七、生产环境启动方式（重点）" class="headerlink" title="七、生产环境启动方式（重点）"></a>七、生产环境启动方式（重点）</h2><p>⚠️ <strong>千万不要把密钥写死在配置文件里！</strong></p>
+<h3 id="1️⃣-JVM-参数方式（推荐）"><a href="#1️⃣-JVM-参数方式（推荐）" class="headerlink" title="1️⃣ JVM 参数方式（推荐）"></a>1️⃣ JVM 参数方式（推荐）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar app.jar -Djasypt.encryptor.password=生产密钥</span><br></pre></td></tr></table></figure>
+
+<h3 id="2️⃣-环境变量方式"><a href="#2️⃣-环境变量方式" class="headerlink" title="2️⃣ 环境变量方式"></a>2️⃣ 环境变量方式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export JASYPT_PASSWORD=生产密钥</span><br><span class="line">java -jar app.jar</span><br></pre></td></tr></table></figure>
+
+<h3 id="3️⃣-Docker-方式"><a href="#3️⃣-Docker-方式" class="headerlink" title="3️⃣ Docker 方式"></a>3️⃣ Docker 方式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -e JASYPT_PASSWORD=生产密钥 stock-app:latest</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="八、常见需要加密的配置"><a href="#八、常见需要加密的配置" class="headerlink" title="八、常见需要加密的配置"></a>八、常见需要加密的配置</h2><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>配置项示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数据库</td>
+<td><code>spring.datasource.password</code></td>
+</tr>
+<tr>
+<td>Redis</td>
+<td><code>spring.redis.password</code></td>
+</tr>
+<tr>
+<td>邮箱</td>
+<td><code>mail.smtp.password</code></td>
+</tr>
+<tr>
+<td>短信</td>
+<td><code>sms.config.secret</code></td>
+</tr>
+<tr>
+<td>OSS</td>
+<td><code>oss.accessKeySecret</code></td>
+</tr>
+<tr>
+<td>支付</td>
+<td><code>pay.merchant.key</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="九、常见问题-避坑指南"><a href="#九、常见问题-避坑指南" class="headerlink" title="九、常见问题 &amp; 避坑指南"></a>九、常见问题 &amp; 避坑指南</h2><h3 id="❓-为什么每次加密结果不一样？"><a href="#❓-为什么每次加密结果不一样？" class="headerlink" title="❓ 为什么每次加密结果不一样？"></a>❓ 为什么每次加密结果不一样？</h3><p>✅ 正常现象！</p>
+<p>使用了 <code>RandomSaltGenerator</code>，安全性更高。</p>
+<hr>
+<h3 id="❓-启动报错：Bad-credentials？"><a href="#❓-启动报错：Bad-credentials？" class="headerlink" title="❓ 启动报错：Bad credentials？"></a>❓ 启动报错：Bad credentials？</h3><ul>
+<li>加密和解密的 <strong>密钥不一致</strong></li>
+<li>生产环境未正确传入 <code>JASYPT_PASSWORD</code></li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+  <hr/>
+
+    
+      
+
+  
+
+  
+  
+  
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2026/06/01/SpringBoot%E9%A1%B9%E7%9B%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%A2%ABcc%E6%94%BB%E5%87%BB%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1540,165 +1722,6 @@
 <li>在高并发场景下，INCR命令是原子操作，无需担心并发问题</li>
 </ol>
 <p>这个实现方案简单高效，适合大多数Web应用的访问统计需求。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-  <hr/>
-
-    
-      
-
-  
-
-  
-  
-  
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://ruiyeclub.cn/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ruiyeclub">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/02/18/%E7%BB%95%E8%BF%87Cloudflare%205%E7%A7%92%E7%9B%BE%E7%9A%84%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88%E8%A7%A3%E6%9E%90/" itemprop="url">绕过cloudflare 5秒盾的技术方案解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2025-02-18T15:03:59+08:00">
-                2025-02-18
-              </time>
-            
-          </span>
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>Cloudflare 的 5秒盾（Under Attack Mode）是网站防护的常见手段，通过 JavaScript 挑战验证访客真实性。很多网站会使用Cloudflare提供安全服务，导致爬虫的时候显示403状态。</p>
-</blockquote>
-<p><img src="https://ruiyeclub.oss-cn-shenzhen.aliyuncs.com/picgo/55187d199c2a9079caff09622c6f78f9933ed773.png" alt="55187d199c2a9079caff09622c6f78f9933ed773"></p>
-<h2 id="一、解决方案及代码示例"><a href="#一、解决方案及代码示例" class="headerlink" title="一、解决方案及代码示例"></a>一、解决方案及代码示例</h2><h4 id="1-使用-cloudscraper-库"><a href="#1-使用-cloudscraper-库" class="headerlink" title="1. 使用 cloudscraper 库"></a>1. 使用 cloudscraper 库</h4><p><strong>原理</strong>：模拟 Cloudflare 预期的请求特征</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cloudscraper</span><br><span class="line"></span><br><span class="line">scraper = cloudscraper.create_scraper()</span><br><span class="line">response = scraper.get(<span class="string">&quot;https://target-site.com&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-使用-curl-cffi-库"><a href="#2-使用-curl-cffi-库" class="headerlink" title="2. 使用 curl_cffi 库"></a>2. 使用 curl_cffi 库</h4><p><strong>优势</strong>：支持多浏览器指纹模拟</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> curl_cffi <span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">response = requests.get(</span><br><span class="line">    <span class="string">&quot;https://target-site.com&quot;</span>,</span><br><span class="line">    impersonate=<span class="string">&quot;chrome110&quot;</span>  <span class="comment"># 支持 chrome99-110 / edge99-110</span></span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(response.text)</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-第三方-API-服务"><a href="#3-第三方-API-服务" class="headerlink" title="3. 第三方 API 服务"></a>3. 第三方 API 服务</h4><p><strong>推荐服务</strong>：</p>
-<ul>
-<li>ScrapingBee（自带代理轮转）</li>
-<li>ScraperAPI</li>
-<li>ZenRows</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">API_KEY = <span class="string">&quot;your_api_key&quot;</span></span><br><span class="line">response = requests.get(</span><br><span class="line">    <span class="string">f&quot;https://api.scrapingbee.com/v1/?api_key=<span class="subst">&#123;API_KEY&#125;</span>&amp;url=target-site.com&quot;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-FlareSolverr-服务"><a href="#4-FlareSolverr-服务" class="headerlink" title="4. FlareSolverr 服务"></a>4. FlareSolverr 服务</h4><p><strong>架构</strong>：基于 Puppeteer 的中间件服务</p>
-<p>部署步骤：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -d \</span><br><span class="line">  --name flaresolverr \</span><br><span class="line">  -p 8191:8191 \</span><br><span class="line">  -e LOG_LEVEL=info \</span><br><span class="line">  --restart unless-stopped \</span><br><span class="line">  ghcr.io/flaresolverr/flaresolverr:latest</span><br></pre></td></tr></table></figure>
-
-<p>调用示例：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">payload = &#123;</span><br><span class="line">    <span class="string">&quot;cmd&quot;</span>: <span class="string">&quot;request.get&quot;</span>,</span><br><span class="line">    <span class="string">&quot;url&quot;</span>: <span class="string">&quot;https://target-site.com&quot;</span>,</span><br><span class="line">    <span class="string">&quot;maxTimeout&quot;</span>: <span class="number">60000</span></span><br><span class="line">&#125;</span><br><span class="line">response = requests.post(<span class="string">&quot;http://localhost:8191/v1&quot;</span>, json=payload)</span><br></pre></td></tr></table></figure>
-
-<h2 id="二、方案对比分析"><a href="#二、方案对比分析" class="headerlink" title="二、方案对比分析"></a>二、方案对比分析</h2><table>
-<thead>
-<tr>
-<th>方案</th>
-<th>执行速度</th>
-<th>维护成本</th>
-<th>隐匿性</th>
-<th>适用场景</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>cloudscraper</td>
-<td>★★★★</td>
-<td>低</td>
-<td>中</td>
-<td>中小规模常规采集</td>
-</tr>
-<tr>
-<td>curl_cffi</td>
-<td>★★★★★</td>
-<td>低</td>
-<td>高</td>
-<td>需要最新指纹场景</td>
-</tr>
-<tr>
-<td>第三方API</td>
-<td>★★★</td>
-<td>中</td>
-<td>高</td>
-<td>企业级高频采集</td>
-</tr>
-<tr>
-<td>FlareSolverr</td>
-<td>★★</td>
-<td>高</td>
-<td>极高</td>
-<td>复杂JS验证场景</td>
-</tr>
-</tbody></table>
-<h2 id="三、对抗升级建议"><a href="#三、对抗升级建议" class="headerlink" title="三、对抗升级建议"></a>三、对抗升级建议</h2><ol>
-<li><strong>IP轮换策略</strong>：结合住宅代理使用（推荐 BrightData）</li>
-<li><strong>指纹随机化</strong>：定期更换 User-Agent&#x2F;TLS 指纹</li>
-<li><strong>请求限速</strong>：设置 3-10 秒随机延迟</li>
-<li><strong>头信息校验</strong>：携带完整 Accept-Encoding&#x2F;Cookie 等头</li>
-</ol>
 
           
         
